@@ -37,7 +37,7 @@ mkdir -p $DST_FOLDER
 echo -n "Running vrx task..."
 
 # Run the task.
-vrx_EXIT_ON_COMPLETION=1 roslaunch vrx_gazebo sandisland.launch
+vrx_EXIT_ON_COMPLETION=1 roslaunch vrx_gazebo sandisland.launch gui:=false & 
 
 echo -e "${GREEN}OK${NOCOLOR}"
 

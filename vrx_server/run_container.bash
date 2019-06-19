@@ -18,7 +18,7 @@ DOCKER_EXTRA_ARGS=$3
 COMMAND=$4
 
 NETWORK="vrx-network"
-IP="172.18.0.22"
+IP="172.17.0.0.16"
 
 # XAUTH=/tmp/.docker.xauth
 # xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
@@ -63,10 +63,6 @@ DISPLAY="${DISPLAY:-:0}"
 
 docker run --rm --name ${CONTAINER} \
   -e XAUTHORITY=/tmp/.docker.xauth \
-  -e ROS_IP=${IP} \
-  -e ROS_MASTER_URI=http://${IP}:11311 \
-  --ip ${IP} \
-  --net ${NETWORK} \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
@@ -75,3 +71,8 @@ docker run --rm --name ${CONTAINER} \
   ${DOCKER_DISPLAY_PARAMS} \
   ${IMAGE_NAME} \
 ${COMMAND}
+
+#  -e ROS_IP=${IP} \
+#  -e ROS_MASTER_URI=http://${IP}:11311 \
+#  --ip ${IP} \
+#  --net ${NETWORK} \

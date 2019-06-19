@@ -11,5 +11,5 @@ then
 fi
 
 docker network create -d bridge \
-  --subnet=172.18.0.0/22 \
+  --subnet=172.17.0.0/16 \
   vrx-network

@@ -34,12 +34,25 @@ if [ -d "$DST_FOLDER" ]; then
 fi
 mkdir -p $DST_FOLDER
 
-echo -n "Running vrx task..."
+#echo "Starting roscore"
+#roscore &
+#
+#echo "Generating WAM-V"
+#roslaunch vrx_gazebo generate_wamv.launch wamv_target:=/home/developer/my_wamv.urdf & 
+#ls /
+#echo "Generating Worlds"
+#
+echo "Running vrx task..."
 
 # Run the task.
-vrx_EXIT_ON_COMPLETION=1 roslaunch vrx_gazebo sandisland.launch gui:=false & 
+vrx_EXIT_ON_COMPLETION=1 roslaunch vrx_gazebo sandisland.launch gui:=false 
 
 echo -e "${GREEN}OK${NOCOLOR}"
+
+echo "Sleeping for 10s"
+sleep 5s
+
+rostopic echo /vrx/task/info
 
 # Copy vrx log files.
 echo -n "Copying logs into [$DST_FOLDER]..."

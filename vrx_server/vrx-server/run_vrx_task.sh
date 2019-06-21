@@ -34,14 +34,6 @@ if [ -d "$DST_FOLDER" ]; then
 fi
 mkdir -p $DST_FOLDER
 
-#echo "Starting roscore"
-#roscore &
-#
-#echo "Generating WAM-V"
-#roslaunch vrx_gazebo generate_wamv.launch wamv_target:=/home/developer/my_wamv.urdf & 
-#ls /
-#echo "Generating Worlds"
-#
 echo "Running vrx task..."
 
 # Run the task.

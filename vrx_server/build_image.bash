@@ -6,6 +6,7 @@ set -e
 
 set -x
 
+# Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 echo " Build image: vrx-server"

@@ -62,7 +62,9 @@ fi
 DISPLAY="${DISPLAY:-:0}"
 
 docker run --rm --name ${CONTAINER} \
+  --net ${NETWORK} \
   -e XAUTHORITY=/tmp/.docker.xauth \
+  -e ROS_MASTER_URI=http://${CONTAINER}:11311 \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
@@ -72,7 +74,7 @@ docker run --rm --name ${CONTAINER} \
   ${IMAGE_NAME} \
 ${COMMAND}
 
-#  -e ROS_IP=${IP} \
-#  -e ROS_MASTER_URI=http://${IP}:11311 \
-#  --ip ${IP} \
-#  --net ${NETWORK} \
+# TODO(tylerlum): Figure out how to configure these properly
+# TODO(tylerlum): Figure out ROS_MASTER_URI
+# -e ROS_IP=${IP} \
+# --ip ${IP} \

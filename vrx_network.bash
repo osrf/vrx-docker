@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-# networking
+# Check if vrx-network already running
 inspect=`docker network inspect vrx-network`
 if [ inspect ]
 then
@@ -10,6 +8,4 @@ then
   docker network rm vrx-network
 fi
 
-docker network create -d bridge \
-  --subnet=172.17.0.0/16 \
-  vrx-network
+docker network create vrx-network

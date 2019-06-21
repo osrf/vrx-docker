@@ -56,10 +56,6 @@ ${DIR}/kill_vrx_containers.bash
 # Create the network for the containers to talk to each other.
 ${DIR}/vrx_network.bash
 
-# Start the competitors container and let it run in the background.
-COMPETITOR_IMAGE_NAME="vrx_competitor_${TEAM_NAME}"
-# ./vrx_competitor/run_competitor_container.bash ${COMPETITOR_IMAGE_NAME} "/run_team_system_with_delay.bash" &
-
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
@@ -68,8 +64,30 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
   -v ${COMP_CONFIG_DIR}:/trial_config \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
-  "/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/team_config.yaml ${LOG_DIR}"
+  "echo $ROS_IP && /run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/team_config.yaml ${LOG_DIR}" &
 
+echo "Waiting for server to start up"
+sleep 20s
+# Start the competitors container and let it run in the background.
+# COMPETITOR_IMAGE_NAME="vrx_competitor_${TEAM_NAME}"
+COMPETITOR_IMAGE_NAME="ros:ros-tutorials"
+RATE=1
+CMD=2
+COMPETITOR_RUN_SYSTEM_CMD="echo $ROS_IP && rostopic pub /left_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}"
+#COMPETITOR_RUN_SYSTEM_CMD="\"rostopic pub /left_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD} & rostopic pub /right_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}\""
+echo "Starting competitor command"
+docker run -it --rm \
+    --net vrx-network \
+    --name vrx-competitor-test \
+    --env ROS_HOSTNAME=listener \
+    --env ROS_MASTER_URI=http://vrx_server_system:11311 \
+    ${COMPETITOR_IMAGE_NAME} \
+    ${COMPETITOR_RUN_SYSTEM_CMD}
+
+echo "Passed competitor command"
+
+echo "Run trial sleep for 30s"
+sleep 30s
 # Copy the ROS log files from the competitor's container.
 # echo "Copying ROS log files from competitor container..."
 # docker cp --follow-link ${COMPETITOR_IMAGE_NAME}-system:/root/.ros/log/latest $HOST_LOG_DIR/ros-competitor

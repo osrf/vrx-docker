@@ -42,8 +42,8 @@ gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}"
 
-echo "Sleep for 20s"
-sleep 20s
+echo "Sleep for 300s"
+sleep 300s
 echo "Killing ${gazebo_pid}"
 kill ${gazebo_pid}
 

@@ -37,23 +37,24 @@ mkdir -p $DST_FOLDER
 echo "Running vrx task..."
 
 # Run the task.
-vrx_EXIT_ON_COMPLETION=1 roslaunch vrx_gazebo sandisland.launch gui:=false 
+roslaunch vrx_gazebo sandisland.launch gui:=false &
+gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}"
 
-echo "Sleeping for 10s"
-sleep 5s
-
-rostopic echo /vrx/task/info
+echo "Sleep for 20s"
+sleep 20s
+echo "Killing ${gazebo_pid}"
+kill ${gazebo_pid}
 
 # Copy vrx log files.
-echo -n "Copying logs into [$DST_FOLDER]..."
-cp --recursive --dereference ~/.vrx/log/* $DST_FOLDER
-# Copy ROS log files.
-mkdir -p $DST_FOLDER/ros
-cp --recursive --dereference ~/.ros/log/latest/* $DST_FOLDER/ros
-# Copy vrx generated files.
-mkdir -p $DST_FOLDER/generated
-cp --recursive --dereference /tmp/vrx/* $DST_FOLDER/generated
-
-echo -e "${GREEN}OK${NOCOLOR}"
+# echo -n "Copying logs into [$DST_FOLDER]..."
+# cp --recursive --dereference ~/.vrx/log/* $DST_FOLDER
+# # Copy ROS log files.
+# mkdir -p $DST_FOLDER/ros
+# cp --recursive --dereference ~/.ros/log/latest/* $DST_FOLDER/ros
+# # Copy vrx generated files.
+# mkdir -p $DST_FOLDER/generated
+# cp --recursive --dereference /tmp/vrx/* $DST_FOLDER/generated
+# 
+# echo -e "${GREEN}OK${NOCOLOR}"

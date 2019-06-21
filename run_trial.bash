@@ -71,9 +71,9 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
   "/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/team_config.yaml ${LOG_DIR}"
 
 # Copy the ROS log files from the competitor's container.
-echo "Copying ROS log files from competitor container..."
-docker cp --follow-link ${COMPETITOR_IMAGE_NAME}-system:/root/.ros/log/latest $HOST_LOG_DIR/ros-competitor
-echo -e "${GREEN}OK${NOCOLOR}"
+# echo "Copying ROS log files from competitor container..."
+# docker cp --follow-link ${COMPETITOR_IMAGE_NAME}-system:/root/.ros/log/latest $HOST_LOG_DIR/ros-competitor
+# echo -e "${GREEN}OK${NOCOLOR}"
 
 # Kill and remove all containers before exit
 ./kill_vrx_containers.bash

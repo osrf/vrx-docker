@@ -51,10 +51,10 @@ else
 fi
 
 # Ensure any previous containers are killed and removed.
-./kill_vrx_containers.bash
+${DIR}/kill_vrx_containers.bash
 
 # Create the network for the containers to talk to each other.
-./vrx_network.bash
+${DIR}/vrx_network.bash
 
 # Start the competitors container and let it run in the background.
 COMPETITOR_IMAGE_NAME="vrx_competitor_${TEAM_NAME}"
@@ -63,7 +63,7 @@ COMPETITOR_IMAGE_NAME="vrx_competitor_${TEAM_NAME}"
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
-./vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
+${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "-v ${TEAM_CONFIG_DIR}:/team_config \
   -v ${COMP_CONFIG_DIR}:/trial_config \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \

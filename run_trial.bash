@@ -22,6 +22,7 @@ usage()
 SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vrx/logs
+NETWORK=vrx-network-2
 
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -60,14 +61,15 @@ echo -e "${GREEN}Done.${NOCOLOR}\n"
 ${DIR}/kill_vrx_containers.bash
 
 # Create the network for the containers to talk to each other.
-${DIR}/vrx_network.bash
+${DIR}/vrx_network.bash ${NETWORK}
 
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
 SERVER_CMD="/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/sensor_config.yaml /team_config/thruster_config.yaml ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
-  "-v ${TEAM_CONFIG_DIR}:/team_config \
+  "--net ${NETWORK} \
+  -v ${TEAM_CONFIG_DIR}:/team_config \
   -v ${COMP_CONFIG_DIR}:/trial_config \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
@@ -85,7 +87,7 @@ CMD=2
 COMPETITOR_RUN_SYSTEM_CMD="rostopic pub /left_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}"
 echo "Starting competitor command"
 docker run --rm \
-    --net vrx-network \
+    --net ${NETWORK} \
     --name vrx-competitor-test-1 \
     --env ROS_HOSTNAME=vrx-competitor-test-1 \
     --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
@@ -96,7 +98,7 @@ docker run --rm \
 COMPETITOR_IMAGE_NAME="ros:ros-tutorials"
 COMPETITOR_RUN_SYSTEM_CMD="rostopic echo /imu/data"
 docker run --rm \
-    --net vrx-network \
+    --net ${NETWORK} \
     --name vrx-competitor-test-2 \
     --env ROS_HOSTNAME=vrx-competitor-test-2 \
     --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \

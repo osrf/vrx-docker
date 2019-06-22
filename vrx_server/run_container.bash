@@ -17,8 +17,6 @@ IMAGE_NAME=$2
 DOCKER_EXTRA_ARGS=$3
 COMMAND=$4
 
-NETWORK="vrx-network"
-
 # XAUTH=/tmp/.docker.xauth
 # xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
 if [ ! -f /tmp/.docker.xauth ]
@@ -61,7 +59,6 @@ fi
 DISPLAY="${DISPLAY:-:0}"
 
 docker run --rm --name ${CONTAINER} \
-  --net ${NETWORK} \
   -e XAUTHORITY=/tmp/.docker.xauth \
   -e ROS_MASTER_URI=http://${CONTAINER}:11311 \
   -e ROS_HOSTNAME=${CONTAINER} \

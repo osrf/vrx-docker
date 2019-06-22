@@ -6,14 +6,16 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NOCOLOR='\033[0m'
 
-# Check if vrx-network already running
-inspect=`docker network inspect vrx-network`
+NETWORK=$1
+
+# Check if ${NETWORK} already running
+inspect=`docker network inspect ${NETWORK}`
 if [ inspect ]; then
-  echo "Replacing vrx-network"
-  docker network rm vrx-network
+  echo "Replacing ${NETWORK}"
+  docker network rm ${NETWORK}
 else
-  echo "Starting vrx-network"
+  echo "Starting ${NETWORK}"
 fi
 
-docker network create vrx-network
+docker network create ${NETWORK}
 echo -e "${GREEN}Done.${NOCOLOR}\n"

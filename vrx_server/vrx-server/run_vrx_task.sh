@@ -30,20 +30,22 @@ DST_FOLDER=$3
 # Create a directory for the Gazebo log and the score file.
 if [ -d "$DST_FOLDER" ]; then
   echo -e "${YELLOW}Wrn: Destination folder already exists. Data might be"\
-          "overwritten${NOCOLOR}"
+          "overwritten${NOCOLOR}\n"
 fi
 mkdir -p $DST_FOLDER
 
-echo "Running vrx task..."
+echo "Starting vrx task..."
 
 # Run the task.
 roslaunch vrx_gazebo sandisland.launch gui:=false &
 gazebo_pid=$!
 
-echo -e "${GREEN}OK${NOCOLOR}"
+echo -e "${GREEN}OK${NOCOLOR}\n"
 
-echo "Sleep for 300s"
+echo "Run simulation for 300s before ending"
 sleep 300s
+echo -e "${GREEN}OK${NOCOLOR}\n"
+
 echo "Killing ${gazebo_pid}"
 kill ${gazebo_pid}
 

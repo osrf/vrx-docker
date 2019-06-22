@@ -65,6 +65,8 @@ docker run --rm --name ${CONTAINER} \
   --net ${NETWORK} \
   -e XAUTHORITY=/tmp/.docker.xauth \
   -e ROS_MASTER_URI=http://${CONTAINER}:11311 \
+  -e ROS_HOSTNAME=${CONTAINER} \
+  -e ROS_IP=172.19.0.2 \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \

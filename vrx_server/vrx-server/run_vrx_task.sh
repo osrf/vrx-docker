@@ -48,15 +48,3 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Killing ${gazebo_pid}"
 kill ${gazebo_pid}
-
-# Copy vrx log files.
-# echo -n "Copying logs into [$DST_FOLDER]..."
-# cp --recursive --dereference ~/.vrx/log/* $DST_FOLDER
-# # Copy ROS log files.
-# mkdir -p $DST_FOLDER/ros
-# cp --recursive --dereference ~/.ros/log/latest/* $DST_FOLDER/ros
-# # Copy vrx generated files.
-# mkdir -p $DST_FOLDER/generated
-# cp --recursive --dereference /tmp/vrx/* $DST_FOLDER/generated
-# 
-# echo -e "${GREEN}OK${NOCOLOR}"

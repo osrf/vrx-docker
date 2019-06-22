@@ -98,14 +98,24 @@ docker run --rm \
     ${COMPETITOR_IMAGE_NAME} \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
-echo "Start 30s timer"
-sleep 30s
-echo "30s up"
+echo "Start 15s timer"
+sleep 15s
+echo "15s up"
 # Copy the ROS log files from the competitor's container.
 echo "Copying ROS log files from competitor container..."
-docker cp --follow-link ${COMPETITOR_IMAGE_NAME}:/root/.ros/log/latest $HOST_LOG_DIR/ros-competitor
+docker cp --follow-link vrx-competitor-test-1:/root/.ros/log $HOST_LOG_DIR/ros-competitor
 echo -e "${GREEN}OK${NOCOLOR}"
 
+# Copy the ROS log files from the server's container.
+echo "Copying ROS log files from server container..."
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log $HOST_LOG_DIR/ros-server
+# Copy ROS log files.
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
+# Copy vrx generated files. (NOT SURE IF THERE ARE ANY, MAYBE THE YAML=>XACROS?)
+# mkdir -p $DST_FOLDER/generated
+# docker cp ${SERVER_CONTAINER_NAME}:/tmp/vrx/* $HOST_LOG_DIR/generated
+
+echo -e "${GREEN}OK${NOCOLOR}"
 # Kill and remove all containers before exit
 ./kill_vrx_containers.bash
 

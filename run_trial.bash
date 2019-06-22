@@ -22,14 +22,14 @@ usage()
 SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vrx/logs
-NETWORK=vrx-network-2
+NETWORK=vrx-network
 
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
-HOST_LOG_DIR=${DIR}/logs/${TEAM_NAME}/${TRIAL_NAME}
+HOST_LOG_DIR=${DIR}/logs/$(date +%Y-%m-%d.%H:%M:%S)/${TEAM_NAME}/${TRIAL_NAME}
 echo "Creating directory: ${HOST_LOG_DIR}"
 mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
@@ -106,9 +106,12 @@ docker run --rm \
     ${COMPETITOR_IMAGE_NAME} \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
+# Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
 echo "Start 100s timer"
 sleep 100s
 echo "100s up"
+
+# TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
 echo "Copying ROS log files from competitor container..."
 docker cp --follow-link vrx-competitor-test-1:/root/.ros/log $HOST_LOG_DIR/ros-competitor
@@ -119,11 +122,9 @@ echo "Copying ROS log files from server container..."
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log $HOST_LOG_DIR/ros-server
 # Copy ROS log files.
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-# Copy vrx generated files. (NOT SURE IF THERE ARE ANY, MAYBE THE YAML=>XACROS?)
-# mkdir -p $DST_FOLDER/generated
-# docker cp ${SERVER_CONTAINER_NAME}:/tmp/vrx/* $HOST_LOG_DIR/generated
 
 echo -e "${GREEN}OK${NOCOLOR}"
+
 # Kill and remove all containers before exit
 ./kill_vrx_containers.bash
 

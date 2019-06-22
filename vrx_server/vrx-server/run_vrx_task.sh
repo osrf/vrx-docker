@@ -35,10 +35,16 @@ if [ -d "$DST_FOLDER" ]; then
 fi
 mkdir -p $DST_FOLDER
 
+wamv_target="/my_wamv.urdf"
+echo "Generating WAM-V..."
+roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$2 thruster_yaml:=$3 wamv_target:=$wamv_target &
+sleep 10s
+echo -e "${GREEN}OK${NOCOLOR}\n"
+
 echo "Starting vrx task..."
 
 # Run the task.
-roslaunch vrx_gazebo wayfinding.launch gui:=false &
+roslaunch vrx_gazebo wayfinding.launch gui:=false urdf:=$wamv_target &
 gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}\n"

@@ -19,7 +19,7 @@ usage()
 # Call usage() function if arguments not supplied.
 [[ $# -ne 2 ]] && usage
 
-SERVER_CONTAINER_NAME=vrx_server_system
+SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vrx/logs
 
@@ -88,7 +88,7 @@ docker run --rm \
     --net vrx-network \
     --name vrx-competitor-test-1 \
     --env ROS_HOSTNAME=vrx-competitor-test-1 \
-    --env ROS_MASTER_URI=http://vrx_server_system:11311 \
+    --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
     --env ROS_IP=172.19.0.3 \
     ${COMPETITOR_IMAGE_NAME} \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
@@ -99,14 +99,14 @@ docker run --rm \
     --net vrx-network \
     --name vrx-competitor-test-2 \
     --env ROS_HOSTNAME=vrx-competitor-test-2 \
-    --env ROS_MASTER_URI=http://vrx_server_system:11311 \
+    --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
     --env ROS_IP=172.19.0.4 \
     ${COMPETITOR_IMAGE_NAME} \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
-echo "Start 15s timer"
-sleep 15s
-echo "15s up"
+echo "Start 100s timer"
+sleep 100s
+echo "100s up"
 # Copy the ROS log files from the competitor's container.
 echo "Copying ROS log files from competitor container..."
 docker cp --follow-link vrx-competitor-test-1:/root/.ros/log $HOST_LOG_DIR/ros-competitor

@@ -16,16 +16,17 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <task.yaml> <user.yaml> <dst_folder>"
+  echo "Usage: $0 <task.yaml> <sensor.yaml> <thruster.yaml> <dst_folder>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 3 ]] && usage
+[[ $# -ne 4 ]] && usage
 
 TASK_CONFIG=$1
-USER_CONFIG=$2
-DST_FOLDER=$3
+SENSOR_CONFIG=$2
+THRUSTER_CONFIG=$3
+DST_FOLDER=$4
 
 # Create a directory for the Gazebo log and the score file.
 if [ -d "$DST_FOLDER" ]; then
@@ -37,7 +38,7 @@ mkdir -p $DST_FOLDER
 echo "Starting vrx task..."
 
 # Run the task.
-roslaunch vrx_gazebo sandisland.launch gui:=false &
+roslaunch vrx_gazebo wayfinding.launch gui:=false &
 gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}\n"

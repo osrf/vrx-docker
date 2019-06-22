@@ -18,7 +18,6 @@ DOCKER_EXTRA_ARGS=$3
 COMMAND=$4
 
 NETWORK="vrx-network"
-IP="172.17.0.0.16"
 
 # XAUTH=/tmp/.docker.xauth
 # xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -

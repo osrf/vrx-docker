@@ -34,13 +34,18 @@ mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
-# Find team and competition yaml files
+# Find sensor, thruster, and competition yaml files
 echo "Looking for config files"
 TEAM_CONFIG_DIR=${DIR}/team_config/${TEAM_NAME}
-if [ -f "${TEAM_CONFIG_DIR}/team_config.yaml" ]; then
-  echo "Successfully found: ${TEAM_CONFIG_DIR}/team_config.yaml"
+if [ -f "${TEAM_CONFIG_DIR}/sensor_config.yaml" ]; then
+  echo "Successfully found: ${TEAM_CONFIG_DIR}/sensor_config.yaml"
 else
-  echo -e "${RED}Err: ${TEAM_CONFIG_DIR}/team_config.yaml not found."; exit 1;
+  echo -e "${RED}Err: ${TEAM_CONFIG_DIR}/sensor_config.yaml not found."; exit 1;
+fi
+if [ -f "${TEAM_CONFIG_DIR}/thruster_config.yaml" ]; then
+  echo "Successfully found: ${TEAM_CONFIG_DIR}/thruster_config.yaml"
+else
+  echo -e "${RED}Err: ${TEAM_CONFIG_DIR}/thruster_config.yaml not found."; exit 1;
 fi
 
 COMP_CONFIG_DIR=${DIR}/trial_config
@@ -60,12 +65,13 @@ ${DIR}/vrx_network.bash
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
+SERVER_CMD="/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/sensor_config.yaml /team_config/thruster_config.yaml ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "-v ${TEAM_CONFIG_DIR}:/team_config \
   -v ${COMP_CONFIG_DIR}:/trial_config \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
-  "/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/team_config.yaml ${LOG_DIR}" &
+  "${SERVER_CMD}" &
 
 # Wait until server starts before competitor code can be run
 echo "Waiting for server to start up"

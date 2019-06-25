@@ -38,8 +38,8 @@ else
 fi
 
 # Create directories to store generated files
-world_xacro_target=${DIR}/generated/trial/${TRIAL_NAME}/world_xacros/
-world_target=${DIR}/generated/trial/${TRIAL_NAME}/worlds/
+world_xacro_target=${DIR}/trial_generated/${TRIAL_NAME}/world_xacros/
+world_target=${DIR}/trial_generated/${TRIAL_NAME}/worlds/
 mkdir -p ${world_xacro_target}
 mkdir -p ${world_target}
 

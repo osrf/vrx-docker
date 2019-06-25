@@ -44,7 +44,7 @@ else
 fi
 
 # Create directory for generated files
-wamv_target_dir=${DIR}/generated/team_wamv/${TEAM_NAME}
+wamv_target_dir=${DIR}/team_generated/${TEAM_NAME}
 wamv_target=${wamv_target_dir}/${TEAM_NAME}.urdf
 mkdir -p ${wamv_target_dir}
 

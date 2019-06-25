@@ -2,6 +2,7 @@
 set -e 
 TEAM_NAME=$1
 TRIAL_NAME=$2
+TRIAL_NUM=$3
 
 # Constants.
 RED='\033[0;31m'
@@ -12,12 +13,12 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name> <trial_name>"
+  echo "Usage: $0 <team_name> <trial_name> <trial_num>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 2 ]] && usage
+[[ $# -ne 3 ]] && usage
 
 SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
@@ -35,25 +36,20 @@ mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
-# Find sensor, thruster, and competition yaml files
-echo "Looking for config files"
-TEAM_CONFIG_DIR=${DIR}/team_config/${TEAM_NAME}
-if [ -f "${TEAM_CONFIG_DIR}/sensor_config.yaml" ]; then
-  echo "Successfully found: ${TEAM_CONFIG_DIR}/sensor_config.yaml"
+# Find wamv urdf and trial world files
+echo "Looking for generated files"
+TEAM_GENERATED_DIR=${DIR}/team_generated/${TEAM_NAME}
+if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
+  echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
 else
-  echo -e "${RED}Err: ${TEAM_CONFIG_DIR}/sensor_config.yaml not found."; exit 1;
-fi
-if [ -f "${TEAM_CONFIG_DIR}/thruster_config.yaml" ]; then
-  echo "Successfully found: ${TEAM_CONFIG_DIR}/thruster_config.yaml"
-else
-  echo -e "${RED}Err: ${TEAM_CONFIG_DIR}/thruster_config.yaml not found."; exit 1;
+  echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
 
-COMP_CONFIG_DIR=${DIR}/trial_config
-if [ -f "${COMP_CONFIG_DIR}/${TRIAL_NAME}.yaml" ]; then
-  echo "Successfully found: ${COMP_CONFIG_DIR}/${TRIAL_NAME}.yaml"
+COMP_GENERATED_DIR=${DIR}/trial_generated/${TRIAL_NAME}
+if [ -f "${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world" ]; then
+  echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world"
 else
-  echo -e "${RED}Err: ${COMP_CONFIG_DIR}/${TRIAL_NAME}.yaml not found."; exit 1;
+  echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world not found."; exit 1;
 fi
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
@@ -66,11 +62,11 @@ ${DIR}/vrx_network.bash ${NETWORK}
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
-SERVER_CMD="/run_vrx_task.sh /trial_config/${TRIAL_NAME}.yaml /team_config/sensor_config.yaml /team_config/thruster_config.yaml ${LOG_DIR}"
+SERVER_CMD="/run_vrx_task.sh /trial_generated/worlds/world${TRIAL_NUM}.world /team_generated/${TEAM_NAME}.urdf ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "--net ${NETWORK} \
-  -v ${TEAM_CONFIG_DIR}:/team_config \
-  -v ${COMP_CONFIG_DIR}:/trial_config \
+  -v ${TEAM_GENERATED_DIR}:/team_generated \
+  -v ${COMP_GENERATED_DIR}:/trial_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
   "${SERVER_CMD}" &

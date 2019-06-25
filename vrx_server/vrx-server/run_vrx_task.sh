@@ -16,17 +16,16 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <task.yaml> <sensor.yaml> <thruster.yaml> <dst_folder>"
+  echo "Usage: $0 <task_world> <wamv_urdf> <dst_folder>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 4 ]] && usage
+[[ $# -ne 3 ]] && usage
 
-TASK_CONFIG=$1
-SENSOR_CONFIG=$2
-THRUSTER_CONFIG=$3
-DST_FOLDER=$4
+TASK_WORLD=$1
+WAMV_URDF=$2
+DST_FOLDER=$3
 
 # Create a directory for the Gazebo log and the score file.
 if [ -d "$DST_FOLDER" ]; then
@@ -35,16 +34,10 @@ if [ -d "$DST_FOLDER" ]; then
 fi
 mkdir -p $DST_FOLDER
 
-wamv_target=~/my_wamv.urdf
-echo "Generating WAM-V..."
-roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$2 thruster_yaml:=$3 wamv_target:=$wamv_target &
-sleep 10s
-echo -e "${GREEN}OK${NOCOLOR}\n"
-
 echo "Starting vrx task..."
 
 # Run the task.
-roslaunch vrx_gazebo wayfinding.launch gui:=false urdf:=$wamv_target &
+roslaunch vrx_gazebo wayfinding.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD &
 gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}\n"

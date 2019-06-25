@@ -29,7 +29,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
-HOST_LOG_DIR=${DIR}/logs/$(date +%Y-%m-%d.%H:%M:%S)/${TEAM_NAME}/${TRIAL_NAME}
+HOST_LOG_DIR=${DIR}/logs/$(date +%Y-%m-%d.%H-%M-%S)/${TEAM_NAME}/${TRIAL_NAME}
 echo "Creating directory: ${HOST_LOG_DIR}"
 mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}

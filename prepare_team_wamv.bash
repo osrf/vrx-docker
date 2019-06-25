@@ -43,15 +43,19 @@ else
   echo -e "${RED}Err: ${THRUSTER_CONFIG}"; exit 1;
 fi
 
+# Create directory for generated files
 wamv_target_dir=${DIR}/generated/team_wamv/${TEAM_NAME}
 wamv_target=${wamv_target_dir}/${TEAM_NAME}.urdf
+mkdir -p ${wamv_target_dir}
 
+# Generate WAM-V
 echo "Generating WAM-V..."
 roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target &
+
+# Wait until generation is complete, then kill process
 generate_wamv_pid=$!
 sleep 5s
 echo -e "${GREEN}OK${NOCOLOR}\n"
-
 echo "Killing ${generate_wamv_pid}"
 kill ${generate_wamv_pid}
 

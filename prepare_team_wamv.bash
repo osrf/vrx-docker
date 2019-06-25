@@ -43,7 +43,9 @@ else
   echo -e "${RED}Err: ${THRUSTER_CONFIG}"; exit 1;
 fi
 
-wamv_target=${DIR}/generated/team_wamv/${TEAM_NAME}.urdf
+wamv_target_dir=${DIR}/generated/team_wamv/${TEAM_NAME}
+wamv_target=${wamv_target_dir}/${TEAM_NAME}.urdf
+
 echo "Generating WAM-V..."
 roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target &
 generate_wamv_pid=$!
@@ -52,3 +54,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Killing ${generate_wamv_pid}"
 kill ${generate_wamv_pid}
+
+# Move generated files to correct location
+mv ${TEAM_CONFIG_DIR}/sensor_config.xacro ${wamv_target_dir}
+mv ${TEAM_CONFIG_DIR}/thruster_config.xacro ${wamv_target_dir}

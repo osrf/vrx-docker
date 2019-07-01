@@ -26,5 +26,5 @@ wamv_imu:
     - name: imu_wamv
 wamv_p3d:
     - name: p3d_wamv
-wamv_3d_lidar:
+lidar:
     - name: lidar_wamv

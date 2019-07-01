@@ -16,15 +16,15 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <task_world> <wamv_urdf> <dst_folder>"
+  echo "Usage: $0 <wamv_urdf> <task_world> <dst_folder>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
 
-TASK_WORLD=$1
-WAMV_URDF=$2
+WAMV_URDF=$1
+TASK_WORLD=$2
 DST_FOLDER=$3
 
 # Create a directory for the Gazebo log and the score file.
@@ -37,7 +37,7 @@ mkdir -p $DST_FOLDER
 echo "Starting vrx task..."
 
 # Run the task.
-roslaunch vrx_gazebo wayfinding.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD &
+roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
 gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -48,3 +48,5 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Killing ${gazebo_pid}"
 kill ${gazebo_pid}
+echo "Killed Gazebo, sleeping for 100s"
+sleep 100s

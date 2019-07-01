@@ -54,7 +54,7 @@ roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_y
 
 # Wait until generation is complete, then kill process
 generate_wamv_pid=$!
-sleep 5s
+sleep 3s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 echo "Killing ${generate_wamv_pid}"
 kill ${generate_wamv_pid}

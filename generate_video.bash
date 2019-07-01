@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# generate_video.sh: A shell script to generate a video from a Gazebo log file.
+# generate_video.bash: A bash script to generate a video from a Gazebo log file.
 #
 # E.g.: ./generate_video.sh ~/vrx/log/gazebo/state.log output.ogv
 #
@@ -19,7 +19,7 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <path_to_gazebo_log_file> <output>"
+  echo "Usage: $0 <path_to_gazebo_log_file> <output_filename>"
   exit 1
 }
 
@@ -35,6 +35,8 @@ is_gzclient_running()
 
 # Wait until the /gazebo/robotx_example_course/world_stats topic tells us that the playback
 # has been paused. This event will trigger the end of the recording.
+# Note: Depending on name of world running, may be different name from "robotx_example_course"
+# Run `gz topic -l` to see the correct topic name
 wait_until_playback_ends()
 {
   echo -n "Waiting for playback to end..."

@@ -47,7 +47,7 @@ mkdir -p ${world_target}
 echo "Generating worlds..."
 roslaunch vrx_gazebo generate_worlds.launch requested:=$TRIAL_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target &
 generate_worlds_pid=$!
-sleep 5s
+sleep 8s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Killing ${generate_worlds_pid}"

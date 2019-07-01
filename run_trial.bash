@@ -62,7 +62,7 @@ ${DIR}/vrx_network.bash ${NETWORK}
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
-SERVER_CMD="/run_vrx_task.sh /trial_generated/worlds/world${TRIAL_NUM}.world /team_generated/${TEAM_NAME}.urdf ${LOG_DIR}"
+SERVER_CMD="/run_vrx_task.sh /team_generated/${TEAM_NAME}.urdf /trial_generated/worlds/world${TRIAL_NUM}.world ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "--net ${NETWORK} \
   -v ${TEAM_GENERATED_DIR}:/team_generated \
@@ -92,7 +92,8 @@ docker run --rm \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
 COMPETITOR_IMAGE_NAME="ros:ros-tutorials"
-COMPETITOR_RUN_SYSTEM_CMD="rostopic echo /imu/data"
+COMPETITOR_RUN_SYSTEM_CMD="rostopic pub /right_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}"
+# COMPETITOR_RUN_SYSTEM_CMD="rostopic echo /imu/data"
 docker run --rm \
     --net ${NETWORK} \
     --name vrx-competitor-test-2 \
@@ -103,9 +104,9 @@ docker run --rm \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
-echo "Start 100s timer"
-sleep 100s
-echo "100s up"
+echo "Start 30s timer"
+sleep 30s
+echo "30s up"
 
 # TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
@@ -121,7 +122,10 @@ docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log/latest
 
 echo -e "${GREEN}OK${NOCOLOR}"
 
+echo "sleeping for 50s"
+sleep 50s
+
 # Kill and remove all containers before exit
-./kill_vrx_containers.bash
+# ./kill_vrx_containers.bash
 
 exit 0

@@ -139,6 +139,6 @@ ENV LANG en_US.UTF-8
 
 # setup entrypoint
 COPY ./vrx_entrypoint.sh /
-COPY ./run_vrx_task.sh /
+COPY ./run_vrx_trial.sh /
 
 ENTRYPOINT ["/vrx_entrypoint.sh"]

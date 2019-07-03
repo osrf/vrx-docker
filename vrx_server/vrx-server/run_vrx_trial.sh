@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# run_vrx_task.sh: A shell script to execute one vrx task.
-# E.g.: ./run_vrx_task.sh `catkin_find --share osrf_gear`/config/qual3a.yaml
-#  `catkin_find --share osrf_gear`/config/sample_user_config.yaml
-#  /tmp/team_foo/finalA/1/
+# run_vrx_trial.sh: A shell script to execute one vrx trial.
 
 set -e
 
@@ -16,7 +13,7 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <wamv_urdf> <task_world> <dst_folder>"
+  echo "Usage: $0 <wamv_urdf> <trial_world> <destination_folder>"
   exit 1
 }
 
@@ -24,15 +21,15 @@ usage()
 [[ $# -ne 3 ]] && usage
 
 WAMV_URDF=$1
-TASK_WORLD=$2
-DST_FOLDER=$3
+TRIAL_WORLD=$2
+DESTINATION_FOLDER=$3
 
 # Create a directory for the Gazebo log and the score file.
-if [ -d "$DST_FOLDER" ]; then
+if [ -d "$DESTINATION_FOLDER" ]; then
   echo -e "${YELLOW}Wrn: Destination folder already exists. Data might be"\
           "overwritten${NOCOLOR}\n"
 fi
-mkdir -p $DST_FOLDER
+mkdir -p $DESTINATION_FOLDER
 
 ## TEMP HACK FIX: to update
 cd /home/developer/vrx_ws/src/vrx 
@@ -40,11 +37,11 @@ hg update default
 cd ../../ && catkin_make
 source ./devel/setup.bash
 
-echo "Starting vrx task..."
+echo "Starting vrx trial..."
 
-# Run the task.
-#roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
-# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
+# Run the trial.
+#roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
+# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
 roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r" &
 gazebo_pid=$!
 

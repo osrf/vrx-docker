@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e 
 TEAM_NAME=$1
-TRIAL_NAME=$2
+TASK_NAME=$2
 TRIAL_NUM=$3
 
 # Constants.
@@ -13,7 +13,7 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name> <trial_name> <trial_num>"
+  echo "Usage: $0 <team_name> <task_name> <trial_num>"
   exit 1
 }
 
@@ -30,13 +30,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
-HOST_LOG_DIR=${DIR}/logs/$(date +%Y-%m-%d.%H-%M-%S)/${TEAM_NAME}/${TRIAL_NAME}
+HOST_LOG_DIR=${DIR}/logs/$(date +%Y-%m-%d.%H-%M-%S)/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
 echo "Creating directory: ${HOST_LOG_DIR}"
 mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
-# Find wamv urdf and trial world files
+# Find wamv urdf and task world files
 echo "Looking for generated files"
 TEAM_GENERATED_DIR=${DIR}/team_generated/${TEAM_NAME}
 if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
@@ -45,7 +45,7 @@ else
   echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
 
-COMP_GENERATED_DIR=${DIR}/trial_generated/${TRIAL_NAME}
+COMP_GENERATED_DIR=${DIR}/task_generated/${TASK_NAME}
 if [ -f "${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world"
 else
@@ -62,11 +62,11 @@ ${DIR}/vrx_network.bash ${NETWORK}
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
-SERVER_CMD="/run_vrx_task.sh /team_generated/${TEAM_NAME}.urdf /trial_generated/worlds/world${TRIAL_NUM}.world ${LOG_DIR}"
+SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/world${TRIAL_NUM}.world ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "--net ${NETWORK} \
   -v ${TEAM_GENERATED_DIR}:/team_generated \
-  -v ${COMP_GENERATED_DIR}:/trial_generated \
+  -v ${COMP_GENERATED_DIR}:/task_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
   "${SERVER_CMD}" &

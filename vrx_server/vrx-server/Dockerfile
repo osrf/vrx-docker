@@ -42,10 +42,8 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  && apt clean
 
 # Get ROS melodic and Gazebo 9.
-RUN wget -P /tmp/ http://packages.osrfoundation.org/gazebo.key
-RUN wget -P /tmp/ http://packages.ros.org/ros.key
-# COPY docker/keys/gazebo.key /tmp/gazebo.key
-# COPY docker/keys/ros.key /tmp/ros.key
+COPY docker/keys/gazebo.key /tmp/gazebo.key
+COPY docker/keys/ros.key /tmp/ros.key
 RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
  && apt-key add /tmp/ros.key \
  && /bin/sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list' \

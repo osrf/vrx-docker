@@ -104,9 +104,9 @@ docker run --rm \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
-echo "Start 30s timer"
-sleep 30s
-echo "30s up"
+echo "Send competitor commands for 100s"
+sleep 100s
+echo "100s up. Moving files now"
 
 # TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.

@@ -40,7 +40,8 @@ is_gzclient_running()
 wait_until_playback_ends()
 {
   echo -n "Waiting for playback to end..."
-  until gz topic -e /gazebo/robotx_example_course/world_stats -d 1 -u | grep "paused: true" \
+  # until gz topic -e /gazebo/robotx_example_course/world_stats -d 1 -u | grep "paused: true" \
+  until gz topic -e /gazebo/default/world_stats -d 1 -u | grep "paused: true" \
     > /dev/null
   do
     sleep 1

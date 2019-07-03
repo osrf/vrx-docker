@@ -34,19 +34,27 @@ if [ -d "$DST_FOLDER" ]; then
 fi
 mkdir -p $DST_FOLDER
 
+## TEMP HACK FIX: to update
+cd /home/developer/vrx_ws/src/vrx 
+hg update default
+cd ../../ && catkin_make
+source ./devel/setup.bash
+
 echo "Starting vrx task..."
 
 # Run the task.
-roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
+#roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TASK_WORLD recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
+# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF recording:=true extra_gazebo_args:="--record_path ${DST_FOLDER}" &
+roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r" &
 gazebo_pid=$!
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-echo "Run simulation for 300s before ending"
-sleep 300s
+echo "Run simulation for 100s before ending"
+sleep 100s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Killing ${gazebo_pid}"
 kill ${gazebo_pid}
-echo "Killed Gazebo, sleeping for 100s"
-sleep 100s
+echo "Killed Gazebo, sleeping for 300s"
+sleep 300s

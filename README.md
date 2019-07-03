@@ -20,9 +20,9 @@ Docker is required to run the automated evaluation. Please follow the [Docker CE
 
 Then, continue to the [post-install instructions](https://docs.docker.com/engine/installation/linux/linux-postinstall/) and complete the __Manage Docker as a non-root user__ section to avoid having to run the commands on this page using `sudo`.
 
-### Setting up vrx_gazebo
+### Setting up vrx\_gazebo
 
-`vrx_gazebo` must be setup on your machine to run these scripts. If you do not already how it set up on your machine, you can follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall). Make sure it is sourced.
+`vrx_gazebo` must be setup on your machine to run these scripts. If you do not already how it set up on your machine, you can follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall). Make sure it is sourced so that you can run launch files from vrx\_gazebo.
 
 ### Adding VRX team files
 
@@ -35,7 +35,7 @@ $ ls team_config/example_team/
 dockerhub_url.txt sensor_config.yaml thruster_config.yaml
 ```
 
-Together these files constitute a submission. The files are explained in the __Files Required From VRX Teams For Submission__ section below. We will work with the files of the example_team submission for this tutorial; you can use them as a template for your own team's submission.
+Together these files constitute a submission. The files are explained in the __Files Required From VRX Teams For Submission__ section below. We will work with the files of the `example_team` submission for this tutorial; you can use them as a template for your own team's submission.
 
 ### Preparing a team's system
 
@@ -54,11 +54,11 @@ This will call `generate_wamv.launch` from `team_config/example_team` and store 
 
 In this README, we will be using some vocabulary that will be clearly defined here.
 
-* `task` One of the five competition missions. Eg. `scan_and_dock`.
+* `task`: One of the major competition tasks. Eg. `station_keeping`.
 
-* `trial` A specific task with a specific set of environmental conditions (e.g., sea state, wind magnitude and direction, lighting, etc.). Each task has multiple trials. Each trial will have a specific world file associated with it.
+* `trial`: A specific task with a specific set of environmental conditions (e.g., sea state, wind magnitude and direction, lighting, etc.). Each task has multiple trials. Each trial will have a specific world file associated with it.
 
-* `trial_number` Each task will have `n` trials. Each trial will be labelled with a trial_number, which ranges from `0` to `n-1` inclusive.
+* `trial_number`: Each task will have `n` trials. Each trial will be labelled with a trial\_number, which ranges from `0` to `n-1` inclusive.
 
 To prepare all of the trials for a task, call:
 
@@ -70,13 +70,16 @@ To prepare all of the trials for a task, call:
 
 This will call `generate_worlds.launch` from `task_config/example_task` and store the generated files in `task_generated/example_task`.
 
-Please note that we will be writing our own private .yaml files for the tasks. Essentially, the only difference between testing out your system with these steps and the real competition is that for the real competition, we will be creating our own `.yaml` files for tasks that you have not seen, which will vary the environmental condition. We will not be trying to surprise you with the conditions, but simply reward teams that are robust to different environmental conditions.
+Please note that we will be writing our own private .yaml files for the tasks. Essentially, the only difference between testing out your system with these steps and the real competition is that for the real competition, we will be creating our own `.yaml` files for tasks that you have not seen, which will vary the environmental conditions. We will not be trying to surprise you with the conditions, but we want to simply reward teams that are robust to different environmental conditions.
 
+TODO(tylerlum): Add section about prepare\_all scripts
 ## Running trials 
+
+In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running.
 
 ### Running a single trial
 
-In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the trial associated with trial_number 0 associated with `task_config/example_task.yaml`), call:
+To run a single trial with a specific team (in this case the trial with trial\_number 0 associated with `task_config/example_task.yaml`), call:
 
 ```
 ./run_trial.bash example_team example_task 0
@@ -119,7 +122,7 @@ To run all trials for all tasks listed in the `task_config` directory, call:
 # ./run_all_tasks.bash <your_team_name>
 ```
 
-This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial_config directory, you're ready for the competition.
+This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
 
 # Reviewing the results of a trial
 

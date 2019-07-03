@@ -23,11 +23,11 @@ Then, continue to the [post-install instructions](https://docs.docker.com/engine
 
 All VRX teams must submit one folder containing three files for automated evaluation. The name of the folder should be the name of the team. Please note that the filenames must be identical with how they are listed below.
 
-1. `sensor_config.yaml`: The team's sensor configuration yaml file. One sensor configuration is used for all trials. For more information about this file, please refer to the [Creating a Customhttps://bitbucket.org/osrf/vrx/wiki/tutorials WAM-V Thruster and Sensor Configuration](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
+1. `sensor_config.yaml`: The team's sensor configuration yaml file. One sensor configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://bitbucket.org/osrf/vrx/wiki/tutorials WAM-V Thruster and Sensor Configuration](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 
-2. `thruster_config.yaml`: The team's thruster configuration yaml file. One thruster configuration is used for all trials. For more information about this file, please refer to the [Creating a Customhttps://bitbucket.org/osrf/vrx/wiki/tutorials WAM-V Thruster and Sensor Configuration](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
+2. `thruster_config.yaml`: The team's thruster configuration yaml file. One thruster configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://bitbucket.org/osrf/vrx/wiki/tutorials WAM-V Thruster and Sensor Configuration](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 
-3. `dockerhub_url.txt`: A text file containing only the name of their docker image publicly available on Dockerhub. Eg. `vrx-competitor-example:v1.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](TODO(tylerlum))
+3. `dockerhub_url.txt`: A text file containing only the name of their docker image publicly available on Dockerhub. Eg. `vrx-competitor-example:v1.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20Dockerhub%20image%20for%20submission)
 
 ## Testing Your Submission
 

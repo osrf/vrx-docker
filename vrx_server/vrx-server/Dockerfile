@@ -108,7 +108,7 @@ RUN hg clone https://tylerlum@bitbucket.org/osrf/vrx
 RUN mv ./vrx ./vrx_ws/src
 
 # Compile the VRX project.
-RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vrx_ws && catkin_make"
+RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vrx_ws/src/vrx && hg pull && hg update default && cd ../../ && catkin_make"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \

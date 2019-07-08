@@ -75,32 +75,26 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
 echo "Waiting for server to start up"
 sleep 20s
 
+echo "Looking for dockerhub_url.txt"
+DOCKERHUB_URL_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_url.txt
+if [ -f "${DOCKERHUB_URL_FILENAME}" ]; then
+  echo "Successfully found: ${DOCKERHUB_URL_FILENAME}"
+  DOCKERHUB_URL=$(head -n 1 ${DOCKERHUB_URL_FILENAME})
+  echo "Dockerhub url: ${DOCKERHUB_URL}"
+else
+  echo -e "${RED}Err: ${DOCKERHUB_URL_FILENAME} not found."; exit 1;
+fi
+
 # Start the competitors container and let it run in the background.
-# COMPETITOR_IMAGE_NAME="vrx_competitor_${TEAM_NAME}"
-COMPETITOR_IMAGE_NAME="ros:ros-tutorials"
-RATE=1
-CMD=2
-COMPETITOR_RUN_SYSTEM_CMD="rostopic pub /left_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}"
-echo "Starting competitor command"
+COMPETITOR_RUN_SYSTEM_CMD="/move_forward.sh"
+docker login
 docker run --rm \
     --net ${NETWORK} \
-    --name vrx-competitor-test-1 \
-    --env ROS_HOSTNAME=vrx-competitor-test-1 \
+    --name vrx-competitor-test \
+    --env ROS_HOSTNAME=vrx-competitor-test \
     --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
     --env ROS_IP=172.19.0.3 \
-    ${COMPETITOR_IMAGE_NAME} \
-    ${COMPETITOR_RUN_SYSTEM_CMD} &
-
-COMPETITOR_IMAGE_NAME="ros:ros-tutorials"
-COMPETITOR_RUN_SYSTEM_CMD="rostopic pub /right_thrust_cmd std_msgs/Float32 -r ${RATE} -- ${CMD}"
-# COMPETITOR_RUN_SYSTEM_CMD="rostopic echo /imu/data"
-docker run --rm \
-    --net ${NETWORK} \
-    --name vrx-competitor-test-2 \
-    --env ROS_HOSTNAME=vrx-competitor-test-2 \
-    --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
-    --env ROS_IP=172.19.0.4 \
-    ${COMPETITOR_IMAGE_NAME} \
+    ${DOCKERHUB_URL} \
     ${COMPETITOR_RUN_SYSTEM_CMD} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
@@ -111,7 +105,7 @@ echo "100s up. Moving files now"
 # TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
 echo "Copying ROS log files from competitor container..."
-docker cp --follow-link vrx-competitor-test-1:/root/.ros/log $HOST_LOG_DIR/ros-competitor
+docker cp --follow-link vrx-competitor-test:/root/.ros/log $HOST_LOG_DIR/ros-competitor
 echo -e "${GREEN}OK${NOCOLOR}"
 
 # Copy the ROS log files from the server's container.

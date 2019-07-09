@@ -43,15 +43,23 @@ echo "Starting vrx trial..."
 #roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
 # roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
 roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r" &
-gazebo_pid=$!
+roslaunch_pid=$!
+echo -e "${GREEN}OK${NOCOLOR}\n"
 
+echo "Starting rosbag recording..." 
+sleep 5s
+rosbag record -O ~/vrx_task_info.bag /vrx/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 echo "Run simulation for 100s before ending"
 sleep 100s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-echo "Killing ${gazebo_pid}"
-kill ${gazebo_pid}
-echo "Killed Gazebo, sleeping for 300s"
+echo "Killing recorder"
+rosnode kill $(rosnode list | grep record | awk '{print $1}')
+sleep 2s
+echo "Killing roslaunch pid: ${roslaunch_pid}"
+kill -INT ${roslaunch_pid}
+
+echo "Finished killing, sleeping for 300s"
 sleep 300s

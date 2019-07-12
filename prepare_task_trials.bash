@@ -23,6 +23,8 @@ usage()
 
 TASK_NAME=$1
 
+echo -e "${GREEN}Preparing all trial worlds for task: ${TASK_NAME}${NOCOLOR}"
+
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -32,7 +34,7 @@ TASK_CONFIG_DIR=${DIR}/task_config
 TASK_CONFIG=${TASK_CONFIG_DIR}/${TASK_NAME}.yaml
 
 if [ -f "${TASK_CONFIG}" ]; then
-  echo "Successfully found: ${TASK_CONFIG}"
+  echo -e "Successfully found: ${TASK_CONFIG}\n"
 else
   echo -e "${RED}Err: ${TASK_CONFIG} not found."; exit 1;
 fi
@@ -47,8 +49,14 @@ mkdir -p ${world_target}
 echo "Generating worlds..."
 roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target &
 generate_worlds_pid=$!
+
+# Output success message
+# TODO: Rather than wait hardcoded 8s, wait until success message is ended
 sleep 8s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-echo "Killing ${generate_worlds_pid}"
-kill ${generate_worlds_pid}
+# Kill ROS, wait 5s to let it be killed
+echo "Killing Generate Worlds PID: ${generate_worlds_pid}"
+kill -INT ${generate_worlds_pid}
+sleep 5s
+

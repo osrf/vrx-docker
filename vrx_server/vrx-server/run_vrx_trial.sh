@@ -47,18 +47,23 @@ roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL
 roslaunch_pid=$!
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
+# Store topics in rosbag NOTE: currently storing ALL topics, might be too much
 echo "Starting rosbag recording..." 
 sleep 5s
-rosbag record -O ~/vrx_task_info.bag /vrx/task/info &
+rosbag record -O ~/vrx_task_info.bag --all &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
+# Let simulation run
 echo "Run simulation for 100s before ending"
 sleep 100s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
+# Kill rosbag record
 echo "Killing recorder"
 rosnode kill $(rosnode list | grep record | awk '{print $1}')
 sleep 2s
+
+# Kill roslaunch
 echo "Killing roslaunch pid: ${roslaunch_pid}"
 kill -INT ${roslaunch_pid}
 

@@ -23,6 +23,8 @@ usage()
 
 TEAM_NAME=$1
 
+echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
+
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

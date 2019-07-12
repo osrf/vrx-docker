@@ -32,12 +32,13 @@ echo -e "
 ${GREEN}Running all ${TASK_NAME} trials for team: ${TEAM_NAME}${NOCOLOR}"
 
 LIST_OF_TRIAL_NUMS="$(get_list_of_trial_nums)"
+date_time=$(date +%Y-%m-%d.%H-%M-%S)
 
 for TRIAL_NUM in ${LIST_OF_TRIAL_NUMS}; do
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
-  CONSOLE_OUTPUT_DIR=logs/$(date +%Y-%m-%d.%H-%M-%S)_multi_scripts_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+  CONSOLE_OUTPUT_DIR=${DIR}/run_output/${date_time}/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
   mkdir -p ${CONSOLE_OUTPUT_DIR}
-  ./run_trial.bash "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
+  ${DIR}/../run_trial.bash "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
   exit_status=$?
   if [ $exit_status -eq 0 ]; then
     echo -e "${GREEN}OK.${NOCOLOR}"

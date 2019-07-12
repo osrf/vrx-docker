@@ -23,6 +23,8 @@ usage()
 
 TASK_NAME=$1
 
+echo -e "${GREEN}Preparing all trial worlds for task: ${TASK_NAME}${NOCOLOR}"
+
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 

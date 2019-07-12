@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" 
 
 # Constants.
 RED='\033[0;31m'
@@ -33,5 +33,5 @@ LIST_OF_TASKS="$(get_list_of_tasks)"
 
 for TASK_NAME in ${LIST_OF_TASKS}; do
   echo "Running task: ${TASK_NAME}..."
-  ./run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
+  ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
 done

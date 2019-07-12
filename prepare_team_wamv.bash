@@ -33,12 +33,12 @@ SENSOR_CONFIG=${TEAM_CONFIG_DIR}/sensor_config.yaml
 THRUSTER_CONFIG=${TEAM_CONFIG_DIR}/thruster_config.yaml
 
 if [ -f "${SENSOR_CONFIG}" ]; then
-  echo "Successfully found: ${SENSOR_CONFIG}"
+  echo -e "Successfully found: ${SENSOR_CONFIG}"
 else
   echo -e "${RED}Err: ${SENSOR_CONFIG}"; exit 1;
 fi
 if [ -f "${THRUSTER_CONFIG}" ]; then
-  echo "Successfully found: ${THRUSTER_CONFIG}"
+  echo -e "Successfully found: ${THRUSTER_CONFIG}\n"
 else
   echo -e "${RED}Err: ${THRUSTER_CONFIG}"; exit 1;
 fi
@@ -51,14 +51,19 @@ mkdir -p ${wamv_target_dir}
 # Generate WAM-V
 echo "Generating WAM-V..."
 roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target &
+generate_wamv_pid=$!
 
 # Wait until generation is complete, then kill process
-generate_wamv_pid=$!
+# TODO: Rather than wait arbitrary 3 seconds, wait till success message
 sleep 3s
 echo -e "${GREEN}OK${NOCOLOR}\n"
-echo "Killing ${generate_wamv_pid}"
-kill ${generate_wamv_pid}
 
 # Move generated files to correct location
 mv ${TEAM_CONFIG_DIR}/sensor_config.xacro ${wamv_target_dir}
 mv ${TEAM_CONFIG_DIR}/thruster_config.xacro ${wamv_target_dir}
+
+# Kill ROS, wait 5s to let it be killed
+echo "Killing Generate WAM-V PID: ${generate_wamv_pid}"
+kill ${generate_wamv_pid}
+sleep 5s
+

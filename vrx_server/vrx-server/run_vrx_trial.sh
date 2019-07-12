@@ -40,10 +40,10 @@ source ./devel/setup.bash
 echo "Starting vrx trial..."
 
 # Run the trial.
-#roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
-# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF recording:=true extra_gazebo_args:="--record_path ${DESTINATION_FOLDER}" &
 RECORD_PERIOD="0.05"
-roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
+roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
+# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
+# roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
 roslaunch_pid=$!
 echo -e "${GREEN}OK${NOCOLOR}\n"
 

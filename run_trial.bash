@@ -59,6 +59,8 @@ ${DIR}/kill_vrx_containers.bash
 # Create the network for the containers to talk to each other.
 ${DIR}/vrx_network.bash ${NETWORK}
 
+# TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
+#       competitior container waiting for ROS master and has error before server is created.
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
@@ -75,12 +77,12 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
 echo "Waiting for server to start up"
 sleep 20s
 
-echo "Looking for dockerhub_url.txt"
+echo -e "\nLooking for dockerhub_url.txt"
 DOCKERHUB_URL_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_url.txt
 if [ -f "${DOCKERHUB_URL_FILENAME}" ]; then
   echo "Successfully found: ${DOCKERHUB_URL_FILENAME}"
   DOCKERHUB_URL=$(head -n 1 ${DOCKERHUB_URL_FILENAME})
-  echo "Dockerhub url: ${DOCKERHUB_URL}"
+  echo -e "Dockerhub url: ${DOCKERHUB_URL}\n"
 else
   echo -e "${RED}Err: ${DOCKERHUB_URL_FILENAME} not found."; exit 1;
 fi
@@ -88,6 +90,7 @@ fi
 # Start the competitors container and let it run in the background.
 COMPETITOR_RUN_SYSTEM_CMD="/move_forward.sh"
 docker login
+echo -e "Creating container for ${DOCKERHUB_URL}\n"
 docker run --rm \
     --net ${NETWORK} \
     --name vrx-competitor-test \

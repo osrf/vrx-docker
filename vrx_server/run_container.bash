@@ -63,6 +63,9 @@ docker run --rm --name ${CONTAINER} \
   -e ROS_MASTER_URI=http://${CONTAINER}:11311 \
   -e ROS_HOSTNAME=${CONTAINER} \
   -e ROS_IP=172.19.0.2 \
+  --env="DISPLAY" \
+  --env="QT_X11_NO_MITSHM=1" \
+  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \

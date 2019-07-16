@@ -54,10 +54,10 @@ fi
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Ensure any previous containers are killed and removed.
-${DIR}/kill_vrx_containers.bash
+${DIR}/utils/kill_vrx_containers.bash
 
 # Create the network for the containers to talk to each other.
-${DIR}/vrx_network.bash ${NETWORK}
+${DIR}/utils/vrx_network.bash ${NETWORK}
 
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
@@ -123,6 +123,6 @@ echo "sleeping for 50s"
 sleep 50s
 
 # Kill and remove all containers before exit
-# ./kill_vrx_containers.bash
+# ${DIR}/utils/kill_vrx_containers.bash
 
 exit 0

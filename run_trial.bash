@@ -88,7 +88,7 @@ else
 fi
 
 # Start the competitors container and let it run in the background.
-COMPETITOR_RUN_SYSTEM_CMD="/move_forward.sh"
+# COMPETITOR_RUN_SYSTEM_CMD="/move_forward.sh"
 docker login
 echo -e "Creating container for ${DOCKERHUB_URL}\n"
 docker run --rm \
@@ -97,8 +97,7 @@ docker run --rm \
     --env ROS_HOSTNAME=vrx-competitor-test \
     --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
     --env ROS_IP=172.19.0.3 \
-    ${DOCKERHUB_URL} \
-    ${COMPETITOR_RUN_SYSTEM_CMD} &
+    ${DOCKERHUB_URL} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
 echo "Send competitor commands for 100s"

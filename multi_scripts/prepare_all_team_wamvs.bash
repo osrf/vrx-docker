@@ -21,9 +21,13 @@ echo -e "Found teams: \n$LIST_OF_TEAMS"
 echo -e "Storing command outputs to $CONSOLE_OUTPUT_DIR\n"
 
 for TEAM_NAME in ${LIST_OF_TEAMS}; do
+  echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
+
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}
   ${DIR}/../prepare_team_wamv.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1
   # TODO: Check for errors in compliance?
+
+  echo -e "${GREEN}OK${NOCOLOR}\n"
 done
 
 echo -e "${GREEN}Finished preparing WAM-V URDFs for all teams${NOCOLOR}"

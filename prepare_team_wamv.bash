@@ -3,7 +3,7 @@
 # prepare_team_wamv.bash: A shell script to generate single team's WAM-V urdf file.
 # E.g.: ./prepare_team_wamv.bash example_team
 
-set -e
+# set -e
 
 # Constants.
 RED='\033[0;31m'
@@ -60,12 +60,12 @@ generate_wamv_pid=$!
 sleep 3s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
+# Kill ROS, wait 5s to let it be killed
+echo "Killing Generate WAM-V PID: ${generate_wamv_pid}"
+kill ${generate_wamv_pid}
+
 # Move generated files to correct location
 mv ${TEAM_CONFIG_DIR}/sensor_config.xacro ${wamv_target_dir}
 mv ${TEAM_CONFIG_DIR}/thruster_config.xacro ${wamv_target_dir}
 
-# Kill ROS, wait 5s to let it be killed
-echo "Killing Generate WAM-V PID: ${generate_wamv_pid}"
-kill ${generate_wamv_pid}
 sleep 5s
-

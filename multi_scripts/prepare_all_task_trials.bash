@@ -35,8 +35,12 @@ echo "Found tasks: $LIST_OF_TASKS"
 echo -e "Storing command outputs to $CONSOLE_OUTPUT_DIR\n"
 
 for TASK_NAME in ${LIST_OF_TASKS}; do
+  echo -e "${GREEN}Preparing all trial worlds for task: ${TASK_NAME}${NOCOLOR}"
+
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}
   ${DIR}/../prepare_task_trials.bash "${TASK_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}/output.txt 2>&1
+
+  echo -e "${GREEN}OK${NOCOLOR}\n"
 done
 
 echo -e "${GREEN}Finished preparing trial worlds for all tasks${NOCOLOR}"

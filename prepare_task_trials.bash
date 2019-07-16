@@ -3,7 +3,7 @@
 # prepare_task_trials.bash: A shell script to generate single tasks's world files, one for each task.
 # E.g.: ./prepare_task_trials.bash example_task
 
-set -e
+# set -e
 
 # Constants.
 RED='\033[0;31m'
@@ -58,5 +58,6 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Kill ROS, wait 5s to let it be killed
 echo "Killing Generate Worlds PID: ${generate_worlds_pid}"
 kill -INT ${generate_worlds_pid}
+
 sleep 5s
 

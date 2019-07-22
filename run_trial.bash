@@ -24,6 +24,10 @@ SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
+NETWORK_SUBNET="172.18.0.0/16"
+SERVER_ROS_IP="172.18.0.22"
+COMPETITOR_ROS_IP="172.18.0.20"
+ROS_MASTER_URI="http://${SERVER_ROS_IP}:11311"
 
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -57,7 +61,7 @@ echo -e "${GREEN}Done.${NOCOLOR}\n"
 ${DIR}/utils/kill_vrx_containers.bash
 
 # Create the network for the containers to talk to each other.
-${DIR}/utils/vrx_network.bash ${NETWORK}
+${DIR}/utils/vrx_network.bash ${NETWORK} ${NETWORK_SUBNET}
 
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
@@ -71,7 +75,9 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
   -v ${COMP_GENERATED_DIR}:/task_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e vrx_EXIT_ON_COMPLETION=1" \
-  "${SERVER_CMD}" &
+  "${SERVER_CMD}" \
+  "${ROS_MASTER_URI}" \
+  "${SERVER_ROS_IP}" &
 
 # Wait until server starts before competitor code can be run
 echo "Waiting for server to start up"
@@ -88,15 +94,13 @@ else
 fi
 
 # Start the competitors container and let it run in the background.
-# COMPETITOR_RUN_SYSTEM_CMD="/move_forward.sh"
 docker login
 echo -e "Creating container for ${DOCKERHUB_URL}\n"
 docker run --rm \
     --net ${NETWORK} \
     --name vrx-competitor-test \
-    --env ROS_HOSTNAME=vrx-competitor-test \
-    --env ROS_MASTER_URI=http://${SERVER_CONTAINER_NAME}:11311 \
-    --env ROS_IP=172.19.0.3 \
+    --env ROS_MASTER_URI=${ROS_MASTER_URI} \
+    --env ROS_IP=${COMPETITOR_ROS_IP} \
     ${DOCKERHUB_URL} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing

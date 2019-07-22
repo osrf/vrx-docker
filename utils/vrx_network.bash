@@ -7,6 +7,7 @@ YELLOW='\033[0;33m'
 NOCOLOR='\033[0m'
 
 NETWORK=$1
+SUBNET=$2
 
 # Check if ${NETWORK} already running
 inspect=`docker network inspect ${NETWORK}`
@@ -17,5 +18,9 @@ else
   echo "Starting ${NETWORK}"
 fi
 
-docker network create ${NETWORK}
+# Create network with subnet
+docker network create  \
+  --subnet=${SUBNET} \
+  ${NETWORK}
+
 echo -e "${GREEN}Done.${NOCOLOR}\n"

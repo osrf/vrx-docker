@@ -10,17 +10,14 @@ NETWORK=$1
 SUBNET=$2
 
 # Check if ${NETWORK} already running
-inspect=`docker network inspect ${NETWORK}`
-if [ inspect ]; then
+if [ ! "$(docker network ls | grep ${NETWORK})" ]; then
+  echo "Starting ${NETWORK}"
+else
   echo "Replacing ${NETWORK}"
   docker network rm ${NETWORK}
-else
-  echo "Starting ${NETWORK}"
 fi
 
 # Create network with subnet
-docker network create  \
-  --subnet=${SUBNET} \
-  ${NETWORK}
+docker network create --subnet "${SUBNET}" ${NETWORK}
 
 echo -e "${GREEN}Done.${NOCOLOR}\n"

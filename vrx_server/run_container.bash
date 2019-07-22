@@ -16,8 +16,6 @@ CONTAINER=$1
 IMAGE_NAME=$2
 DOCKER_EXTRA_ARGS=$3
 COMMAND=$4
-ROS_MASTER_URI=$5
-ROS_IP=$6
 
 # XAUTH=/tmp/.docker.xauth
 # xauth nlist :0 | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
@@ -62,8 +60,6 @@ DISPLAY="${DISPLAY:-:0}"
 
 docker run --rm --name ${CONTAINER} \
   -e XAUTHORITY=/tmp/.docker.xauth \
-  -e ROS_MASTER_URI=${ROS_MASTER_URI} \
-  -e ROS_IP=${ROS_IP} \
   --env="DISPLAY" \
   --env="QT_X11_NO_MITSHM=1" \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \

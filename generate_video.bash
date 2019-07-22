@@ -10,7 +10,7 @@
 set -e
 
 # Constants
-BLACK_WINDOW_TIME=5
+BLACK_WINDOW_TIME=1
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -40,8 +40,7 @@ is_gzclient_running()
 wait_until_playback_ends()
 {
   echo -n "Waiting for playback to end..."
-  # until gz topic -e /gazebo/robotx_example_course/world_stats -d 1 -u | grep "paused: true" \
-  until gz topic -e /gazebo/default/world_stats -d 1 -u | grep "paused: true" \
+  until gz topic -e /gazebo/robotx_example_course/world_stats -d 1 -u | grep "paused: true" \
     > /dev/null
   do
     sleep 1
@@ -83,8 +82,8 @@ echo "Sanity checks complete"
 
 # Tell gazebo client what size and place it should be
 echo "[geometry]
-width=1330
-height=865
+width=2000
+height=1500
 x=100
 y=100" > ~/.gazebo/gui.ini
 
@@ -107,6 +106,9 @@ if [ -z "$GAZEBO_WINDOW_ID" ]; then
   exit 1
 fi
 
+# Move Gazebo window to front
+wmctrl -i -a ${GAZEBO_WINDOW_ID}
+
 # Adjust the value of this constant if needed to avoid capturing a black
 # screen for a long time.
 sleep $BLACK_WINDOW_TIME
@@ -118,7 +120,7 @@ echo -e "${GREEN}OK${NOCOLOR}"
 
 # Start recording the Gazebo Window.
 echo -n "Recording..."
-recordmydesktop --fps=30 -x 100 -y 100 --width=1330 --height=865 --no-sound -o $OUTPUT \
+recordmydesktop --fps=30 -x 100 -y 100 --width=2000 --height=1500 --no-sound -o $OUTPUT \
   > $OUTPUT.record_output.txt 2>&1 &
 echo -e "${GREEN}OK${NOCOLOR}"
 

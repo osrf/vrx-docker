@@ -31,12 +31,11 @@ if [ -d "$DESTINATION_FOLDER" ]; then
 fi
 mkdir -p $DESTINATION_FOLDER
 
-## Get latest repository and compile
-cd /home/developer/vrx_ws/src/vrx 
-hg pull
-hg update default
-cd ../../ && catkin_make
-source ./devel/setup.bash
+## TEMP HACK FIX: to update
+# cd /home/developer/vrx_ws/src/vrx 
+# hg update default
+# cd ../../ && catkin_make
+# source ./devel/setup.bash
 
 echo "Starting vrx trial..."
 

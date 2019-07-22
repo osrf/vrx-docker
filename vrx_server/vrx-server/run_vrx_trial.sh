@@ -31,8 +31,9 @@ if [ -d "$DESTINATION_FOLDER" ]; then
 fi
 mkdir -p $DESTINATION_FOLDER
 
-## TEMP HACK FIX: to update
+## Get latest repository and compile
 cd /home/developer/vrx_ws/src/vrx 
+hg pull
 hg update default
 cd ../../ && catkin_make
 source ./devel/setup.bash

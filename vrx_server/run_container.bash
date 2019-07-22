@@ -63,6 +63,9 @@ docker run --rm --name ${CONTAINER} \
   -e ROS_MASTER_URI=http://${CONTAINER}:11311 \
   -e ROS_HOSTNAME=${CONTAINER} \
   -e ROS_IP=172.19.0.2 \
+  --env="DISPLAY" \
+  --env="QT_X11_NO_MITSHM=1" \
+  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
@@ -71,6 +74,12 @@ docker run --rm --name ${CONTAINER} \
   ${DOCKER_DISPLAY_PARAMS} \
   ${IMAGE_NAME} \
 ${COMMAND}
+
+# NOTE: the following lines are potentially unsafe. Temp fix that worked for Tyler's Surface Pro. 
+# Not sure if this is needed for devices with dedicated GPUs
+#  --env="DISPLAY" \
+#  --env="QT_X11_NO_MITSHM=1" \
+#  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
 
 # TODO(tylerlum): Figure out how to configure these properly
 # TODO(tylerlum): Figure out ROS_MASTER_URI

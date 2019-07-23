@@ -78,6 +78,8 @@ which catkin_find > /dev/null || { echo "Unable to find catkin_find."\
 # Sanity check: Kill any dangling Gazebo before moving forward.
 killall -wq gzserver gzclient || true
 
+echo "Please ensure that vrx is sourced or else the script will not be able to continue"
+
 echo "Sanity checks complete"
 
 # Tell gazebo client what size and place it should be

@@ -54,8 +54,8 @@ rosbag record -O ~/vrx_rostopics.bag --all &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Let simulation run
-echo "Run simulation for 100s before ending"
-sleep 100s
+echo "Run simulation for 10000s before ending"
+sleep 10000s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill rosbag record

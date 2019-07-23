@@ -31,10 +31,11 @@ get_list_of_trial_nums()
 echo -e "
 ${GREEN}Running all ${TASK_NAME} trials for team: ${TEAM_NAME}${NOCOLOR}"
 
-LIST_OF_TRIAL_NUMS="$(get_list_of_trial_nums)"
+LIST_OF_TRIALS="$(get_list_of_trial_nums)"
 date_time=$(date +%Y-%m-%d.%H-%M-%S)
 
-for TRIAL_NUM in ${LIST_OF_TRIAL_NUMS}; do
+for TRIAL in ${LIST_OF_TRIALS}; do
+  TRIAL_NUM=${TRIAL: -1}
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
   CONSOLE_OUTPUT_DIR=${DIR}/run_output/${date_time}/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
   mkdir -p ${CONSOLE_OUTPUT_DIR}

@@ -149,7 +149,58 @@ Note: To keep the terminal output clean, all of the output from multi_scripts wi
 
 ## Reviewing the trial performance
 
-After the trial has finished, you can go to `logs/<data_and_time>/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) show and describe general output structure of the logs directory. TODO(tylerlum) describe video directory and playback and logging
+After the trial has finished, you can go to `logs/<data_and_time>/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) describe video directory and playback and logging
+
+The `logs` directory has the following structure:
+
+```
+logs
+│   ├── 2019-07-23.12-50-09_logs
+│   │   └── example_team
+│   │       └── example_task
+│   │           └── 0
+│   │               ├── gazebo-server
+│   │               │   ├── log
+│   │               │   │   └── 2019-07-23T125024.840259
+│   │               │   │       └── gzserver
+│   │               │   │           └── state.log
+│   │               │   ├── ogre.log
+│   │               │   └── server-11345
+│   │               │       ├── default.log
+│   │               │       └── gzserver.log
+│   │               ├── ros-competitor
+│   │               │   ├── rostopic_29_1563911438965.log
+│   │               │   └── rostopic_30_1563911438980.log
+│   │               ├── ros-server
+│   │               │   ├── 18447f58-ad83-11e9-95f2-0242ac100016
+│   │               │   │   ├── master.log
+│   │               │   │   ├── roslaunch-d43eea66721e-50.log
+│   │               │   │   ├── rosout-1-stdout.log
+│   │               │   │   ├── rosout.log
+│   │               │   │   ├── spawn_model-3.log
+│   │               │   │   └── spawn_model-3-stdout.log
+│   │               │   └── latest -> /home/tylerlum/.ros/log/18447f58-ad83-11e9-95f2-0242ac100016
+│   │               ├── ros-server-latest
+│   │               │   ├── master.log
+│   │               │   ├── roslaunch-d43eea66721e-50.log
+│   │               │   ├── rosout-1-stdout.log
+│   │               │   ├── rosout.log
+│   │               │   ├── spawn_model-3.log
+│   │               │   └── spawn_model-3-stdout.log
+│   │               └── vrx_rostopics.bag
+│   ├── 2019-07-23.12-58-32_logs
+
+```
+
+The `logs` directory will have numerous directories with the date and time of creation. In each of those directories are the log files of each trial.
+
+* gazebo-server/logs - contains the playback log file, which is used to visualize what happened and is used for video generation
+
+* gazebo-server/server-xxxxx - contains the gazebo server logs
+
+* ros-competitor - the log files from the competitor's container. Note: this is more prone to error, as finding the files depends on the competitor images's file structure
+
+* ros-server - contains the log files from the ros server
 
 ## Playing back the simulation
 
@@ -166,7 +217,7 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/logs/<date_and_time>_logs/<
 If during your development you need to kill the server and competitor containers, you can do so with:
 
 ```
-./kill_vrx_containers.bash
+./utils/kill_vrx_containers.bash
 ```
 
 This will kill and remove all VRX containers.

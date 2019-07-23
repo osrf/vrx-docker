@@ -28,10 +28,12 @@ get_list_of_tasks()
 
 echo -e "
 ${GREEN}Running all tasks for team: ${TEAM_NAME}${NOCOLOR}"
+echo "========================================================="
 
 LIST_OF_TASKS="$(get_list_of_tasks)"
 
 for TASK_NAME in ${LIST_OF_TASKS}; do
   echo "Running task: ${TASK_NAME}..."
+  echo "-----------------------------------"
   ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
 done

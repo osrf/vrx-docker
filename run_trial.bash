@@ -79,6 +79,7 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_D
   -e ROS_IP=${SERVER_ROS_IP} \
   -e VRX_EXIT_ON_COMPLETION=true" \
   "${SERVER_CMD}" &
+SERVER_PID=$!
 
 # Wait until server starts before competitor code can be run
 echo "Waiting for server to start up"
@@ -98,7 +99,7 @@ fi
 docker login
 echo -e "Creating container for ${DOCKERHUB_IMAGE}\n"
 COMPETITOR_CONTAINER_NAME="vrx-competitor-system"
-docker run --rm \
+docker run \
     --net ${NETWORK} \
     --name $COMPETITOR_CONTAINER_NAME \
     --env ROS_MASTER_URI=${ROS_MASTER_URI} \
@@ -106,34 +107,30 @@ docker run --rm \
     --ip ${COMPETITOR_ROS_IP} \
     ${DOCKERHUB_IMAGE} &
 
-# Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
-echo "Send competitor commands for 100s"
-sleep 100s
-echo "100s up. Moving files now"
+# Run competition until server is ended
+wait $SERVER_PID
+echo -e "Trial ended.\n"
 
 # TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
 echo "Copying ROS log files from competitor container..."
 docker cp --follow-link $COMPETITOR_CONTAINER_NAME:/root/.ros/log $HOST_LOG_DIR/ros-competitor
-echo -e "${GREEN}OK${NOCOLOR}"
+echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log $HOST_LOG_DIR/ros-server
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-serv\ner
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt $HOST_LOG_DIR/
 
-echo -e "${GREEN}OK${NOCOLOR}"
+echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Record trial score
 echo "Creating text file for score at ${HOST_LOG_DIR}/score.txt"
 python ${DIR}/utils/get_score.py "${HOST_LOG_DIR}/vrx_rostopics.bag"
-echo -e "${GREEN}OK${NOCOLOR}"
-
-echo "sleeping for 50s"
-sleep 50s
+echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill and remove all containers before exit
 # ${DIR}/utils/kill_vrx_containers.bash

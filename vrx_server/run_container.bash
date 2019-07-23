@@ -58,7 +58,7 @@ fi
 
 DISPLAY="${DISPLAY:-:0}"
 
-docker run --rm --name ${CONTAINER} \
+docker run --name ${CONTAINER} \
   -e XAUTHORITY=/tmp/.docker.xauth \
   --env="DISPLAY" \
   --env="QT_X11_NO_MITSHM=1" \

@@ -85,9 +85,11 @@ echo "Killing recorder"
 rosnode kill $(rosnode list | grep record | awk '{print $1}')
 sleep 2s
 
+# Kill rosnodes
+echo "Killing rosnodes"
+rosnode kill --all
+sleep 10s
+
 # Kill roslaunch
 echo "Killing roslaunch pid: ${roslaunch_pid}"
 kill -INT ${roslaunch_pid}
-
-echo "Finished killing, sleeping for 300s"
-sleep 300s

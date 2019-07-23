@@ -50,10 +50,10 @@ else
 fi
 
 COMP_GENERATED_DIR=${DIR}/task_generated/${TASK_NAME}
-if [ -f "${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world" ]; then
-  echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world"
+if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world" ]; then
+  echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world"
 else
-  echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/world${TRIAL_NUM}.world not found."; exit 1;
+  echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world not found."; exit 1;
 fi
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
@@ -68,7 +68,7 @@ ${DIR}/utils/vrx_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 # Start the competition server. When the trial ends, the container will be killed.
 # The trial may end because of time-out, because of completion, or because the user called the
 # /vrx/end_competition service.
-SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/world${TRIAL_NUM}.world ${LOG_DIR}"
+SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \

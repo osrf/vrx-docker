@@ -2,6 +2,23 @@
 
 # run_vrx_trial.sh: A shell script to execute one vrx trial.
 
+is_gzserver_running()
+{
+  if pgrep gzserver >/dev/null; then
+    true
+  else
+    false
+  fi
+}
+
+wait_until_gzserver_is_down()
+{
+  until ! is_gzserver_running
+  do
+    sleep 1
+  done
+}
+
 set -e
 
 # Constants.
@@ -41,7 +58,7 @@ echo "Starting vrx trial..."
 
 # Run the trial.
 RECORD_PERIOD="0.05"
-roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
+roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true > ~/verbose_output.txt 2>&1 &
 # roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
 # roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
 roslaunch_pid=$!
@@ -54,9 +71,14 @@ rosbag record -O ~/vrx_rostopics.bag --all &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Let simulation run
-echo "Run simulation for 10000s before ending"
-sleep 10000s
+echo "Run simulation for 100s before ending"
+sleep 100s
 echo -e "${GREEN}OK${NOCOLOR}\n"
+
+# echo "Wait until gzserver is shut down"
+# wait_until_gzserver_is_down
+# echo "gzserver shut down"
+# echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill rosbag record
 echo "Killing recorder"

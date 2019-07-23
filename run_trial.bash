@@ -107,9 +107,9 @@ docker run --rm \
     ${DOCKERHUB_IMAGE} &
 
 # Run competition for set time TODO(tylerlum): Make this close down based on competition finishing
-echo "Send competitor commands for 10000s"
-sleep 10000s
-echo "10000s up. Moving files now"
+echo "Send competitor commands for 100s"
+sleep 100s
+echo "100s up. Moving files now"
 
 # TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
@@ -122,7 +122,8 @@ echo "Copying ROS log files from server container..."
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log $HOST_LOG_DIR/ros-server
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_task_info.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt $HOST_LOG_DIR/
 
 echo -e "${GREEN}OK${NOCOLOR}"
 

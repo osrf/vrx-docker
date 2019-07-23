@@ -50,7 +50,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Store topics in rosbag NOTE: currently storing ALL topics, might be too much
 echo "Starting rosbag recording..." 
 sleep 5s
-rosbag record -O ~/vrx_task_info.bag --all &
+rosbag record -O ~/vrx_rostopics.bag --all &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Let simulation run

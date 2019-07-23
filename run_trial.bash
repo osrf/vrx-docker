@@ -127,6 +127,11 @@ docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt 
 
 echo -e "${GREEN}OK${NOCOLOR}"
 
+# Record trial score
+echo "Creating text file for score at ${HOST_LOG_DIR}/score.txt"
+python ${DIR}/utils/get_score.py "${HOST_LOG_DIR}/vrx_rostopics.bag"
+echo -e "${GREEN}OK${NOCOLOR}"
+
 echo "sleeping for 50s"
 sleep 50s
 

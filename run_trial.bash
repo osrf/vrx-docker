@@ -118,10 +118,10 @@ echo -e "${GREEN}OK${NOCOLOR}"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log $HOST_LOG_DIR/ros-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/.gazebo/ $HOST_LOG_DIR/gazebo-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/developer/vrx_task_info.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log $HOST_LOG_DIR/ros-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_task_info.bag $HOST_LOG_DIR/
 
 echo -e "${GREEN}OK${NOCOLOR}"
 

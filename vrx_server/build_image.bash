@@ -24,7 +24,7 @@ if [[ ${USERID} != 0 ]]; then
   DOCKER_ARGS="--build-arg USERID=${USERID}"
 fi
 
-docker build --force-rm ${DOCKER_ARGS} --tag vrx-server-melodic:latest $DIR/vrx-server
+docker build --force-rm ${DOCKER_ARGS} --tag vrx-server-melodic:latest --build-arg USER=$USER --build-arg GROUP=$USER $DIR/vrx-server
 
 set +x
 echo -e "${GREEN}Done.${NOCOLOR}\n"

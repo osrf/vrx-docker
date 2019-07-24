@@ -2,7 +2,7 @@
 
 # generate_trial_video.bash: A bash script to generate a video from a Gazebo playback log file.
 #
-# E.g.: ./generate_trial_video.bash `pwd`/logs/example_team/station_keeping/0/gazebo-server/log/2019-07-23T170421.440661/gzserver/state.log ~/station_keeping_0.ogv
+# E.g.: ./generate_trial_video.bash example_team station_keeping 0
 #
 # Please, install the following dependencies before using the script:
 #   sudo apt-get install recordmydesktop wmctrl psmisc
@@ -19,7 +19,7 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <path_to_gazebo_log_file> <output_filename>"
+  echo "Usage: $0 <team_name> <task_name> <trial_num>"
   exit 1
 }
 
@@ -54,15 +54,27 @@ wait_until_playback_ends()
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 2 ]] && usage
+[[ $# -ne 3 ]] && usage
 
-GZ_LOG_FILE=$1
-OUTPUT=$2
+TEAM_NAME=$1
+TASK_NAME=$2
+TRIAL_NUM=$3
+
+# Get directory of this file
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+GZ_LOG_DIR=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/log
+
+GZ_LOG_FILE="$GZ_LOG_DIR/$(ls $GZ_LOG_DIR)/gzserver/state.log"
+
+OUTPUT=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/playback_video.ogv
 
 # Sanity check: Make sure that the log file exists.
 if [ ! -f $GZ_LOG_FILE ]; then
     echo "Gazebo log file [$GZ_LOG_FILE] not found!"
     exit 1
+else
+    echo "Found Gazebo log file [$GZ_LOG_FILE]"
 fi
 
 # Sanity check: Make sure that the log file path is absolute (the Gazebo
@@ -140,6 +152,6 @@ echo -e "${GREEN}OK${NOCOLOR}"
 wait_until_playback_ends
 
 # Terminate Gazebo.
-echo -n "Encoding video..."
+echo -n "Encoding video and storing in $OUTPUT ..."
 killall -w gzserver gzclient recordmydesktop
 echo -e "${GREEN}OK${NOCOLOR}"

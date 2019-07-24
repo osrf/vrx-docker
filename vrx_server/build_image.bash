@@ -1,4 +1,8 @@
-#!/bin/bash -x
+#!/bin/bash
+echo "Building vrx-server image"
+echo "================================="
+
+set -x
 set -e
 
 # Constants.

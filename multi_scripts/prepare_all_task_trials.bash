@@ -9,6 +9,9 @@
 
 # set -e
 
+echo "Preparing all task trials"
+echo "================================="
+
 # Constants.
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -51,7 +54,7 @@ echo "Found tasks: $LIST_OF_TASKS"
 echo -e "Storing command outputs to $CONSOLE_OUTPUT_DIR\n"
 
 for TASK_NAME in ${LIST_OF_TASKS}; do
-  echo -e "${GREEN}Preparing all trial worlds for task: ${TASK_NAME}${NOCOLOR}"
+  echo -e "Preparing all trial worlds for task: ${TASK_NAME}"
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}
   ${DIR}/../prepare_task_trials.bash "${TASK_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}/output.txt 2>&1

@@ -8,6 +8,9 @@
 
 # set -e
 
+echo "Preparing all team wamvs"
+echo "================================="
+
 # Constants.
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -36,7 +39,7 @@ echo -e "Found teams: \n$LIST_OF_TEAMS"
 echo -e "Storing command outputs to $CONSOLE_OUTPUT_DIR\n"
 
 for TEAM_NAME in ${LIST_OF_TEAMS}; do
-  echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
+  echo -e "Preparing WAM-V URDF for team: ${TEAM_NAME}"
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}
   ${DIR}/../prepare_team_wamv.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1

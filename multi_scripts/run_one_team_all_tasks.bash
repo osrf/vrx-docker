@@ -41,7 +41,7 @@ get_list_of_tasks()
 }
 
 echo -e "
-${GREEN}Running all tasks for team: ${TEAM_NAME}${NOCOLOR}"
+Running all tasks for team: ${TEAM_NAME}"
 echo "========================================================="
 
 LIST_OF_TASKS="$(get_list_of_tasks)"

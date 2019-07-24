@@ -47,3 +47,7 @@ for TRIAL in ${LIST_OF_TRIALS}; do
     echo -e "${RED}TRIAL FAILED: ${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}${NOCOLOR}" >&2
   fi
 done
+
+echo "All $TASK_NAME trials completed. Creating text file for task score at ${DIR}/../logs/${TEAM_NAME}/${TASK_NAME}/task_score.txt"
+python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
+echo -e "${GREEN}OK${NOCOLOR}\n"

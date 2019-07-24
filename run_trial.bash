@@ -128,8 +128,8 @@ docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt 
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Record trial score
-echo "Creating text file for score at ${HOST_LOG_DIR}/score.txt"
-python ${DIR}/utils/get_score.py "${HOST_LOG_DIR}"
+echo "Creating text file for trial score at ${HOST_LOG_DIR}/trial_score.txt"
+python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill and remove all containers before exit

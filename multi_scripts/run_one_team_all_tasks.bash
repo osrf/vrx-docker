@@ -37,3 +37,9 @@ for TASK_NAME in ${LIST_OF_TASKS}; do
   echo "-----------------------------------"
   ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
 done
+
+# Record team score
+echo "${TEAM_NAME} has completed all tasks. Creating text file for team score"
+python ${DIR}/../utils/get_team_score.py $TEAM_NAME
+echo -e "${GREEN}OK${NOCOLOR}\n"
+

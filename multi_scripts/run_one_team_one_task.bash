@@ -48,6 +48,7 @@ for TRIAL in ${LIST_OF_TRIALS}; do
   fi
 done
 
-echo "All $TASK_NAME trials completed. Creating text file for task score at ${DIR}/../logs/${TEAM_NAME}/${TASK_NAME}/task_score.txt"
+# Record task score
+echo "All $TASK_NAME trials completed. Creating text file for task score"
 python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
 echo -e "${GREEN}OK${NOCOLOR}\n"

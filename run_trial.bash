@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+
+# Comment out to allow script to continue, even if it encounters an error
 # set -e 
 TEAM_NAME=$1
 TASK_NAME=$2

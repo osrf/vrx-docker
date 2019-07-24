@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# generate_video.bash: A bash script to generate a video from a Gazebo log file.
+# generate_video.bash: A bash script to generate a video from a Gazebo playback log file.
 #
-# E.g.: ./generate_video.sh ~/vrx/log/gazebo/state.log output.ogv
+# E.g.: ./generate_video.sh `pwd`/logs/example_team/station_keeping/0/gazebo-server/log/2019-07-23T170421.440661/gzserver/state.log ~/station_keeping_0.ogv
 #
 # Please, install the following dependencies before using the script:
 #   sudo apt-get install recordmydesktop wmctrl psmisc
 
+# Exit on error
 set -e
 
 # Constants
-BLACK_WINDOW_TIME=1
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -23,9 +23,10 @@ usage()
   exit 1
 }
 
+# Check if gzclient is running
 is_gzclient_running()
 {
-  if pgrep gzclient ; then
+  if pgrep gzclient >/dev/null; then
     true
   else
     false
@@ -79,21 +80,28 @@ which catkin_find > /dev/null || { echo "Unable to find catkin_find."\
 killall -wq gzserver gzclient || true
 
 echo "Please ensure that vrx is sourced or else the script will not be able to continue"
-
 echo "Sanity checks complete"
+
+# Define constants for recording
+x=100
+y=100
+width=2000
+height=1500
+BLACK_WINDOW_TIME=1
 
 # Tell gazebo client what size and place it should be
 echo "[geometry]
-width=2000
-height=1500
-x=100
-y=100" > ~/.gazebo/gui.ini
+width=$width
+height=$height
+x=$x
+y=$y" > ~/.gazebo/gui.ini
 
-# Start Gazebo in playback mode (paused).
+# Start Gazebo in playback mode
 roslaunch vrx_gazebo playback.launch log_file:=$GZ_LOG_FILE \
   > $OUTPUT.playback_output.txt 2>&1 &
 
 echo "Setting up for playback..."
+
 # Wait and find the Gazebo Window ID.
 until wmctrl -lp | grep Gazebo > /dev/null
 do
@@ -120,9 +128,11 @@ echo -n "Playing back..."
 gz world -p 0
 echo -e "${GREEN}OK${NOCOLOR}"
 
+# Note: Added hardcoded adjustments to x,y,width,height, as Gazebo window not aligned with recordmdesktop
+
 # Start recording the Gazebo Window.
 echo -n "Recording..."
-recordmydesktop --fps=30 -x 100 -y 100 --width=2000 --height=1500 --no-sound -o $OUTPUT \
+recordmydesktop --fps=30 -x $((x + 50)) -y $((y + 10)) --width=$((width - 50)) --height=$((height - 20)) --no-sound -o $OUTPUT \
   > $OUTPUT.record_output.txt 2>&1 &
 echo -e "${GREEN}OK${NOCOLOR}"
 

@@ -29,8 +29,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 team_config_DIR=${DIR}/../team_config/
 
 LIST_OF_TEAMS="$(ls ${team_config_DIR})"
-date_time=$(date +%Y-%m-%d.%H-%M-%S)
-CONSOLE_OUTPUT_DIR=${DIR}/prepare_output/${date_time}
+CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
 
 # Show teams that were found
 echo -e "Found teams: \n$LIST_OF_TEAMS"

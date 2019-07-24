@@ -46,12 +46,11 @@ echo -e "
 ${GREEN}Running all ${TASK_NAME} trials for team: ${TEAM_NAME}${NOCOLOR}"
 
 LIST_OF_TRIALS="$(get_list_of_trial_nums)"
-date_time=$(date +%Y-%m-%d.%H-%M-%S)
 
 for TRIAL in ${LIST_OF_TRIALS}; do
   TRIAL_NUM=${TRIAL: -1}
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
-  CONSOLE_OUTPUT_DIR=${DIR}/run_output/${date_time}/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+  CONSOLE_OUTPUT_DIR=${DIR}/run_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
   mkdir -p ${CONSOLE_OUTPUT_DIR}
   ${DIR}/../run_trial.bash "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
   exit_status=$?

@@ -44,8 +44,7 @@ get_list_of_tasks()
 }
 
 LIST_OF_TASKS="$(get_list_of_tasks)"
-date_time=$(date +%Y-%m-%d.%H-%M-%S)
-CONSOLE_OUTPUT_DIR=${DIR}/prepare_output/${date_time}
+CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
 
 # Show tasks that were found
 echo "Found tasks: $LIST_OF_TASKS"

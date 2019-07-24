@@ -128,7 +128,6 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log $HOST_LOG_DIR/ros-server
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
@@ -142,6 +141,6 @@ python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill and remove all containers before exit
-# ${DIR}/utils/kill_vrx_containers.bash
+${DIR}/utils/kill_vrx_containers.bash
 
 exit 0

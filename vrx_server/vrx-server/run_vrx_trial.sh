@@ -65,9 +65,10 @@ roslaunch_pid=$!
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Store topics in rosbag NOTE: currently storing ALL topics, might be too much
+# July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
 sleep 5s
-rosbag record -O ~/vrx_rostopics.bag --all &
+rosbag record -O ~/vrx_rostopics.bag /vrx/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Let simulation run

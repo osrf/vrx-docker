@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
+# run_trial.bash: A bash script to run a trial for a given team. 
+#
+# E.g.: ./run_trial.bash example_team station_keeping 0
+#
+# Note: must run prepare scripts for the trial and team before running
+#
+
 # Comment out to allow script to continue, even if it encounters an error
 # set -e 
+
 TEAM_NAME=$1
 TASK_NAME=$2
 TRIAL_NUM=$3
@@ -22,11 +30,12 @@ usage()
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
 
+# Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
-NETWORK_SUBNET="172.16.0.10/16"
+NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
 SERVER_ROS_IP="172.16.0.22"
 COMPETITOR_ROS_IP="172.16.0.20"
 ROS_MASTER_URI="http://${SERVER_ROS_IP}:11311"
@@ -67,9 +76,7 @@ ${DIR}/utils/vrx_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
-# Start the competition server. When the trial ends, the container will be killed.
-# The trial may end because of time-out, because of completion, or because the user called the
-# /vrx/end_competition service.
+# Run Gazebo simulation server container
 SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
   "--net ${NETWORK} \
@@ -113,8 +120,8 @@ docker run \
 wait $SERVER_PID
 echo -e "Trial ended.\n"
 
-# TODO(tylerlum): Check what other files must be logged
 # Copy the ROS log files from the competitor's container.
+# TODO: find way to record log files, even if competitor's container's log files not in /root/.ros/log
 echo "Copying ROS log files from competitor container..."
 docker cp --follow-link $COMPETITOR_CONTAINER_NAME:/root/.ros/log $HOST_LOG_DIR/ros-competitor
 echo -e "${GREEN}OK${NOCOLOR}\n"

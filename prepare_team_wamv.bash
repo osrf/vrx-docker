@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# prepare_team_wamv.bash: A shell script to generate single team's WAM-V urdf file.
+# prepare_team_wamv.bash: A bash script to generate single team's WAM-V urdf file.
+#
 # E.g.: ./prepare_team_wamv.bash example_team
 
 # set -e
@@ -57,6 +58,7 @@ generate_wamv_pid=$!
 
 # Wait until generation is complete, then kill process
 # TODO: Rather than wait arbitrary 3 seconds, wait till success message
+# TODO: Find way to record if compliant or not
 sleep 3s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 

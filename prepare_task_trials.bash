@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# prepare_task_trials.bash: A shell script to generate single tasks's world files, one for each task.
-# E.g.: ./prepare_task_trials.bash example_task
+# prepare_task_trials.bash: A bash script to generate single tasks's world files, one for each task.
+#
+# E.g.: ./prepare_task_trials.bash station_keeping
 
+# Commented out to allow it to continue, even after an error
 # set -e
 
 # Constants.

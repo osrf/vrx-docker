@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# run_one_team_one_task.bash: A bash script that calls run_trial.bash on all trials in task_generated
+#
+# eg. ./run_one_team_one_task.bash example_team station_keeping
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Constants.
@@ -7,6 +11,16 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NOCOLOR='\033[0m'
+
+# Define usage function.
+usage()
+{
+  echo "Usage: $0 <team_name> <task_name>"
+  exit 1
+}
+
+# Call usage() function if arguments not supplied.
+[[ $# -ne 2 ]] && usage
 
 TEAM_NAME=$1
 TASK_NAME=$2

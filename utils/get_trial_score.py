@@ -1,3 +1,8 @@
+# get_trial_score.py: A Python script that gets the last message of a trial's rosbag file, 
+#                     then records the final trial score in a text file
+#
+# eg. python get_trial_score.py <team_name> <task_name> <trial_number>
+
 import os
 import rosbag
 import sys

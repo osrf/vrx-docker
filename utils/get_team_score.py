@@ -1,3 +1,8 @@
+# get_team_score.py: A Python script that sums up a team's task scores
+#                     then records the final team score in a text file
+#
+# eg. python get_team_score.py <team_name>
+
 import os
 import sys
 

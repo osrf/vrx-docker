@@ -1,3 +1,8 @@
+# get_task_score.py: A Python script that sums up a task's trial scores from text files
+#                     then records the final task score in a text file
+#
+# eg. python get_task_score.py <team_name> <task_name>
+
 import os
 import sys
 

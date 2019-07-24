@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# kill_vrx_containers.bash: A bash script that kills all vrx containers
+# 
+# eg. ./kill_vrx_containers.bash
+
 # Constants.
 RED='\033[0;31m'
 GREEN='\033[0;32m'

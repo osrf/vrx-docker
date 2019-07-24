@@ -12,6 +12,32 @@ GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NOCOLOR='\033[0m'
 
+# Define compliance check function.
+
+is_wamv_compliant()
+{
+  # Get logs
+  log_dir=$HOME/.ros/log/latest
+  logs=$(ls -t $log_dir)
+
+  # Find latest wamv_generator log
+  for log in $logs; do
+      if [[ $log == *"wamv_generator"* ]]; then
+        break
+      fi
+  done
+
+  echo "Checking $log_dir/$log for compliance"
+
+  # Check if the log file has errors
+  if grep -Fq "ERROR" $log_dir/$log
+  then
+      return 1
+  else
+      return 0
+  fi
+}
+
 # Define usage function.
 usage()
 {
@@ -28,6 +54,11 @@ echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
 
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Remove previous log files, so new log data can be seen more easily
+# (currently done for log check for compliance)
+log_dir=$HOME/.ros/log/latest
+rm -fR $log_dir
 
 # Find sensor and thruster yaml files
 echo "Looking for config files"
@@ -58,8 +89,18 @@ generate_wamv_pid=$!
 
 # Wait until generation is complete, then kill process
 # TODO: Rather than wait arbitrary 3 seconds, wait till success message
-# TODO: Find way to record if compliant or not
 sleep 3s
+echo -e "${GREEN}OK${NOCOLOR}\n"
+
+# Write to text file about compliance
+if is_wamv_compliant; then
+  is_compliant=true
+else
+  is_compliant=false
+fi
+
+echo "Compliant? $is_compliant. Writing to ${wamv_target_dir}/compliant.txt"
+echo $is_compliant > ${wamv_target_dir}/compliant.txt
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill ROS, wait 5s to let it be killed

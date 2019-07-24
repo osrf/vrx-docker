@@ -11,7 +11,7 @@ tasks:
         wayfinding:
             -
     sequence:
-        1:
+        0:
             wayfinding:
                 - /**waypoints: "
                 <waypoint>

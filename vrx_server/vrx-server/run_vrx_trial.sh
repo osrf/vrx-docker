@@ -75,7 +75,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # sleep 100s
 # echo -e "${GREEN}OK${NOCOLOR}\n"
 
-echo "Wait until gzserver is shut down"
+echo "Run simulation until gzserver is shutdown by scoring plugin"
 wait_until_gzserver_is_down
 echo "gzserver shut down"
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -93,3 +93,4 @@ sleep 10s
 # Kill roslaunch
 echo "Killing roslaunch pid: ${roslaunch_pid}"
 kill -INT ${roslaunch_pid}
+echo -e "${GREEN}OK${NOCOLOR}\n"

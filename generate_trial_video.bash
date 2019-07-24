@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# generate_video.bash: A bash script to generate a video from a Gazebo playback log file.
+# generate_trial_video.bash: A bash script to generate a video from a Gazebo playback log file.
 #
-# E.g.: ./generate_video.bash `pwd`/logs/example_team/station_keeping/0/gazebo-server/log/2019-07-23T170421.440661/gzserver/state.log ~/station_keeping_0.ogv
+# E.g.: ./generate_trial_video.bash `pwd`/logs/example_team/station_keeping/0/gazebo-server/log/2019-07-23T170421.440661/gzserver/state.log ~/station_keeping_0.ogv
 #
 # Please, install the following dependencies before using the script:
 #   sudo apt-get install recordmydesktop wmctrl psmisc

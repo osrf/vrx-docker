@@ -1,1 +1,1 @@
-tylerlum/vrx-competitor-example:v5.2019
+tylerlum/vrx-competitor-example:v2.2019

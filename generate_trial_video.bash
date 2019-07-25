@@ -144,7 +144,7 @@ echo -e "${GREEN}OK${NOCOLOR}"
 
 # Start recording the Gazebo Window.
 echo -n "Recording..."
-recordmydesktop --fps=30 -x $((x + 50)) -y $((y + 10)) --width=$((width - 50)) --height=$((height - 20)) --no-sound -o $OUTPUT \
+recordmydesktop --fps=30 -x $x -y $y --width=$width --height=$height --no-sound -o $OUTPUT \
   > $OUTPUT.record_output.txt 2>&1 &
 echo -e "${GREEN}OK${NOCOLOR}"
 

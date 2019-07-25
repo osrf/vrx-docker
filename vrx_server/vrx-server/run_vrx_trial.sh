@@ -19,6 +19,15 @@ wait_until_gzserver_is_down()
   done
 }
 
+
+wait_until_gzserver_is_up()
+{
+  until is_gzserver_running
+  do
+    sleep 1
+  done
+}
+
 set -e
 
 # Constants.
@@ -60,7 +69,7 @@ echo "Starting vrx trial..."
 RECORD_PERIOD="0.01"
 roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
-sleep 5s
+wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Store topics in rosbag NOTE: currently storing ALL topics, might be too much
@@ -77,7 +86,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill rosbag record
 echo "Killing recorder"
-rosnode kill $(rosnode list | grep record | awk '{print $1}')
+#rosnode kill $(rosnode list | grep record | awk '{print $1}')
 sleep 1s
 
 # Kill rosnodes

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# prepare_all_team_wamvs.bash: A bash script to run prepare_team_wamv.bash on all teams in team_generated
+# prepare_all_team_wamvs.bash: A bash script to run prepare_team_wamv.bash on all teams in team_config
 #
 # All terminal output it piped to multi_scripts/prepare_output to keep things clear
 #
@@ -29,9 +29,9 @@ usage()
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-team_generated_DIR=${DIR}/../team_generated/
+team_config_DIR=${DIR}/../team_config/
 
-LIST_OF_TEAMS="$(ls ${team_generated_DIR})"
+LIST_OF_TEAMS="$(ls ${team_config_DIR})"
 CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
 
 # Show teams that were found

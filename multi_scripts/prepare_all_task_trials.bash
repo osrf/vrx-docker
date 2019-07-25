@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# prepare_all_task_trials.bash: A bash script to run prepare_task_trials.bash on all yaml files in task_generated
+# prepare_all_task_trials.bash: A bash script to run prepare_task_trials.bash on all yaml files in task_config
 #
 # All terminal output it piped to multi_scripts/prepare_output to keep things clear
 #
@@ -30,10 +30,25 @@ usage()
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-task_generated_DIR=${DIR}/../task_generated/
+task_config_DIR=${DIR}/../task_config/
 
-# Get the available tasks from the generated directory
-LIST_OF_TASKS="$(ls ${task_generated_DIR})"
+# Get the available tasks from the config directory
+get_list_of_tasks()
+{
+  yaml_files=$(ls ${task_config_DIR}/*.yaml)
+
+  for f in $(ls ${task_config_DIR}/*.yaml); do
+    f=${f##*/}
+    f=${f//.yaml}
+    all_names="${all_names} ${f}"
+  done
+
+  echo $all_names
+}
+
+# Get the available tasks from the config directory
+LIST_OF_TASKS="$(get_list_of_tasks)"
+
 CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
 
 # Show tasks that were found

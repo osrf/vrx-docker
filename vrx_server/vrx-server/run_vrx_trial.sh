@@ -84,11 +84,6 @@ wait_until_gzserver_is_down
 echo "gzserver shut down"
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-# Kill rosbag record
-echo "Killing recorder"
-#rosnode kill $(rosnode list | grep record | awk '{print $1}')
-sleep 1s
-
 # Kill rosnodes
 echo "Killing rosnodes"
 rosnode kill --all

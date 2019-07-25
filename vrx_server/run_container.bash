@@ -58,23 +58,39 @@ fi
 
 DISPLAY="${DISPLAY:-:0}"
 
+# USE FOR NON-NVIDIA SYSTEM
 docker run --name ${CONTAINER} \
   -e XAUTHORITY=/tmp/.docker.xauth \
-  -e DISPLAY \
-  -e QT_X11_NO_MITSHM=1 \
+  --env="DISPLAY" \
+  --env="QT_X11_NO_MITSHM=1" \
+  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
-  -v "$XAUTH:$XAUTH" \
-  -v "/tmp/.X11-unix:/tmp/.X11-unix" \
-  -v "/etc/localtime:/etc/localtime:ro" \
-  --runtime=nvidia \
-  --privileged \
   ${DOCKER_EXTRA_ARGS} \
   ${DOCKER_GPU_PARAMS} \
   ${DOCKER_DISPLAY_PARAMS} \
   ${IMAGE_NAME} \
 ${COMMAND}
+
+# USE FOR NVIDIA SYSTEM
+# docker run --name ${CONTAINER} \
+#   -e XAUTHORITY=/tmp/.docker.xauth \
+#   -e DISPLAY \
+#   -e QT_X11_NO_MITSHM=1 \
+#   -v "/etc/localtime:/etc/localtime:ro" \
+#   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
+#   -v /dev/log:/dev/log \
+#   -v "$XAUTH:$XAUTH" \
+#   -v "/tmp/.X11-unix:/tmp/.X11-unix" \
+#   -v "/etc/localtime:/etc/localtime:ro" \
+#   --runtime=nvidia \
+#   --privileged \
+#   ${DOCKER_EXTRA_ARGS} \
+#   ${DOCKER_GPU_PARAMS} \
+#   ${DOCKER_DISPLAY_PARAMS} \
+#   ${IMAGE_NAME} \
+# ${COMMAND}
 
 # NOTE: the following lines are potentially unsafe. Temp fix that worked for Tyler's Surface Pro. 
 # Not sure if this is needed for devices with dedicated GPUs

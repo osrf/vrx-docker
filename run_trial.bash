@@ -135,11 +135,6 @@ echo "Trial ended. Logging data"
 echo "---------------------------------"
 
 # Copy the ROS log files from the competitor's container.
-# TODO: find way to record log files, even if competitor's container's log files not in /root/.ros/log
-echo "Copying ROS log files from competitor container..."
-docker cp --follow-link $COMPETITOR_CONTAINER_NAME:/root/.ros/log $HOST_LOG_DIR/ros-competitor
-echo -e "${GREEN}OK${NOCOLOR}\n"
-
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
@@ -152,6 +147,11 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Record trial score
 echo "Creating text file for trial score"
 python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
+echo -e "${GREEN}OK${NOCOLOR}\n"
+
+# TODO: find way to record log files, even if competitor's container's log files not in /root/.ros/log
+echo "Copying ROS log files from competitor container..."
+docker cp --follow-link $COMPETITOR_CONTAINER_NAME:/root/.ros/log $HOST_LOG_DIR/ros-competitor
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill and remove all containers before exit

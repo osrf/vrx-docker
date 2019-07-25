@@ -50,10 +50,16 @@ LIST_OF_TRIALS="$(get_list_of_trial_nums)"
 for TRIAL in ${LIST_OF_TRIALS}; do
   TRIAL_NUM=${TRIAL: -1}
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
+
+  # Prepare directory for console output
   CONSOLE_OUTPUT_DIR=${DIR}/run_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
   mkdir -p ${CONSOLE_OUTPUT_DIR}
+
+  # Run trial and store console output
   ${DIR}/../run_trial.bash "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
   exit_status=$?
+
+  # Print OK or FAIL message
   if [ $exit_status -eq 0 ]; then
     echo -e "${GREEN}OK.${NOCOLOR}"
   else
@@ -64,4 +70,11 @@ done
 # Record task score
 echo "All $TASK_NAME trials completed. Creating text file for task score"
 python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
-echo -e "${GREEN}OK${NOCOLOR}\n"
+exit_status=$?
+
+# Print OK or FAIL message
+if [ $exit_status -eq 0 ]; then
+  echo -e "${GREEN}OK.${NOCOLOR}"
+else
+  echo -e "${RED}TASK SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}/${TASK_NAME}${NOCOLOR}" >&2
+fi

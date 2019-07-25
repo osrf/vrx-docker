@@ -55,5 +55,11 @@ done
 # Record team score
 echo "${TEAM_NAME} has completed all tasks. Creating text file for team score"
 python ${DIR}/../utils/get_team_score.py $TEAM_NAME
-echo -e "${GREEN}OK${NOCOLOR}\n"
+exit_status=$?
 
+# Print OK or FAIL message
+if [ $exit_status -eq 0 ]; then
+  echo -e "${GREEN}OK.${NOCOLOR}"
+else
+  echo -e "${RED}TEAM SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}${NOCOLOR}" >&2
+fi

@@ -4,8 +4,7 @@
 #
 # E.g.: ./prepare_task_trials.bash station_keeping
 
-# Commented out to allow it to continue, even after an error
-# set -e
+set -e
 
 # Constants.
 RED='\033[0;31m'

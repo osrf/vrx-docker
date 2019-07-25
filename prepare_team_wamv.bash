@@ -4,7 +4,7 @@
 #
 # E.g.: ./prepare_team_wamv.bash example_team
 
-# set -e
+set -e
 
 # Constants.
 RED='\033[0;31m'

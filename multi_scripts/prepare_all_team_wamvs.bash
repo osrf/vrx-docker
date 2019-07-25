@@ -6,7 +6,7 @@
 #
 # eg. ./prepare_all_team_wamvs.bash
 
-# set -e
+set -e
 
 echo "Preparing all team wamvs"
 echo "================================="

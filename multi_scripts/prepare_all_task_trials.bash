@@ -7,7 +7,7 @@
 # eg. ./prepare_all_task_trials.bash
 
 
-# set -e
+set -e
 
 echo "Preparing all task trials"
 echo "================================="

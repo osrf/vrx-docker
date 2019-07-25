@@ -78,12 +78,12 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Kill rosbag record
 echo "Killing recorder"
 rosnode kill $(rosnode list | grep record | awk '{print $1}')
-sleep 2s
+sleep 1s
 
 # Kill rosnodes
 echo "Killing rosnodes"
 rosnode kill --all
-sleep 10s
+sleep 1s
 
 # Kill roslaunch
 echo "Killing roslaunch pid: ${roslaunch_pid}"

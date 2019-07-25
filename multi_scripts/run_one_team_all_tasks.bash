@@ -53,7 +53,7 @@ for TASK_NAME in ${LIST_OF_TASKS}; do
   ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
 
   # Check if successful
-  if [ $exit_status -ne 0 ]; then
+  if [ $? -ne 0 ]; then
     successful_team=false
   fi
 

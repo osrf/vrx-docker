@@ -84,12 +84,7 @@ mkdir -p ${wamv_target_dir}
 
 # Generate WAM-V
 echo "Generating WAM-V..."
-roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target &
-generate_wamv_pid=$!
-
-# Wait until generation is complete, then kill process
-# TODO: Rather than wait arbitrary 3 seconds, wait till success message
-sleep 3s
+roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Write to text file about compliance
@@ -103,12 +98,6 @@ echo "Compliant? $is_compliant. Writing to ${wamv_target_dir}/compliant.txt"
 echo $is_compliant > ${wamv_target_dir}/compliant.txt
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-# Kill ROS, wait 5s to let it be killed
-echo "Killing Generate WAM-V PID: ${generate_wamv_pid}"
-kill ${generate_wamv_pid}
-
 # Move generated files to correct location
 mv ${TEAM_CONFIG_DIR}/sensor_config.xacro ${wamv_target_dir}
 mv ${TEAM_CONFIG_DIR}/thruster_config.xacro ${wamv_target_dir}
-
-sleep 5s

@@ -49,17 +49,5 @@ mkdir -p ${world_target}
 
 # Generate worlds
 echo "Generating worlds..."
-roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target &
-generate_worlds_pid=$!
-
-# Output success message
-# TODO: Rather than wait hardcoded 8s, wait until success message is ended
-sleep 8s
+roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target
 echo -e "${GREEN}OK${NOCOLOR}\n"
-
-# Kill ROS, wait 5s to let it be killed
-echo "Killing Generate Worlds PID: ${generate_worlds_pid}"
-kill -INT ${generate_worlds_pid}
-
-sleep 5s
-

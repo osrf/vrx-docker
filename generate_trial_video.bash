@@ -63,9 +63,7 @@ TRIAL_NUM=$3
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-GZ_LOG_DIR=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/log
-
-GZ_LOG_FILE="$GZ_LOG_DIR/$(ls $GZ_LOG_DIR)/gzserver/state.log"
+GZ_LOG_FILE=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
 
 OUTPUT=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/playback_video.ogv
 

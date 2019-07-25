@@ -43,6 +43,12 @@ ROS_MASTER_URI="http://${SERVER_ROS_IP}:11311"
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+echo "Running $TEAM_NAME WAM-V in $TASK_NAME $TRIAL_NUM"
+echo -e "=================================\n"
+
+echo "Setting up"
+echo "---------------------------------"
+
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
 HOST_LOG_DIR=${DIR}/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
@@ -74,6 +80,9 @@ ${DIR}/utils/kill_vrx_containers.bash
 # Create the network for the containers to talk to each other.
 ${DIR}/utils/vrx_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 
+echo "Starting simulation server container"
+echo "---------------------------------"
+
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
@@ -93,7 +102,10 @@ SERVER_PID=$!
 
 # Wait until server starts before competitor code can be run
 echo "Waiting for server to start up"
-sleep 15s
+sleep 9s
+
+echo "Starting competitor container"
+echo "---------------------------------"
 
 echo -e "\nLooking for dockerhub_image.txt"
 DOCKERHUB_IMAGE_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_image.txt
@@ -119,7 +131,8 @@ docker run \
 
 # Run competition until server is ended
 wait $SERVER_PID
-echo -e "Trial ended.\n"
+echo "Trial ended. Logging data"
+echo "---------------------------------"
 
 # Copy the ROS log files from the competitor's container.
 # TODO: find way to record log files, even if competitor's container's log files not in /root/.ros/log

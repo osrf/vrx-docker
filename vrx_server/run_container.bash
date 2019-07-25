@@ -60,12 +60,16 @@ DISPLAY="${DISPLAY:-:0}"
 
 docker run --name ${CONTAINER} \
   -e XAUTHORITY=/tmp/.docker.xauth \
-  --env="DISPLAY" \
-  --env="QT_X11_NO_MITSHM=1" \
-  --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+  -e DISPLAY \
+  -e QT_X11_NO_MITSHM=1 \
   -v "/etc/localtime:/etc/localtime:ro" \
   -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
+  -v "$XAUTH:$XAUTH" \
+  -v "/tmp/.X11-unix:/tmp/.X11-unix" \
+  -v "/etc/localtime:/etc/localtime:ro" \
+  --runtime=nvidia \
+  --privileged \
   ${DOCKER_EXTRA_ARGS} \
   ${DOCKER_GPU_PARAMS} \
   ${DOCKER_DISPLAY_PARAMS} \

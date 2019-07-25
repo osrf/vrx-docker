@@ -52,7 +52,13 @@ echo "---------------------------------"
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
 HOST_LOG_DIR=${DIR}/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
-echo "Creating directory: ${HOST_LOG_DIR}"
+if [ -d "$HOST_LOG_DIR" ]; then
+  echo "Overwriting directory: ${HOST_LOG_DIR}"
+  rm -R $HOST_LOG_DIR
+else
+  echo "Creating directory: ${HOST_LOG_DIR}"
+fi
+
 mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"

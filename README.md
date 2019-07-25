@@ -23,6 +23,7 @@ Then, continue to the [post-install instructions](https://docs.docker.com/engine
 ### Setting up vrx\_gazebo
 
 `vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). Please, follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. Make sure it is sourced so that you can run launch files from `vrx_gazebo`.
+Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
 
 ### Adding VRX team files
 
@@ -49,6 +50,8 @@ To prepare a team's system, call:
 ```
 
 This will call `generate_wamv.launch` from the files in `team_config/example_team` and store the generated files in `team_generated/example_team`.
+
+This will also create a file `team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise.
 
 ### Preparing trials for a task
 
@@ -90,7 +93,7 @@ Prepare all tasks:
 # Runs ./prepare_task_trials.bash on all task yaml files in task_config
 ```
 
-To keep the terminal output clean, all of the output will be stored in `multi_scripts/prepare_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+To keep the terminal output clean, all of the output will be stored in `multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
 ## Running trials 
 
@@ -113,7 +116,7 @@ This will instantiate two Docker containers.
 
 2. The VRX team's container, which runs their system from the Dockerhub image in `team_config/<your_team_name>/dockerhub_image.txt`.
 
-TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
+After the competition is over, it stores log files of the results. More about logs in a section below.
 
 ### Running all trials for a given task for a single team
 
@@ -155,42 +158,107 @@ The `logs` directory has the following structure:
 
 ```
 logs
-│   ├── 2019-07-23.12-50-09_logs
-│   │   └── example_team
-│   │       └── example_task
-│   │           └── 0
-│   │               ├── gazebo-server
-│   │               │   ├── log
-│   │               │   │   └── 2019-07-23T125024.840259
-│   │               │   │       └── gzserver
-│   │               │   │           └── state.log
-│   │               │   ├── ogre.log
-│   │               │   └── server-11345
-│   │               │       ├── default.log
-│   │               │       └── gzserver.log
-│   │               ├── ros-competitor
-│   │               │   ├── rostopic_29_1563911438965.log
-│   │               │   └── rostopic_30_1563911438980.log
-│   │               ├── ros-server
-│   │               │   ├── 18447f58-ad83-11e9-95f2-0242ac100016
-│   │               │   │   ├── master.log
-│   │               │   │   ├── roslaunch-d43eea66721e-50.log
-│   │               │   │   ├── rosout-1-stdout.log
-│   │               │   │   ├── rosout.log
-│   │               │   │   ├── spawn_model-3.log
-│   │               │   │   └── spawn_model-3-stdout.log
-│   │               │   └── latest -> /home/tylerlum/.ros/log/18447f58-ad83-11e9-95f2-0242ac100016
-│   │               ├── ros-server-latest
-│   │               │   ├── master.log
-│   │               │   ├── roslaunch-d43eea66721e-50.log
-│   │               │   ├── rosout-1-stdout.log
-│   │               │   ├── rosout.log
-│   │               │   ├── spawn_model-3.log
-│   │               │   └── spawn_model-3-stdout.log
-│   │               └── vrx_rostopics.bag
-│   ├── 2019-07-23.12-58-32_logs
+├── example_team
+│   ├── station_keeping
+│   │   ├── 0
+│   │   │   ├── gazebo-server
+│   │   │   │   ├── log
+│   │   │   │   │   └── 2019-07-25T103301.391562
+│   │   │   │   │       └── gzserver
+│   │   │   │   │           └── state.log
+│   │   │   │   ├── ogre.log
+│   │   │   │   └── server-11345
+│   │   │   │       ├── default.log
+│   │   │   │       └── gzserver.log
+│   │   │   ├── ros-competitor
+│   │   │   │   ├── rostopic_33_1564075986811.log
+│   │   │   │   └── rostopic_34_1564075986814.log
+│   │   │   ├── ros-server-latest
+│   │   │   │   ├── master.log
+│   │   │   │   ├── roslaunch-2f17753a3907-50.log
+│   │   │   │   ├── rosout-1-stdout.log
+│   │   │   │   ├── rosout.log
+│   │   │   │   ├── spawn_model-3.log
+│   │   │   │   └── spawn_model-3-stdout.log
+│   │   │   ├── trial_score.txt
+│   │   │   ├── verbose_output.txt
+│   │   │   └── vrx_rostopics.bag
+│   │   ├── 1
+│   │   │   ├── gazebo-server
+│   │   │   │   ├── log
+│   │   │   │   │   └── 2019-07-25T103424.279898
+│   │   │   │   │       └── gzserver
+│   │   │   │   │           └── state.log
+│   │   │   │   ├── ogre.log
+│   │   │   │   └── server-11345
+│   │   │   │       ├── default.log
+│   │   │   │       └── gzserver.log
+│   │   │   ├── ros-competitor
+│   │   │   │   ├── rostopic_33_1564076069342.log
+│   │   │   │   └── rostopic_34_1564076069335.log
+│   │   │   ├── ros-server-latest
+│   │   │   │   ├── master.log
+│   │   │   │   ├── roslaunch-98d8881050d5-50.log
+│   │   │   │   ├── rosout-1-stdout.log
+│   │   │   │   ├── rosout.log
+│   │   │   │   ├── spawn_model-3.log
+│   │   │   │   └── spawn_model-3-stdout.log
+│   │   │   ├── trial_score.txt
+│   │   │   ├── verbose_output.txt
+│   │   │   └── vrx_rostopics.bag
+│   │   └── task_score.txt
+│   ├── team_score.txt
+│   └── wayfinding
+│       ├── 0
+│       │   ├── gazebo-server
+│       │   │   ├── log
+│       │   │   │   └── 2019-07-25T103541.963698
+│       │   │   │       └── gzserver
+│       │   │   │           └── state.log
+│       │   │   ├── ogre.log
+│       │   │   └── server-11345
+│       │   │       ├── default.log
+│       │   │       └── gzserver.log
+│       │   ├── ros-competitor
+│       │   │   ├── rostopic_33_1564076147397.log
+│       │   │   └── rostopic_34_1564076147385.log
+│       │   ├── ros-server-latest
+│       │   │   ├── master.log
+│       │   │   ├── roslaunch-e61427844a16-50.log
+│       │   │   ├── rosout-1-stdout.log
+│       │   │   ├── rosout.log
+│       │   │   ├── spawn_model-3.log
+│       │   │   └── spawn_model-3-stdout.log
+│       │   ├── trial_score.txt
+│       │   ├── verbose_output.txt
+│       │   └── vrx_rostopics.bag
+│       ├── 1
+│       │   ├── gazebo-server
+│       │   │   ├── log
+│       │   │   │   └── 2019-07-25T103657.537541
+│       │   │   │       └── gzserver
+│       │   │   │           └── state.log
+│       │   │   ├── ogre.log
+│       │   │   └── server-11345
+│       │   │       ├── default.log
+│       │   │       └── gzserver.log
+│       │   ├── ros-competitor
+│       │   │   ├── rostopic_33_1564076222343.log
+│       │   │   └── rostopic_34_1564076222335.log
+│       │   ├── ros-server-latest
+│       │   │   ├── master.log
+│       │   │   ├── roslaunch-cdc7207ee351-50.log
+│       │   │   ├── rosout-1-stdout.log
+│       │   │   ├── rosout.log
+│       │   │   ├── spawn_model-3.log
+│       │   │   └── spawn_model-3-stdout.log
+│       │   ├── trial_score.txt
+│       │   ├── verbose_output.txt
+│       │   └── vrx_rostopics.bag
+│       └── task_score.txt
 
 ```
+
 
 The `logs` directory will have numerous directories with the date and time of creation. In each of those directories are the log files of each trial.
 
@@ -201,6 +269,29 @@ The `logs` directory will have numerous directories with the date and time of cr
 * ros-competitor - the log files from the competitor's container. Note: this is more prone to error, as finding the files depends on the competitor images's file structure
 
 * ros-server - contains the log files from the ros server
+
+* vrx_rostopics.bag - a bag file containing rostopics from the vrx trial. Currently only stores `/vrx/task/info` to save space, but this can be edited in `vrx_server/vrx-server/run_vrx_trial.sh`. Note: to apply any changes to this file, you must also run ./vrx_server/build_image.bash to use the updated file, instead of cache.
+
+* verbose_output.txt - verbose log output from the competition
+
+* trial_score.txt - text file with one number representing the final score of the trial (from the last message of vrx_rostopics.bag)
+
+* task_score.txt - text file with comma separated values, which are the trial scores of one trial
+
+* team_score.txt - text file with comma separated values, which are the trial scores of all trials
+
+Expected errors:
+
+In `verbose_output.txt`, expect to see 
+
+```
+Error [parser_urdf.cc:3170] Unable to call parseURDF on robot model
+Error [parser.cc:406] parse as old deprecated model file failed.
+```
+
+This comes from recording, and is a known issue that does not affect the competition.
+
+TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
 
 ## Playing back the simulation
 

@@ -46,20 +46,34 @@ echo "========================================================="
 
 LIST_OF_TASKS="$(get_list_of_tasks)"
 
+successful_team=true
 for TASK_NAME in ${LIST_OF_TASKS}; do
   echo "Running task: ${TASK_NAME}..."
   echo "-----------------------------------"
   ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
+
+  # Check if successful
+  if [ $exit_status -ne 0 ]; then
+    successful_team=false
+  fi
+
 done
 
-# Record team score
-echo "${TEAM_NAME} has completed all tasks. Creating text file for team score"
-python ${DIR}/../utils/get_team_score.py $TEAM_NAME
-exit_status=$?
 
-# Print OK or FAIL message
-if [ $exit_status -eq 0 ]; then
-  echo -e "${GREEN}OK.${NOCOLOR}"
+
+# Record team score if all tasks successful
+if [ "$successful_team" = true ]; then
+  echo "${TEAM_NAME} has completed all tasks. Creating text file for team score"
+  python ${DIR}/../utils/get_team_score.py $TEAM_NAME
+  exit_status=$?
+  
+  # Print OK or FAIL message
+  if [ $exit_status -eq 0 ]; then
+    echo -e "${GREEN}OK.${NOCOLOR}"
+  else
+    echo -e "${RED}TEAM SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}${NOCOLOR}" >&2
+  fi
 else
-  echo -e "${RED}TEAM SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}${NOCOLOR}" >&2
+  echo -e "${TEAM_NAME} has completed all tasks. >=1 task was unsuccessful, so not creating text file for team score${NOCOLOR}" >&2
 fi
+

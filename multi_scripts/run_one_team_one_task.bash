@@ -47,6 +47,8 @@ ${GREEN}Running all ${TASK_NAME} trials for team: ${TEAM_NAME}${NOCOLOR}"
 
 LIST_OF_TRIALS="$(get_list_of_trial_nums)"
 
+successful_task=true
+
 for TRIAL in ${LIST_OF_TRIALS}; do
   TRIAL_NUM=${TRIAL: -1}
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
@@ -64,17 +66,26 @@ for TRIAL in ${LIST_OF_TRIALS}; do
     echo -e "${GREEN}OK.${NOCOLOR}"
   else
     echo -e "${RED}TRIAL FAILED: ${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}${NOCOLOR}" >&2
+    successful_task=false
   fi
 done
 
-# Record task score
-echo "All $TASK_NAME trials completed. Creating text file for task score"
-python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
-exit_status=$?
-
-# Print OK or FAIL message
-if [ $exit_status -eq 0 ]; then
-  echo -e "${GREEN}OK.${NOCOLOR}"
+# Record task score if all trials successful
+if [ "$successful_task" = true ]; then
+  echo "All $TASK_NAME trials completed. Creating text file for task score"
+  python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
+  exit_status=$?
+  
+  # Print OK or FAIL message
+  if [ $exit_status -eq 0 ]; then
+    echo -e "${GREEN}OK.${NOCOLOR}"
+    exit 0
+  else
+    echo -e "${RED}TASK SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}/${TASK_NAME}${NOCOLOR}" >&2
+    exit 1
+  fi
 else
-  echo -e "${RED}TASK SCORE TEXT FILE CREATION FAILED: ${TEAM_NAME}/${TASK_NAME}${NOCOLOR}" >&2
+  echo -e "${RED}All $TASK_NAME trials completed. >=1 trial was unsuccessful, so not creating text file for task score${NOCOLOR}" >&2
+  exit 1
 fi
+

@@ -67,7 +67,7 @@ echo "Starting vrx trial..."
 
 # Run the trial.
 RECORD_PERIOD="0.01"
-roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true > ~/verbose_output.txt 2>&1 &
+roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/state.log" verbose:=true > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"

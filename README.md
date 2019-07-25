@@ -25,6 +25,12 @@ Then, continue to the [post-install instructions](https://docs.docker.com/engine
 `vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). Please, follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. Make sure it is sourced so that you can run launch files from `vrx_gazebo`.
 Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
 
+### Installing dependencies
+
+* `pip install oyaml` - for generating wam-v and worlds
+
+* `sudo apt-get install recordmydesktop wmctrl psmisc vlc` - for generating and viewing videos
+
 ### Adding VRX team files
 
 To run the competition with a VRX team's configuration, the team's folder containing its configuration files must be put into the `team_config` directory.
@@ -94,6 +100,34 @@ Prepare all tasks:
 ```
 
 To keep the terminal output clean, all of the output will be stored in `multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+
+### File structure after successful prepare
+
+After running the prepare scripts, you should have the following file structure in `team_generated`:
+
+```
+team_generated
+├── example_team
+│   ├── compliant.txt
+│   ├── example_team.urdf
+│   ├── sensor_config.xacro
+│   └── thruster_config.xacro
+```
+
+After running the prepare scripts, you should have the following file structure in `task_generated`:
+
+```
+task_generated
+├── station_keeping
+│   ├── worlds
+│   │   ├── station_keeping0.world
+│   │   └── station_keeping1.world
+│   └── world_xacros
+│       ├── station_keeping0.world.xacro
+│       └── station_keeping1.world.xacro
+```
+
+If you are missing these files, please review the command output (either in terminal or in `multi_scripts/prepare_output/`) to investigate the issue.
 
 ## Running trials 
 

@@ -59,23 +59,17 @@ echo "Starting vrx trial..."
 # Run the trial.
 RECORD_PERIOD="0.01"
 roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true > ~/verbose_output.txt 2>&1 &
-# roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
-# roslaunch vrx_gazebo sandisland.launch gui:=false extra_gazebo_args:="-r --record_period ${RECORD_PERIOD}" verbose:=true &
 roslaunch_pid=$!
+sleep 5s
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Store topics in rosbag NOTE: currently storing ALL topics, might be too much
 # July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
-sleep 5s
 rosbag record -O ~/vrx_rostopics.bag /vrx/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-# Let simulation run
-# echo "Run simulation for 100s before ending"
-# sleep 100s
-# echo -e "${GREEN}OK${NOCOLOR}\n"
-
+# Run simulation until shutdown
 echo "Run simulation until gzserver is shutdown by scoring plugin"
 wait_until_gzserver_is_down
 echo "gzserver shut down"

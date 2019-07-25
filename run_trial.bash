@@ -93,7 +93,7 @@ SERVER_PID=$!
 
 # Wait until server starts before competitor code can be run
 echo "Waiting for server to start up"
-sleep 20s
+sleep 15s
 
 echo -e "\nLooking for dockerhub_image.txt"
 DOCKERHUB_IMAGE_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_image.txt

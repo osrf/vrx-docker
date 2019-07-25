@@ -29,7 +29,7 @@ for subdirectory in subdirectories:
 team_score_filename = team_directory + '/team_score.txt'
 f = open(team_score_filename, 'w+')
 for task_score in team_score:
-    f.write(task_score)
+    f.write(task_score + '\n')
 
 print("Successfully recorded team score in {}".format(team_score_filename))
 f.close()

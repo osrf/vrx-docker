@@ -6,8 +6,6 @@
 #
 # eg. ./prepare_all_team_wamvs.bash
 
-set -e
-
 echo "Preparing all team wamvs"
 echo "================================="
 
@@ -43,9 +41,14 @@ for TEAM_NAME in ${LIST_OF_TEAMS}; do
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}
   ${DIR}/../prepare_team_wamv.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1
-  # TODO: Check for errors in compliance?
+  exit_status=$?
 
-  echo -e "${GREEN}OK${NOCOLOR}\n"
+  # Print OK or FAIL message
+  if [ $exit_status -eq 0 ]; then
+    echo -e "${GREEN}OK.${NOCOLOR}"
+  else
+    echo -e "${RED}TEAM PREPARE FAILED${NOCOLOR}" >&2
+  fi
 done
 
 echo -e "${GREEN}Finished preparing WAM-V URDFs for all teams${NOCOLOR}"

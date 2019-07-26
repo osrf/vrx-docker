@@ -7,8 +7,6 @@
 # eg. ./prepare_all_task_trials.bash
 
 
-set -e
-
 echo "Preparing all task trials"
 echo "================================="
 
@@ -60,8 +58,14 @@ for TASK_NAME in ${LIST_OF_TASKS}; do
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}
   ${DIR}/../prepare_task_trials.bash "${TASK_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TASK_NAME}/output.txt 2>&1
+  exit_status=$?
 
-  echo -e "${GREEN}OK${NOCOLOR}\n"
+  # Print OK or FAIL message
+  if [ $exit_status -eq 0 ]; then
+    echo -e "${GREEN}OK.${NOCOLOR}"
+  else
+    echo -e "${RED}TASK PREPARE FAILED${NOCOLOR}" >&2
+  fi
 done
 
 echo -e "${GREEN}Finished preparing trial worlds for all tasks${NOCOLOR}"

@@ -6,8 +6,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-set -x
-
 # Constants.
 RED='\033[0;31m'
 GREEN='\033[0;32m'

@@ -66,6 +66,13 @@ GZ_LOG_FILE=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
 
 # Output directory
 OUTPUT_DIR=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/video
+if [ -d "$OUTPUT_DIR" ]; then
+  echo "Overwriting directory: ${OUTPUT_DIR}"
+  rm -R $OUTPUT_DIR
+else
+  echo "Creating directory: ${OUTPUT_DIR}"
+fi
+
 mkdir -p $OUTPUT_DIR
 OUTPUT=$OUTPUT_DIR/playback_video.ogv
 

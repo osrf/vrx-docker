@@ -33,7 +33,6 @@ is_gzclient_running()
   fi
 }
 
-
 # Wait until the /gazebo/robotx_example_course/world_stats topic tells us that the playback
 # has been paused. This event will trigger the end of the recording.
 # Note: Depending on name of world running, may be different name from "robotx_example_course"
@@ -65,7 +64,10 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 GZ_LOG_FILE=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
 
-OUTPUT=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/playback_video.ogv
+# Output directory
+OUTPUT_DIR=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/video
+mkdir -p $OUTPUT_DIR
+OUTPUT=$OUTPUT_DIR/playback_video.ogv
 
 # Sanity check: Make sure that the log file exists.
 if [ ! -f $GZ_LOG_FILE ]; then

@@ -98,7 +98,6 @@ which catkin_find > /dev/null || { echo "Unable to find catkin_find."\
 # Sanity check: Kill any dangling Gazebo before moving forward.
 killall -wq gzserver gzclient || true
 
-echo "Please ensure that vrx is sourced or else the script will not be able to continue"
 echo "Sanity checks complete"
 
 # Define constants for recording
@@ -118,6 +117,14 @@ y=$y" > ~/.gazebo/gui.ini
 # Start Gazebo in playback mode
 roslaunch vrx_gazebo playback.launch log_file:=$GZ_LOG_FILE \
   > $OUTPUT.playback_output.txt 2>&1 &
+sleep 1s
+
+# Check if the log file has errors, likely forgot to source ws
+if grep -Fq "RLException" $OUTPUT.playback_output.txt
+then
+  echo "Failed to find playback launch file. Did you source your vrx_ws?"
+  exit 1
+fi
 
 echo "Setting up for playback..."
 

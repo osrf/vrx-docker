@@ -55,7 +55,7 @@ for TRIAL_NUM in ${LIST_OF_TRIAL_NUMS}; do
     if [ $exit_status -eq 0 ]; then
       echo -e "${GREEN}OK.${NOCOLOR}"
     else
-      echo -e "${RED}TRIAL VIDEO FAILED: ${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}${NOCOLOR}" >&2
+      echo -e "${RED}TRIAL VIDEO FAILED: ${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}${NOCOLOR}. Please review ${CONSOLE_OUTPUT_DIR}/output.txt" >&2
       successful_task=false
     fi
   fi

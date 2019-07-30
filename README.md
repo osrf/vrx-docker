@@ -42,17 +42,17 @@ This section will give descriptions of the directories in this repository:
 
 * `vrx_server` - contains scripts for building and running the vrx-server container, as well as its Docker files
 
-* `team_config` - stores the team config files. The prepare team scripts look inside of this directory to generate the WAM-V URDF files.
+* `team_config` - stores the team config files. The prepare team scripts look inside of this directory to generate the WAM-V URDF files. More details about this below.
 
-* `task_config` - stores the task config files. The prepare task scripts look inside of this directory to generate the trial world files.
+* `task_config` - stores the task config files. The prepare task scripts look inside of this directory to generate the trial world files. More details about this below.
 
 * `utils` - contains helper scripts that the main scripts call
 
 * `multi_scripts` - contains convenience scripts that call the main scripts multiple times
 
-* `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, WAM-V URDFs, trial worlds etc.
+* `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, WAM-V URDFs, trial worlds etc. More details about this below.
 
-## Setting up workspace to run automated evaluation
+## Quick Start Instructions (no multi_scripts): Setting up workspace to run automated evaluation
 
 ### Installing Docker
 
@@ -112,9 +112,9 @@ To prepare a team's system, call:
 # ./prepare_team_wamv.bash <your_team_name>
 ```
 
-This will call `generate_wamv.launch` on the files in `team_config/example_team` and store the generated files in `team_generated/example_team`.
+This will call `generate_wamv.launch` on the files in `team_config/example_team` and store the generated files in `generated/team_generated/example_team`.
 
-This will also create a file `team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise.
+This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise.
 
 ### Preparing trials for a task
 
@@ -134,9 +134,174 @@ To prepare all of the trials for a task, call:
 #./prepare_task_trials.bash <task_name>
 ```
 
-This will call `generate_worlds.launch` from `task_config/station_keeping.yaml` and store the generated files in `task_generated/example_task`.
+This will call `generate_worlds.launch` on `task_config/station_keeping.yaml` and store the generated files in `generated/task_generated/station_keeping`.
 
 Please note that we will be writing our own private .yaml files for the tasks. Essentially, the only difference between testing out your system with these steps and the real competition is that for the real competition, we will be creating our own `.yaml` files for tasks that you have not seen, which will vary the environmental conditions. We will not be trying to surprise you with the conditions, but we want to simply reward teams that are robust to different environmental conditions.
+
+### File structure after successful prepare
+
+After running the prepare scripts, you should have the following file structure in `generated/team_generated`:
+
+```
+generated/team_generated
+├── example_team
+│   ├── compliant.txt
+│   ├── example_team.urdf
+│   ├── sensor_config.xacro
+│   └── thruster_config.xacro
+```
+
+After running the prepare scripts, you should have the following file structure in `generated/task_generated`:
+
+```
+generated/task_generated
+├── station_keeping
+│   ├── worlds
+│   │   ├── station_keeping0.world
+│   │   └── station_keeping1.world
+│   └── world_xacros
+│       ├── station_keeping0.world.xacro
+│       └── station_keeping1.world.xacro
+```
+
+If you are missing these files, please review the command output (either in terminal or in `multi_scripts/prepare_output/`) to investigate the issue.
+
+## Quick Start Instructions (no multi_scripts): Running a single trial for a single team
+
+In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/station_keeping.yaml`), call:
+
+```
+./run_trial.bash example_team station_keeping 0
+
+# For your team you will run:
+# ./run_trial.bash <your_team_name> <task_name> <trial_number>
+```
+
+This will instantiate two Docker containers.
+
+1. The simulation server container, which runs the VRX Gazebo simulation with the desired team WAM-V and desired task trial world.
+
+2. The VRX team's container, which runs their system from the Dockerhub image in `team_config/<your_team_name>/dockerhub_image.txt`.
+
+After the competition is over, it stores log files of the results. More about logs in a section below.
+
+TODO: Figure out if competitor or server first and associated errors (ROS_MASTER missing? Docker build slow?)
+
+## Quick Start Instructions (no multi_scripts): Reviewing the results of a trial
+
+### Reviewing the trial performance
+
+After the trial has finished, you can go to `generated/logs/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) describe video directory and playback and logging
+
+The `generated/logs` directory has the following structure:
+
+```
+generated/logs
+└── example_team
+    ├── station_keeping
+    │   └── 0
+    │       ├── gazebo-server
+    │       │   ├── ogre.log
+    │       │   ├── server-11345
+    │       │   │   ├── default.log
+    │       │   │   └── gzserver.log
+    │       │   └── state.log
+    │       ├── ros-competitor
+    │       │   ├── rostopic_29_1564524270930.log
+    │       │   └── rostopic_30_1564524270921.log
+    │       ├── ros-server-latest
+    │       │   ├── master.log
+    │       │   ├── roslaunch-d560550c9290-50.log
+    │       │   ├── rosout-1-stdout.log
+    │       │   ├── rosout.log
+    │       │   ├── spawn_model-3.log
+    │       │   └── spawn_model-3-stdout.log
+    │       ├── trial_score.txt
+    │       ├── verbose_output.txt
+    │       └── vrx_rostopics.bag
+```
+
+The `generated/logs` directory will have numerous directories with the date and time of creation. In each of those directories are the log files of each trial.
+
+* gazebo-server - contains the gazebo server logs
+
+* ros-competitor - the log files from the competitor's container. Note: this is more prone to error, as finding the files depends on the competitor images's file structure
+
+* ros-server-latest - contains the log files from the ros server
+
+* vrx_rostopics.bag - a bag file containing rostopics from the vrx trial. Currently only stores `/vrx/task/info` to save space, but this can be edited in `vrx_server/vrx-server/run_vrx_trial.sh`. Note: to apply any changes to this file, you must also run ./vrx_server/build_image.bash to use the updated file, instead of cache.
+
+* verbose_output.txt - verbose Gazebo log output from the competition
+
+* trial_score.txt - text file with one number representing the final score of the trial (from the last message of vrx_rostopics.bag)
+
+* task_score.txt - (only created when running multi_scripts, how to do so in section below) text file with comma separated values, which are the trial scores of one task for a given team
+
+* team_score.txt - (only created when running multi_scripts, how to do so in section below) text file with comma separated values, which are the trial scores of all tasks for a given team
+
+* video - (only created after running generate video scripts, how to do so in section below) contains the generated trial video and its record and playback command outputs
+
+## Quick Start Instructions (no multi_scripts): Trial videos and playback
+
+### Generating a single trial video
+
+After running a trial, a `state.log` file is stored under `generated/logs/<team>/<task>/<trial_num>/gazebo-server`. This is a playback log file that allows you to play back the trial. 
+To generate a trial video, please run the trial using the steps above, source vrx, and then run
+
+```
+./generate_trial_video.bash example_team station_keeping 0
+
+# For your team you will run:
+# ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
+```
+
+This will start the Gazebo trial playback, begin screen capture on the Gazebo window, and then store the video file, record output and playback output in `generated/logs/<team>/<task>/<trial_num>/video`. 
+Please note that you must close other tabs related to Gazebo for this to work properly, as it puts the Gazebo window at the front (not background). If you have a browser tab open related to Gazebo,
+it may find that window, instead of the actual Gazebo simulation window.
+
+There should be a new directory called `generated/logs/<team>/<task>/<trial_num>/video` that contains the following:
+
+```
+generated/logs/example_team/station_keeping/0/video/
+├── playback_video.ogv
+├── playback_video.ogv.playback_output.txt
+└── playback_video.ogv.record_output.txt
+```
+
+### Playing back the simulation
+
+To play back a specific trial's log file, move to `vrx-docker` and call:
+
+```
+roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/state.log
+```
+
+## Important information
+
+* All generated files will be stored in the `generated` directory. This will include team and task generated files, log files, scoring, playback videos, etc. These files may get overwritten if scripts are called more than once. Remember to delete these generated files if you want to start fresh.
+
+* After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
+
+* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts
+
+* Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
+
+## Expected errors:
+
+In `verbose_output.txt`, expect to see 
+
+```
+Error [parser_urdf.cc:3170] Unable to call parseURDF on robot model
+Error [parser.cc:406] parse as old deprecated model file failed.
+```
+
+This comes from recording, and is a known issue that does not affect the competition.
+
+TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
+
+## Multi_scripts
+
+The above quick start instructions gave an overview of how to use the main scripts to run automated evaluation. For convenience, we also have multi_scripts that run the main scripts multiple times for convenience. We describe these below.
 
 ### Prepare all scripts
 
@@ -156,58 +321,7 @@ Prepare all tasks:
 # Runs ./prepare_task_trials.bash on all task yaml files in task_config
 ```
 
-To keep the terminal output clean, all of the output will be stored in `multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
-
-### File structure after successful prepare
-
-After running the prepare scripts, you should have the following file structure in `team_generated`:
-
-```
-team_generated
-├── example_team
-│   ├── compliant.txt
-│   ├── example_team.urdf
-│   ├── sensor_config.xacro
-│   └── thruster_config.xacro
-```
-
-After running the prepare scripts, you should have the following file structure in `task_generated`:
-
-```
-task_generated
-├── station_keeping
-│   ├── worlds
-│   │   ├── station_keeping0.world
-│   │   └── station_keeping1.world
-│   └── world_xacros
-│       ├── station_keeping0.world.xacro
-│       └── station_keeping1.world.xacro
-```
-
-If you are missing these files, please review the command output (either in terminal or in `multi_scripts/prepare_output/`) to investigate the issue.
-
-## Running trials 
-
-In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running.
-
-### Running a single trial for a single team
-
-To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/example_task.yaml`), call:
-
-```
-./run_trial.bash example_team example_task 0
-
-# For your team you will run:
-# ./run_trial.bash <your_team_name> <task_name> <trial_number>
-```
-
-This will instantiate two Docker containers.
-
-1. The simulation server container, which runs the VRX Gazebo simulation with the desired team WAM-V and desired task trial world.
-
-2. The VRX team's container, which runs their system from the Dockerhub image in `team_config/<your_team_name>/dockerhub_image.txt`.
-
-After the competition is over, it stores log files of the results. More about logs in a section below.
+To keep the terminal output clean, all of the output will be stored in `generated/multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
 ### Running all trials for a given task for a single team
 
@@ -243,159 +357,11 @@ To run all trials for all tasks listed in the `task_generated` directory for all
 # For your team you will run:
 # ./multi_scripts/run_all_teams_all_tasks.bash
 ```
+
 This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
 
-Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
-## Reviewing the results of a trial
-
-### Reviewing the trial performance
-
-After the trial has finished, you can go to `logs/<data_and_time>/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) describe video directory and playback and logging
-
-The `logs` directory has the following structure:
-
-```
-logs
-├── example_team
-│   ├── station_keeping
-│   │   ├── 0
-│   │   │   ├── gazebo-server
-│   │   │   │   ├── log
-│   │   │   │   │   └── 2019-07-25T103301.391562
-│   │   │   │   │       └── gzserver
-│   │   │   │   │           └── state.log
-│   │   │   │   ├── ogre.log
-│   │   │   │   └── server-11345
-│   │   │   │       ├── default.log
-│   │   │   │       └── gzserver.log
-│   │   │   ├── ros-competitor
-│   │   │   │   ├── rostopic_33_1564075986811.log
-│   │   │   │   └── rostopic_34_1564075986814.log
-│   │   │   ├── ros-server-latest
-│   │   │   │   ├── master.log
-│   │   │   │   ├── roslaunch-2f17753a3907-50.log
-│   │   │   │   ├── rosout-1-stdout.log
-│   │   │   │   ├── rosout.log
-│   │   │   │   ├── spawn_model-3.log
-│   │   │   │   └── spawn_model-3-stdout.log
-│   │   │   ├── trial_score.txt
-│   │   │   ├── verbose_output.txt
-│   │   │   └── vrx_rostopics.bag
-│   │   ├── 1
-│   │   │   ├── gazebo-server
-│   │   │   │   ├── log
-│   │   │   │   │   └── 2019-07-25T103424.279898
-│   │   │   │   │       └── gzserver
-│   │   │   │   │           └── state.log
-│   │   │   │   ├── ogre.log
-│   │   │   │   └── server-11345
-│   │   │   │       ├── default.log
-│   │   │   │       └── gzserver.log
-│   │   │   ├── ros-competitor
-│   │   │   │   ├── rostopic_33_1564076069342.log
-│   │   │   │   └── rostopic_34_1564076069335.log
-│   │   │   ├── ros-server-latest
-│   │   │   │   ├── master.log
-│   │   │   │   ├── roslaunch-98d8881050d5-50.log
-│   │   │   │   ├── rosout-1-stdout.log
-│   │   │   │   ├── rosout.log
-│   │   │   │   ├── spawn_model-3.log
-│   │   │   │   └── spawn_model-3-stdout.log
-│   │   │   ├── trial_score.txt
-│   │   │   ├── verbose_output.txt
-│   │   │   └── vrx_rostopics.bag
-│   │   └── task_score.txt
-│   ├── team_score.txt
-│   └── wayfinding
-│       ├── 0
-│       │   ├── gazebo-server
-│       │   │   ├── log
-│       │   │   │   └── 2019-07-25T103541.963698
-│       │   │   │       └── gzserver
-│       │   │   │           └── state.log
-│       │   │   ├── ogre.log
-│       │   │   └── server-11345
-│       │   │       ├── default.log
-│       │   │       └── gzserver.log
-│       │   ├── ros-competitor
-│       │   │   ├── rostopic_33_1564076147397.log
-│       │   │   └── rostopic_34_1564076147385.log
-│       │   ├── ros-server-latest
-│       │   │   ├── master.log
-│       │   │   ├── roslaunch-e61427844a16-50.log
-│       │   │   ├── rosout-1-stdout.log
-│       │   │   ├── rosout.log
-│       │   │   ├── spawn_model-3.log
-│       │   │   └── spawn_model-3-stdout.log
-│       │   ├── trial_score.txt
-│       │   ├── verbose_output.txt
-│       │   └── vrx_rostopics.bag
-│       ├── 1
-│       │   ├── gazebo-server
-│       │   │   ├── log
-│       │   │   │   └── 2019-07-25T103657.537541
-│       │   │   │       └── gzserver
-│       │   │   │           └── state.log
-│       │   │   ├── ogre.log
-│       │   │   └── server-11345
-│       │   │       ├── default.log
-│       │   │       └── gzserver.log
-│       │   ├── ros-competitor
-│       │   │   ├── rostopic_33_1564076222343.log
-│       │   │   └── rostopic_34_1564076222335.log
-│       │   ├── ros-server-latest
-│       │   │   ├── master.log
-│       │   │   ├── roslaunch-cdc7207ee351-50.log
-│       │   │   ├── rosout-1-stdout.log
-│       │   │   ├── rosout.log
-│       │   │   ├── spawn_model-3.log
-│       │   │   └── spawn_model-3-stdout.log
-│       │   ├── trial_score.txt
-│       │   ├── verbose_output.txt
-│       │   └── vrx_rostopics.bag
-│       └── task_score.txt
-
-```
-
-
-The `logs` directory will have numerous directories with the date and time of creation. In each of those directories are the log files of each trial.
-
-* gazebo-server/logs - contains the playback log file, which is used to visualize what happened and is used for video generation
-
-* gazebo-server/server-xxxxx - contains the gazebo server logs
-
-* ros-competitor - the log files from the competitor's container. Note: this is more prone to error, as finding the files depends on the competitor images's file structure
-
-* ros-server - contains the log files from the ros server
-
-* vrx_rostopics.bag - a bag file containing rostopics from the vrx trial. Currently only stores `/vrx/task/info` to save space, but this can be edited in `vrx_server/vrx-server/run_vrx_trial.sh`. Note: to apply any changes to this file, you must also run ./vrx_server/build_image.bash to use the updated file, instead of cache.
-
-* verbose_output.txt - verbose log output from the competition
-
-* trial_score.txt - text file with one number representing the final score of the trial (from the last message of vrx_rostopics.bag)
-
-* task_score.txt - text file with comma separated values, which are the trial scores of one trial
-
-* team_score.txt - text file with comma separated values, which are the trial scores of all trials
-
-## Trial videos and playback
-
-### Generating a single trial video
-
-After running a trial, a `state.log` file is stored under `logs/<team>/<task>/<trial_num>/gazebo-server`. This is a playback log file that allows you to play back the trial. 
-To generate a trial video, please run the trial using the steps above, source vrx, and then run
-
-```
-./generate_trial_video.bash example_team example_task 0
-
-# For your team you will run:
-# ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
-```
-
-This will start the Gazebo trial playback, begin screen capture on the Gazebo window, and then store the video file, record output and playback output in `logs/<team>/<task>/<trial_num>/video`. 
-Please note that you must close other tabs related to Gazebo for this to work properly, as it puts the Gazebo window at the front (not background). If you have a browser tab open related to Gazebo,
-it may find that window, instead of the actual Gazebo simulation window.
 
 ### Generating all trial videos for a given task for a single team
 
@@ -428,41 +394,118 @@ To generate all trial videos for all teams and all its tasks, run
 # ./multi_scripts/generate_all_team_all_task_videos.bash
 ```
 
-Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
-### Playing back the simulation
+### Expected Output After Multi_scripts
 
-To play back a specific trial's log file, move to `vrx-docker` and call:
-
-```
-roslaunch vrx_gazebo playback.launch log_file:=`pwd`/logs/<date_and_time>_logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/log/<data_and_time>/gzserver/state.log
-```
-
-
-## Important information
-
-* All generated files will be stored in the `generated` directory. This will include team and task generated files, log files, scoring, playback videos, etc. These files may get overwritten if scripts are called more than once. Remember to delete these generated files if you want to start fresh.
-
-* After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
-
-* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts
-
-* Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
-
-## Expected errors:
-
-In `verbose_output.txt`, expect to see 
+If you are confident your setup is working, you can run
 
 ```
-Error [parser_urdf.cc:3170] Unable to call parseURDF on robot model
-Error [parser.cc:406] parse as old deprecated model file failed.
+./vrx_server/build_image.bash && ./multi_scripts/prepare_all_team_wamvs.bash && ./multi_scripts/prepare_all_task_trials.bash && ./multi_scripts/run_all_teams_all_tasks.bash && ./multi_scripts/generate_all_team_all_task_videos.bash
 ```
 
-This comes from recording, and is a known issue that does not affect the competition.
+After running this, you should expect your `generated` directory to look like
 
-TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
+```
+ls generated
+logs  multi_scripts  task_generated  team_generated
+```
+
+and your `generated/logs` directory to look like 
+
+```
+generated/logs
+├── example_team
+│   ├── station_keeping
+│   │   ├── 0
+│   │   │   ├── gazebo-server
+│   │   │   │   ├── ogre.log
+│   │   │   │   ├── server-11345
+│   │   │   │   │   ├── default.log
+│   │   │   │   │   └── gzserver.log
+│   │   │   │   └── state.log
+│   │   │   ├── ros-competitor
+│   │   │   │   ├── rostopic_29_1564519107303.log
+│   │   │   │   └── rostopic_30_1564519107315.log
+│   │   │   ├── ros-server-latest
+│   │   │   │   ├── master.log
+│   │   │   │   ├── roslaunch-8fe010b975a0-50.log
+│   │   │   │   ├── rosout-1-stdout.log
+│   │   │   │   ├── rosout.log
+│   │   │   │   ├── spawn_model-3.log
+│   │   │   │   └── spawn_model-3-stdout.log
+│   │   │   ├── trial_score.txt
+│   │   │   ├── verbose_output.txt
+│   │   │   ├── video
+│   │   │   │   ├── playback_video.ogv
+│   │   │   │   ├── playback_video.ogv.playback_output.txt
+│   │   │   │   └── playback_video.ogv.record_output.txt
+│   │   │   └── vrx_rostopics.bag
+│   │   ├── 1
+│   │   │   ├── gazebo-server
+│   │   │   │   ├── ogre.log
+│   │   │   │   ├── server-11345
+│   │   │   │   │   ├── default.log
+│   │   │   │   │   └── gzserver.log
+│   │   │   │   └── state.log
+│   │   │   ├── ros-competitor
+│   │   │   │   ├── rostopic_29_1564519155778.log
+│   │   │   │   └── rostopic_30_1564519155773.log
+│   │   │   ├── ros-server-latest
+│   │   │   │   ├── master.log
+│   │   │   │   ├── roslaunch-8410d47cfdaa-51.log
+│   │   │   │   ├── rosout-1-stdout.log
+│   │   │   │   ├── rosout.log
+│   │   │   │   ├── spawn_model-3.log
+│   │   │   │   └── spawn_model-3-stdout.log
+│   │   │   ├── trial_score.txt
+│   │   │   ├── verbose_output.txt
+│   │   │   ├── video
+│   │   │   │   ├── playback_video.ogv
+│   │   │   │   ├── playback_video.ogv.playback_output.txt
+│   │   │   │   └── playback_video.ogv.record_output.txt
+│   │   │   └── vrx_rostopics.bag
+│   │   └── task_score.txt
+│   │   ....
+│   └── team_score.txt
+│   ...
+```
 
 ## Development tips
+
+### Investigating errors
+
+If you encountered errors, it is recommended that you view the Gazebo verbose output by running:
+
+```
+cat generated/logs/<team>/<task>/<trial_num>/verbose_output.txt
+```
+
+or investigate the generated rosbag by running:
+
+```
+rosbag info generated/logs/<team>/<task>/<trial_num>/vrx_rostopics.bag
+```
+
+or if you ran a multi_script, run
+
+```
+cat generated/multi_scripts/prepare_output/<team or task>/output.txt
+# or
+cat generated/multi_scripts/run_output/<team>/<task>/<trial_number>/output.txt
+# or 
+cat generated/multi_scripts/generate_video_output/<team>/<task>/<trial_number>/output.txt
+```
+
+or if you had an issue with video generation you can run
+
+```
+cat generated/logs/<team>/<task>/<trial_num>/video/playback_video.ogv.record_output.txt 
+# or
+cat generated/logs/<team>/<task>/<trial_num>/video/playback_video.ogv.playback_output.txt 
+```
+
+You can even run these commands while the script is still running to investigate issues.
 
 ### Stopping the Docker containers
 

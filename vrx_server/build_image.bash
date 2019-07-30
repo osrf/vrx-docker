@@ -2,7 +2,6 @@
 echo "Building vrx-server image"
 echo "================================="
 
-set -x
 set -e
 
 # Constants.
@@ -14,25 +13,52 @@ NOCOLOR='\033[0m'
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Uncoment this line to rebuild without cache
-#DOCKER_ARGS="--no-cache"
+# DOCKER_ARGS="--no-cache"
 
-echo "Build image: vrx-server"
-
-# Print commands to terminal
-set -x
-
-DOCKER_ARGS="--no-cache"
 USERID=`id -u $USER`
 if [[ ${USERID} != 0 ]]; then
   DOCKER_ARGS="--build-arg USERID=${USERID}"
 fi
 
-# USE THIS FOR NON-NVIDIA SYSTEM
-docker build --force-rm ${DOCKER_ARGS} --tag vrx-server-melodic:latest --build-arg USER=$USER --build-arg GROUP=$USER $DIR/vrx-server
+# Builds a Docker image.
+BUILD_BASE=""
+image_name="vrx-server-melodic"
 
-# USE THIS FOR NVIDIA SYSTEM
-# docker build --force-rm ${DOCKER_ARGS} --tag vrx-server-melodic:latest --build-arg USER=$USER --build-arg GROUP=$USER --build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu18.04 $DIR/vrx-server
+# Parse args related to NVIDIA
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+
+    case $key in
+        -n|--nvidia)
+        BUILD_BASE="--build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu18.04"
+        image_name="$image_name-nvidia"
+        shift
+        ;;
+        *)    # unknown option
+        POSITIONAL+=("$1")
+        shift
+        ;;
+    esac
+done
+
+set -- "${POSITIONAL[@]}"
+
+# Usage
+if [ $# -gt 0 ]
+then
+    echo "Usage: $0 [-n --nvidia]"
+    exit 1
+fi
+
+# Build image
+echo "Build image: $image_name"
+set -x
+image_plus_tag=$image_name:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
+docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag --build-arg USER=$USER --build-arg GROUP=$USER $BUILD_BASE $DIR/vrx-server && \
+docker tag $image_plus_tag $image_name:latest && \
+echo "Built $image_plus_tag and tagged as $image_name:latest"
 
 set +x
 echo -e "${GREEN}Done.${NOCOLOR}\n"

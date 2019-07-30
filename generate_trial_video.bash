@@ -154,11 +154,10 @@ echo -n "Playing back..."
 gz world -p 0
 echo -e "${GREEN}OK${NOCOLOR}"
 
-# Note: Added hardcoded adjustments to x,y,width,height, as Gazebo window not aligned with recordmdesktop
-
 # Start recording the Gazebo Window.
 echo -n "Recording..."
-recordmydesktop --fps=30 -x $x -y $y --width=$width --height=$height --no-sound -o $OUTPUT \
+# Note: Can add hardcoded adjustments to x,y,width,height, as Gazebo window sometimes not aligned with recordmydesktop
+recordmydesktop --fps=30 -x $((x + 0)) -y $((y + 0)) --width=$((width + 0)) --height=$((height + 0)) --no-sound -o $OUTPUT \
   > $OUTPUT.record_output.txt 2>&1 &
 echo -e "${GREEN}OK${NOCOLOR}"
 

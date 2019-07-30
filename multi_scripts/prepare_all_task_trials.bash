@@ -2,7 +2,7 @@
 
 # prepare_all_task_trials.bash: A bash script to run prepare_task_trials.bash on all yaml files in task_config
 #
-# All terminal output it piped to multi_scripts/prepare_output to keep things clear
+# All terminal output it piped to generated/multi_scripts/prepare_output to keep things clear
 #
 # eg. ./prepare_all_task_trials.bash
 
@@ -47,7 +47,7 @@ get_list_of_tasks()
 # Get the available tasks from the config directory
 LIST_OF_TASKS="$(get_list_of_tasks)"
 
-CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
+CONSOLE_OUTPUT_DIR=${DIR}/../generated/multi_scripts/prepare_output
 
 # Show tasks that were found
 echo "Found tasks: $LIST_OF_TASKS"

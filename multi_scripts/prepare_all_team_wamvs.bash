@@ -2,7 +2,7 @@
 
 # prepare_all_team_wamvs.bash: A bash script to run prepare_team_wamv.bash on all teams in team_config
 #
-# All terminal output it piped to multi_scripts/prepare_output to keep things clear
+# All terminal output it piped to generated/multi_scripts/prepare_output to keep things clear
 #
 # eg. ./prepare_all_team_wamvs.bash
 
@@ -30,7 +30,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 team_config_DIR=${DIR}/../team_config/
 
 LIST_OF_TEAMS="$(ls ${team_config_DIR})"
-CONSOLE_OUTPUT_DIR=${DIR}/prepare_output
+CONSOLE_OUTPUT_DIR=${DIR}/../generated/multi_scripts/prepare_output
 
 # Show teams that were found
 echo -e "Found teams: \n$LIST_OF_TEAMS"

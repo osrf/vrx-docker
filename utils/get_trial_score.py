@@ -14,7 +14,7 @@ trial_number = sys.argv[3]
 
 # Get directory path
 dir_path = os.path.dirname(os.path.realpath(__file__))
-trial_directory = dir_path + '/../logs/' + team_name + '/' + task_name + '/' + trial_number
+trial_directory = dir_path + '/../generated/logs/' + team_name + '/' + task_name + '/' + trial_number
 
 # Open ros bag
 bag_name = trial_directory + '/vrx_rostopics.bag'

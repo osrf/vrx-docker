@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# generate_one_team_all_task_videos.bash: A bash script that calls generate_one_team_one_task_videos.bash on all tasks in logs/<team>
+# generate_one_team_all_task_videos.bash: A bash script that calls generate_one_team_one_task_videos.bash on all tasks in generated/logs/<team>
 #
 # eg. ./generate_one_team_all_task_videos.bash example_team
 
@@ -24,7 +24,7 @@ usage()
 
 TEAM_NAME=$1
 
-task_DIR=${DIR}/../logs/${TEAM_NAME}
+task_DIR=${DIR}/../generated/logs/${TEAM_NAME}
 
 echo -e "
 Generating videos for all tasks for team: ${TEAM_NAME}"
@@ -54,6 +54,6 @@ done
 if [ "$successful_team" = true ]; then
   echo -e "${GREEN}Successfully generated all trial videos for all tasks for team $TEAM_NAME.${NOCOLOR}"
 else
-  echo -e "${RED}All ${TEAM_NAME} $TASK_NAME trial videos completed for all tasks. >=1 task was unsuccessful.${NOCOLOR}" >&2
+  echo -e "${RED}All ${TEAM_NAME} trial videos completed for all tasks. >=1 task was unsuccessful.${NOCOLOR}" >&2
   exit 1
 fi

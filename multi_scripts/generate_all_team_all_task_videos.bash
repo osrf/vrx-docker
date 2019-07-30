@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# generate_all_team_all_task_videos.bash: A bash script to run generate_one_team_all_task_videos.bash on all teams in logs
+# generate_all_team_all_task_videos.bash: A bash script to run generate_one_team_all_task_videos.bash on all teams in generated/logs
 #
 # eg. ./generate_all_team_all_task_videos.bash
 
@@ -22,7 +22,7 @@ usage()
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-team_DIR=${DIR}/../logs
+team_DIR=${DIR}/../generated/logs
 
 LIST_OF_TEAMS="$(ls ${team_DIR})"
 

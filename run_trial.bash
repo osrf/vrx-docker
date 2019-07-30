@@ -51,7 +51,7 @@ echo "---------------------------------"
 
 # Create the directory that logs will be copied into. Since the userid of the user in the container
 # might different to the userid of the user running this script, we change it to be public-writable.
-HOST_LOG_DIR=${DIR}/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+HOST_LOG_DIR=${DIR}/generated/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
 if [ -d "$HOST_LOG_DIR" ]; then
   echo "Overwriting directory: ${HOST_LOG_DIR}"
   rm -R $HOST_LOG_DIR
@@ -65,14 +65,14 @@ echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Find wamv urdf and task world files
 echo "Looking for generated files"
-TEAM_GENERATED_DIR=${DIR}/team_generated/${TEAM_NAME}
+TEAM_GENERATED_DIR=${DIR}/generated/team_generated/${TEAM_NAME}
 if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
   echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
 else
   echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
 
-COMP_GENERATED_DIR=${DIR}/task_generated/${TASK_NAME}
+COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
 if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world"
 else

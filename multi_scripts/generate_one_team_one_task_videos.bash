@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# generate_one_team_one_task_videos.bash: A bash script that calls generate_trial_video.bash on all trials in logs/<team>/<task>
+# generate_one_team_one_task_videos.bash: A bash script that calls generate_trial_video.bash on all trials in generated/logs/<team>/<task>
 #
 # eg. ./generate_one_team_one_task_videos.bash example_team station_keeping
 
@@ -25,7 +25,7 @@ usage()
 TEAM_NAME=$1
 TASK_NAME=$2
 
-trial_DIR=${DIR}/../logs/${TEAM_NAME}/${TASK_NAME}
+trial_DIR=${DIR}/../generated/logs/${TEAM_NAME}/${TASK_NAME}
 
 # Get the available trial numbers from the trial directory
 
@@ -44,7 +44,7 @@ for TRIAL_NUM in ${LIST_OF_TRIAL_NUMS}; do
     echo " ${TASK_NAME} trial number ${TRIAL_NUM}..."
 
     # Prepare directory for console output
-    CONSOLE_OUTPUT_DIR=${DIR}/generate_video_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+    CONSOLE_OUTPUT_DIR=${DIR}/../generated/multi_scripts/generate_video_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
     mkdir -p ${CONSOLE_OUTPUT_DIR}
 
     # Generate trial video and store console output

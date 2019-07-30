@@ -41,8 +41,8 @@ else
 fi
 
 # Create directories to store generated files
-world_xacro_target=${DIR}/task_generated/${TASK_NAME}/world_xacros/
-world_target=${DIR}/task_generated/${TASK_NAME}/worlds/
+world_xacro_target=${DIR}/generated/task_generated/${TASK_NAME}/world_xacros/
+world_target=${DIR}/generated/task_generated/${TASK_NAME}/worlds/
 mkdir -p ${world_xacro_target}
 mkdir -p ${world_target}
 

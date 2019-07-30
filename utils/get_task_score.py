@@ -12,7 +12,7 @@ task_name = sys.argv[2]
 
 # Get directory path
 dir_path = os.path.dirname(os.path.realpath(__file__))
-task_directory = dir_path + '/../logs/' + team_name + '/' + task_name
+task_directory = dir_path + '/../generated/logs/' + team_name + '/' + task_name
 
 # Sum up trial scores into task score
 task_score = ""

@@ -11,7 +11,7 @@ team_name = sys.argv[1]
 
 # Get directory path
 dir_path = os.path.dirname(os.path.realpath(__file__))
-team_directory = dir_path + '/../logs/' + team_name
+team_directory = dir_path + '/../generated/logs/' + team_name
 
 # Sum up task scores into team score
 team_score = []

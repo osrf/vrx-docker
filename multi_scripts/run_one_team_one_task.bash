@@ -25,7 +25,7 @@ usage()
 TEAM_NAME=$1
 TASK_NAME=$2
 
-trial_DIR=${DIR}/../task_generated/${TASK_NAME}/worlds/
+trial_DIR=${DIR}/../generated/task_generated/${TASK_NAME}/worlds/
 
 # Get the available trial numbers from the trial directory
 get_list_of_trial_nums()
@@ -54,7 +54,7 @@ for TRIAL in ${LIST_OF_TRIALS}; do
   echo "Running ${TASK_NAME} trial number ${TRIAL_NUM}..."
 
   # Prepare directory for console output
-  CONSOLE_OUTPUT_DIR=${DIR}/run_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+  CONSOLE_OUTPUT_DIR=${DIR}/../generated/multi_scripts/run_output/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
   mkdir -p ${CONSOLE_OUTPUT_DIR}
 
   # Run trial and store console output

@@ -62,10 +62,10 @@ TRIAL_NUM=$3
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-GZ_LOG_FILE=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
+GZ_LOG_FILE=$DIR/generated/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
 
 # Output directory
-OUTPUT_DIR=$DIR/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/video
+OUTPUT_DIR=$DIR/generated/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/video
 if [ -d "$OUTPUT_DIR" ]; then
   echo "Overwriting directory: ${OUTPUT_DIR}"
   rm -R $OUTPUT_DIR

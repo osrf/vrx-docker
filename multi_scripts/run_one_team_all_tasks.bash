@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# run_one_team_all_tasks.bash: A bash script that calls run_one_team_one_task.bash on all tasks in task_config
+# run_one_team_all_tasks.bash: A bash script that calls run_one_team_one_task.bash on all tasks in generated/task_generated
 #
 # eg. ./run_one_team_all_tasks.bash example_team
 
@@ -24,27 +24,13 @@ usage()
 
 TEAM_NAME=$1
 
-task_config_DIR=${DIR}/../task_config/
-
-# Get the available tasks from the config directory
-get_list_of_tasks()
-{
-  yaml_files=$(ls ${task_config_DIR}/*.yaml)
-
-  for f in $(ls ${task_config_DIR}/*.yaml); do
-    f=${f##*/}
-    f=${f//.yaml}
-    all_names="${all_names} ${f}"
-  done
-
-  echo $all_names
-}
+task_generated_DIR=${DIR}/../generated/task_generated/
 
 echo -e "
 Running all tasks for team: ${TEAM_NAME}"
 echo "========================================================="
 
-LIST_OF_TASKS="$(get_list_of_tasks)"
+LIST_OF_TASKS="$(ls $task_generated_DIR)"
 
 successful_team=true
 for TASK_NAME in ${LIST_OF_TASKS}; do

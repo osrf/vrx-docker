@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# run_all_teams_all_tasks.bash: A bash script to run run_one_team_all_tasks.bash on all teams in team_config
+# run_all_teams_all_tasks.bash: A bash script to run run_one_team_all_tasks.bash on all teams in team_generated
 #
 # eg. ./run_all_teams_all_tasks.bash
 
@@ -22,9 +22,9 @@ usage()
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-team_config_DIR=${DIR}/../team_config/
+team_generated_DIR=${DIR}/../generated/team_generated/
 
-LIST_OF_TEAMS="$(ls ${team_config_DIR})"
+LIST_OF_TEAMS="$(ls ${team_generated_DIR})"
 
 for TEAM_NAME in ${LIST_OF_TEAMS}; do
   ${DIR}/run_one_team_all_tasks.bash "${TEAM_NAME}"

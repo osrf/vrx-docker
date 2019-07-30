@@ -167,9 +167,7 @@ This will run each of the trials for a given task sequentially in an automated f
 
 ### Running all trials for all tasks for a single team
 
-_Only one trial config file is provided at the moment; this command will be more useful in the future._
-
-To run all trials for all tasks listed in the `task_config` directory, call:
+To run all trials for all tasks listed in the `task_generated` directory, call:
 
 ```
 ./multi_scripts/run_one_team_all_tasks.bash example_team
@@ -178,13 +176,23 @@ To run all trials for all tasks listed in the `task_config` directory, call:
 # ./multi_scripts/run_one_team_all_tasks.bash <your_team_name>
 ```
 
+### Running all trials for all tasks for all teams
+
+To run all trials for all tasks listed in the `task_generated` directory for all teams in `team_generated`, call:
+
+```
+./multi_scripts/run_all_teams_all_tasks.bash 
+
+# For your team you will run:
+# ./multi_scripts/run_all_teams_all_tasks.bash
+```
 This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
 
 Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
-# Reviewing the results of a trial
+## Reviewing the results of a trial
 
-## Reviewing the trial performance
+### Reviewing the trial performance
 
 After the trial has finished, you can go to `logs/<data_and_time>/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) describe video directory and playback and logging
 
@@ -314,7 +322,66 @@ The `logs` directory will have numerous directories with the date and time of cr
 
 * team_score.txt - text file with comma separated values, which are the trial scores of all trials
 
-Expected errors:
+## Trial videos and playback
+
+### Generating a single trial video
+
+After running a trial, a `state.log` file is stored under `logs/<team>/<task>/<trial_num>/gazebo-server`. This is a playback log file that allows you to play back the trial. 
+To generate a trial video, please run the trial using the steps above, source vrx, and then run
+
+```
+./generate_trial_video.bash example_team example_task 0
+
+# For your team you will run:
+# ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
+```
+
+This will start the Gazebo trial playback, begin screen capture on the Gazebo window, and then store the video file, record output and playback output in `logs/<team>/<task>/<trial_num>/video`. 
+Please note that you must close other tabs related to Gazebo for this to work properly, as it puts the Gazebo window at the front (not background). If you have a browser tab open related to Gazebo,
+it may find that window, instead of the actual Gazebo simulation window.
+
+### Generating all trial videos for a given task for a single team
+
+To generate all trial videos for one team and one task, run
+
+```
+./multi_scripts/generate_one_team_one_task_videos.bash example_team example_task
+
+# For your team you will run:
+# ./multi_scripts/generate_one_team_one_task_videos.bash <your_team_name> <task_name>
+```
+
+### Generating all trial videos for all tasks for a single team
+To generate all trial videos for one team and all its tasks, run
+
+```
+./multi_scripts/generate_one_team_all_task_videos.bash example_team
+
+# For your team you will run:
+# ./multi_scripts/generate_one_team_all_task_videos.bash <your_team_name>
+```
+
+### Generating all trial videos for all tasks for all teams
+To generate all trial videos for all teams and all its tasks, run
+
+```
+./multi_scripts/generate_all_team_all_task_videos.bash
+
+# For your team you will run:
+# ./multi_scripts/generate_all_team_all_task_videos.bash
+```
+
+Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+
+### Playing back the simulation
+
+To play back a specific trial's log file, move to `vrx-docker` and call:
+
+```
+roslaunch vrx_gazebo playback.launch log_file:=`pwd`/logs/<date_and_time>_logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/log/<data_and_time>/gzserver/state.log
+```
+
+## Expected errors:
 
 In `verbose_output.txt`, expect to see 
 
@@ -326,14 +393,6 @@ Error [parser.cc:406] parse as old deprecated model file failed.
 This comes from recording, and is a known issue that does not affect the competition.
 
 TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
-
-## Playing back the simulation
-
-To play back a specific trial's log file, move to `vrx-docker` and call:
-
-```
-roslaunch vrx_gazebo playback.launch log_file:=`pwd`/logs/<date_and_time>_logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/log/<data_and_time>/gzserver/state.log
-```
 
 ## Development tips
 
@@ -366,7 +425,9 @@ docker exec -it vrx-competitor-system bash
 
 From here, you can investigate what is happening inside of your container.
 
-## Files Required From VRX Teams For Submission
+## Submission Details
+
+### Files Required From VRX Teams For Submission
 
 All VRX teams must submit one folder containing three files for automated evaluation. The name of the folder should be the name of the team. Please note that the filenames must be identical with how they are listed below.
 
@@ -376,12 +437,12 @@ All VRX teams must submit one folder containing three files for automated evalua
 
 3. `dockerhub_image.txt`: A text file containing only the name of their docker image publicly available on Dockerhub. Eg. `tylerlum/vrx-competitor-example:v2.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20Dockerhub%20image%20for%20submission)
 
-## Testing Your Submission
+### Testing Your Submission
 
 All teams should test their submissions by following the instructions above. It details how to run the scripts to test your system in a mock competition.
 
 It is imperative that teams use the outlined process for testing their system, as it replicates the process that will be used during automated evaluation. If your system does not work in the mock competition setup, then it will not work for the real competition.
 
-## Uploading Your Submission
+### Uploading Your Submission
 
 Details about the submission will be coming shortly.

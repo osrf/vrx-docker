@@ -2,8 +2,6 @@
 
 This repository contains scripts and infrastructure that will be used for automatic evaluation of Virtual RobotX (VRX) teams' submissions. 
 
-## Overview
-
 This repository consists of two major components: 
 
 1. The VRX server system, which runs the VRX Gazebo simulation
@@ -12,18 +10,63 @@ This repository consists of two major components:
 
 For security and reproducibility, the VRX server and the VRX competitor's systems will be run in separate, isolated environments called Docker containers.
 
+## Overview
+
+### Scripts
+
+This repository primarily consists of the following main scripts:
+
+* `vrx_server/vrx-server/build_image.bash` - A script that runs `docker build ...` on the files in `vrx_server/vrx-server` to build the image. This script may take 30-60 minutes to run the first time, but is cached afterwards. It must be run every time the files in `vrx_server/vrx-server` are modified to not simply use the old cached versions.
+
+* `prepare_team_wamv.bash` - A script that runs `roslaunch vrx_gazebo generate_wamv.launch ...` and stores the generated files appropriately.
+
+* `prepare_task_trials.bash` - A script that runs `roslaunch vrx_gazebo generated_worlds.launch ...` and stores the generated files appropriately
+
+* `run_trial.bash` - A script that runs a vrx trial with a given team, task and environmental condition. It requires that the above prepare scripts be called before using it. It is the script that runs the simulation and the competitor container. This is the most important script of this repository.
+
+* `vrx_server/vrx-server/run_vrx_trial.sh` - A script that the vrx-server container runs after entry. This is the code that starts the simulation. Please note that you must run the build image script every time you modify this file to see the changes. This script is automatically called when running `run_trial.bash`
+
+* `generate_trial_video.bash` - A script that runs `roslaunch vrx_gazebo playback.launch ...` to playback a trial and also record it with `recordmydesktop`. It requires that the above run script be called before using. This script is not important for the running of the competition, but for visualizing and documenting progress.
+
+Every other script is either:
+
+* a helper script that the main scripts call or
+
+* a multi_script version of the main scripts, which means that it calls the main scripts multiple times for convenience (eg. do multiple tasks, trials, teams, etc.)
+
+The average user should not need to modify any files, but may want to change some values in one of the main scripts. The other scripts should not need to be modified.
+
+### File structure
+
+This section will give descriptions of the directories in this repository:
+
+* `vrx_server` - contains scripts for building and running the vrx-server container, as well as its Docker files
+
+* `team_config` - stores the team config files. The prepare team scripts look inside of this directory to generate the WAM-V URDF files.
+
+* `task_config` - stores the task config files. The prepare task scripts look inside of this directory to generate the trial world files.
+
+* `utils` - contains helper scripts that the main scripts call
+
+* `multi_scripts` - contains convenience scripts that call the main scripts multiple times
+
+* `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, WAM-V URDFs, trial worlds etc.
+
 ## Setting up workspace to run automated evaluation
 
 ### Installing Docker
 
-Docker is required to run the automated evaluation. Please follow the [Docker CE for Ubuntu tutorial's](https://docs.docker.com/install/linux/docker-ce/ubuntu) __Prerequisites__ and __Install Docker CE__ sections.
+Docker is required to run the automated evaluation. 
+Please follow the [Docker CE for Ubuntu tutorial's](https://docs.docker.com/install/linux/docker-ce/ubuntu) __Prerequisites__ and __Install Docker CE__ sections.
 
-Then, continue to the [post-install instructions](https://docs.docker.com/engine/installation/linux/linux-postinstall/) and complete the __Manage Docker as a non-root user__ section to avoid having to run the commands on this page using `sudo`.
+Then, continue to the [post-install instructions](https://docs.docker.com/engine/installation/linux/linux-postinstall/).
+Complete the __Manage Docker as a non-root user__ section to avoid having to run the commands on this page using `sudo`.
 
 ### Setting up vrx\_gazebo
 
-`vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). Please, follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. Make sure it is sourced so that you can run launch files from `vrx_gazebo`.
-Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
+`vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). 
+Please, follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. 
+Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
 
 ### Installing dependencies
 
@@ -31,18 +74,32 @@ Make sure that your file structure is `/home/<username>/vrx_ws`, as this will as
 
 * `sudo apt-get install recordmydesktop wmctrl psmisc vlc` - for generating and viewing videos
 
+### Building your vrx-server image
+
+The next step is to build your vrx-server image. This involves running
+
+```
+./vrx_server/build_image.bash
+```
+
+This will create the image for the vrx server that runs the simulation. This step may take 30-60 minutes the first time, but it will be cached in the future calls.
+
+TODO: Note about Nvidia.
+
 ### Adding VRX team files
 
 To run the competition with a VRX team's configuration, the team's folder containing its configuration files must be put into the `team_config` directory.
 
-We have provided an example submission in the `team_config` directory of this repository. You should see that there is a directory called `example_team` that has the following configuration files in it:
+We have provided example submissions in the `team_config` directory of this repository. 
+You should see that there is a directory called `example_team` that has the following configuration files in it:
 
 ```
 $ ls team_config/example_team/
 dockerhub_image.txt sensor_config.yaml thruster_config.yaml
 ```
 
-Together these files constitute a submission. The files are explained in the __Files Required From VRX Teams For Submission__ section below. We will work with the files of the `example_team` submission for this tutorial; you can use them as a template for your own team's submission.
+Together these files constitute a submission. The files are explained in the __Files Required From VRX Teams For Submission__ section below. 
+We will work with the files of the `example_team` submission for this tutorial; you can use them as a template for your own team's submission.
 
 ### Preparing a team's system
 
@@ -55,7 +112,7 @@ To prepare a team's system, call:
 # ./prepare_team_wamv.bash <your_team_name>
 ```
 
-This will call `generate_wamv.launch` from the files in `team_config/example_team` and store the generated files in `team_generated/example_team`.
+This will call `generate_wamv.launch` on the files in `team_config/example_team` and store the generated files in `team_generated/example_team`.
 
 This will also create a file `team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise.
 
@@ -72,12 +129,12 @@ In this README, we will be using some vocabulary that will be clearly defined he
 To prepare all of the trials for a task, call:
 
 ```
-./prepare_task_trials.bash example_task
+./prepare_task_trials.bash station_keeping
 
 #./prepare_task_trials.bash <task_name>
 ```
 
-This will call `generate_worlds.launch` from `task_config/example_task.yaml` and store the generated files in `task_generated/example_task`.
+This will call `generate_worlds.launch` from `task_config/station_keeping.yaml` and store the generated files in `task_generated/example_task`.
 
 Please note that we will be writing our own private .yaml files for the tasks. Essentially, the only difference between testing out your system with these steps and the real competition is that for the real competition, we will be creating our own `.yaml` files for tasks that you have not seen, which will vary the environmental conditions. We will not be trying to surprise you with the conditions, but we want to simply reward teams that are robust to different environmental conditions.
 
@@ -380,6 +437,17 @@ To play back a specific trial's log file, move to `vrx-docker` and call:
 ```
 roslaunch vrx_gazebo playback.launch log_file:=`pwd`/logs/<date_and_time>_logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/log/<data_and_time>/gzserver/state.log
 ```
+
+
+## Important information
+
+* All generated files will be stored in the `generated` directory. This will include team and task generated files, log files, scoring, playback videos, etc. These files may get overwritten if scripts are called more than once. Remember to delete these generated files if you want to start fresh.
+
+* After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
+
+* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts
+
+* Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
 ## Expected errors:
 

@@ -149,7 +149,7 @@ wmctrl -i -a ${GAZEBO_WINDOW_ID}
 # screen for a long time.
 sleep $BLACK_WINDOW_TIME
 
-# Play the simulation.
+# Unpause the simulation.
 echo -n "Playing back..."
 gz world -p 0
 echo -e "${GREEN}OK${NOCOLOR}"

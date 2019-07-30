@@ -86,6 +86,22 @@ ${DIR}/utils/kill_vrx_containers.bash
 # Create the network for the containers to talk to each other.
 ${DIR}/utils/vrx_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 
+echo "Building competitor image"
+echo "---------------------------------"
+
+echo -e "\nLooking for dockerhub_image.txt"
+DOCKERHUB_IMAGE_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_image.txt
+if [ -f "${DOCKERHUB_IMAGE_FILENAME}" ]; then
+  echo "Successfully found: ${DOCKERHUB_IMAGE_FILENAME}"
+  DOCKERHUB_IMAGE=$(head -n 1 ${DOCKERHUB_IMAGE_FILENAME})
+  echo -e "Dockerhub image: ${DOCKERHUB_IMAGE}\n"
+else
+  echo -e "${RED}Err: ${DOCKERHUB_IMAGE_FILENAME} not found."; exit 1;
+fi
+
+docker login
+docker image pull $DOCKERHUB_IMAGE
+
 echo "Starting simulation server container"
 echo "---------------------------------"
 
@@ -113,18 +129,7 @@ sleep 9s
 echo "Starting competitor container"
 echo "---------------------------------"
 
-echo -e "\nLooking for dockerhub_image.txt"
-DOCKERHUB_IMAGE_FILENAME=${DIR}/team_config/${TEAM_NAME}/dockerhub_image.txt
-if [ -f "${DOCKERHUB_IMAGE_FILENAME}" ]; then
-  echo "Successfully found: ${DOCKERHUB_IMAGE_FILENAME}"
-  DOCKERHUB_IMAGE=$(head -n 1 ${DOCKERHUB_IMAGE_FILENAME})
-  echo -e "Dockerhub image: ${DOCKERHUB_IMAGE}\n"
-else
-  echo -e "${RED}Err: ${DOCKERHUB_IMAGE_FILENAME} not found."; exit 1;
-fi
-
 # Start the competitors container and let it run in the background.
-docker login
 echo -e "Creating container for ${DOCKERHUB_IMAGE}\n"
 COMPETITOR_CONTAINER_NAME="vrx-competitor-system"
 docker run \

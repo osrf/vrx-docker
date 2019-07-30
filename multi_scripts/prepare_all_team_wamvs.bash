@@ -47,7 +47,7 @@ for TEAM_NAME in ${LIST_OF_TEAMS}; do
   if [ $exit_status -eq 0 ]; then
     echo -e "${GREEN}OK.${NOCOLOR}"
   else
-    echo -e "${RED}TEAM PREPARE FAILED${NOCOLOR}" >&2
+    echo -e "${RED}TEAM PREPARE FAILED. Did you source your vrx_ws?${NOCOLOR}" >&2
   fi
 done
 

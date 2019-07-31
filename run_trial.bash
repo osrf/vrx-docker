@@ -10,10 +10,6 @@
 # Comment out to allow script to continue, even if it encounters an error
 set -e 
 
-TEAM_NAME=$1
-TASK_NAME=$2
-TRIAL_NUM=$3
-
 # Constants.
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -23,12 +19,40 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 [-n --nvidia] <team_name> <task_name> <trial_num>"
   exit 1
 }
 
+# Parse arguments
+nvidia_arg=""
+image_nvidia=""
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+      -n|--nvidia)
+      nvidia_arg="-n"
+      image_nvidia="-nvidia"
+      shift
+      ;;
+      *)    # unknown option
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
+
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
+
+TEAM_NAME=$1
+TASK_NAME=$2
+TRIAL_NUM=$3
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
@@ -109,7 +133,8 @@ echo "---------------------------------"
 #       competitior container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
 SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
-${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} vrx-server-${ROS_DISTRO}:latest \
+SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
+${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
   -v ${TEAM_GENERATED_DIR}:/team_generated \

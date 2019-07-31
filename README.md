@@ -293,9 +293,20 @@ In `verbose_output.txt`, expect to see
 ```
 Error [parser_urdf.cc:3170] Unable to call parseURDF on robot model
 Error [parser.cc:406] parse as old deprecated model file failed.
+...
+[Msg] OnReady
+[Msg] OnRunning
+[Msg] 4.999000Segmentation fault (core dumped)
+[gazebo-2] process has died [pid 86, exit code 139, cmd /opt/ros/melodic/lib/gazebo_ros/gzserver --verbose -e ode -r --record_period 0.01 --record_path /home/tylerlum/.gazebo /task_generated/worlds/perception0.world __name:=gazebo __log:=/home/tylerlum/.ros/log/1d527252-b319-11e9-89c0-0242ac100016/gazebo-2.log].
+log file: /home/tylerlum/.ros/log/1d527252-b319-11e9-89c0-0242ac100016/gazebo-2*.log
+
 ```
 
-This comes from recording, and is a known issue that does not affect the competition.
+The parse error message comes from recording, and is a known issue that does not affect the competition. The segmentation fault at the end comes from the scoring plugin shutting down Gazebo when the competition is over.
+
+A known bug is that getting log files from the competitor container might not work, depending on the location that it is stored.
+
+As well, during video generation you cannot have any other windows related to Gazebo open. The script looks for a window with Gazebo in the name to move to the front for recooding, but this can be ruined by another window.
 
 TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
 

@@ -79,7 +79,11 @@ Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make
 The next step is to build your vrx-server image. This involves running
 
 ```
-./vrx_server/build_image.bash
+./vrx_server/build_image.bash # for non-Nvidia computers
+# or
+./vrx_server/build_image.bash -n # for Nvidia computers
+
+# ./vrx_server/build_image.bash [-n --nvidia]
 ```
 
 This will create the image for the vrx server that runs the simulation. This step may take 30-60 minutes the first time, but it will be cached in the future calls.
@@ -171,10 +175,12 @@ If you are missing these files, please review the command output (either in term
 In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/station_keeping.yaml`), call:
 
 ```
-./run_trial.bash example_team station_keeping 0
+./run_trial.bash example_team station_keeping 0 # for non-Nvidia computers
+# or
+./run_trial.bash -n example_team station_keeping 0 # for Nvidia computers
 
 # For your team you will run:
-# ./run_trial.bash <your_team_name> <task_name> <trial_number>
+# ./run_trial.bash [-n --nvidia] <your_team_name> <task_name> <trial_number>
 ```
 
 This will instantiate two Docker containers.
@@ -286,6 +292,8 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_n
 
 * Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
+* Note that some scripts (build_image.bash, run_container.bash, run_trial.bash, all multi_scripts for running) have an optional \[-n --nvidia\] argument that should be set for Nvidia devices. Please create an issue if there are any difficulties with this.
+
 ## Expected errors:
 
 In `verbose_output.txt`, expect to see 
@@ -339,10 +347,12 @@ To keep the terminal output clean, all of the output will be stored in `generate
 To run all trials for a given task, call:
 
 ```
-./multi_scripts/run_one_team_one_task.bash example_team example_task
+./multi_scripts/run_one_team_one_task.bash example_team example_task # for non-Nvidia computers
+# or
+./multi_scripts/run_one_team_one_task.bash -n example_team example_task # for Nvidia computers
 
 # For your team you will run:
-# ./multi_scripts/run_one_team_one_task.bash <your_team_name> <task_name>
+# ./multi_scripts/run_one_team_one_task.bash [-n --nvidia] <your_team_name> <task_name>
 ```
 
 This will run each of the trials for a given task sequentially in an automated fashion for one team.
@@ -352,10 +362,12 @@ This will run each of the trials for a given task sequentially in an automated f
 To run all trials for all tasks listed in the `task_generated` directory, call:
 
 ```
-./multi_scripts/run_one_team_all_tasks.bash example_team
+./multi_scripts/run_one_team_all_tasks.bash example_team # for non-Nvidia computers
+# or
+./multi_scripts/run_one_team_all_tasks.bash -n example_team # for Nvidia computers
 
 # For your team you will run:
-# ./multi_scripts/run_one_team_all_tasks.bash <your_team_name>
+# ./multi_scripts/run_one_team_all_tasks.bash [-n --nvidia] <your_team_name>
 ```
 
 ### Running all trials for all tasks for all teams
@@ -363,10 +375,12 @@ To run all trials for all tasks listed in the `task_generated` directory, call:
 To run all trials for all tasks listed in the `task_generated` directory for all teams in `team_generated`, call:
 
 ```
-./multi_scripts/run_all_teams_all_tasks.bash 
+./multi_scripts/run_all_teams_all_tasks.bash # for non-Nvidia computers
+# or
+./multi_scripts/run_all_teams_all_tasks.bash -n # for Nvidia computers
 
 # For your team you will run:
-# ./multi_scripts/run_all_teams_all_tasks.bash
+# ./multi_scripts/run_all_teams_all_tasks.bash [-n --nvidia]
 ```
 
 This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.

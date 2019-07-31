@@ -88,8 +88,6 @@ The next step is to build your vrx-server image. This involves running
 
 This will create the image for the vrx server that runs the simulation. This step may take 30-60 minutes the first time, but it will be cached in the future calls.
 
-TODO: Note about Nvidia.
-
 ### Adding VRX team files
 
 To run the competition with a VRX team's configuration, the team's folder containing its configuration files must be put into the `team_config` directory.
@@ -292,6 +290,7 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_n
 
 * Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
+* Currently, the playback log files are always played back at the same speed. To change the speed of playback, you must change the rate of recording. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `RECORD_PERIOD=...`. A higher number means faster playback. A lower number means slower playback. 
 * Note that some scripts (build_image.bash, run_container.bash, run_trial.bash, all multi_scripts for running) have an optional \[-n --nvidia\] argument that should be set for Nvidia devices. Please create an issue if there are any difficulties with this.
 
 ## Expected errors:

@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# build_image.bash: A bash script to build the vrx server image
+#
+# E.g.: ./build_image.bash    # non-Nvidia
+#   or  ./build_image.bash -n # Nvidia
+
 echo "Building vrx-server image"
 echo "================================="
 
@@ -13,14 +19,15 @@ NOCOLOR='\033[0m'
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# DOCKER_ARGS="--no-cache"
-
+# Setup docker args
 USERID=`id -u $USER`
 if [[ ${USERID} != 0 ]]; then
   DOCKER_ARGS="--build-arg USERID=${USERID}"
 fi
 
-# Builds a Docker image.
+# DOCKER_ARGS="$DOCKER_ARGS --no-cache"
+
+# Parse arguments
 BUILD_BASE=""
 image_name="vrx-server-melodic"
 

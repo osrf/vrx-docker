@@ -84,13 +84,6 @@ else
     echo "Found Gazebo log file [$GZ_LOG_FILE]"
 fi
 
-# Sanity check: Make sure that the log file path is absolute (the Gazebo
-# playback doesn't work well with relative paths).
-if [[ "$GZ_LOG_FILE" != /* ]]; then
-  echo "Please, use an absolute path for your Gazebo log path."
-  exit 1
-fi
-
 # Sanity check: Make sure that catkin_find is found.
 which catkin_find > /dev/null || { echo "Unable to find catkin_find."\
   "Did you source your ROS setup.bash file?" ; exit 1; }
@@ -129,6 +122,7 @@ fi
 echo "Setting up for playback..."
 
 # Wait and find the Gazebo Window ID.
+# Note: May find Gazebo in browser tab, which is wrong. Please close all Gazebo related tabs.
 until wmctrl -lp | grep Gazebo > /dev/null
 do
   sleep 1

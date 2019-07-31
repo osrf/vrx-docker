@@ -60,13 +60,14 @@ mkdir -p $DESTINATION_FOLDER
 echo "Starting vrx trial..."
 
 # Run the trial.
+# Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
 roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-# Store topics in rosbag NOTE: currently storing ALL topics, might be too much
+# Store topics in rosbag 
 # July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
 rosbag record -O ~/vrx_rostopics.bag /vrx/task/info &

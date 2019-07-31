@@ -72,7 +72,6 @@ fi
 USERID=$(id -u)
 GROUPID=$(id -g)
 
-# USE FOR NON-NVIDIA SYSTEM
 docker run --name ${CONTAINER} \
   -e XAUTHORITY=$XAUTH \
   --env="DISPLAY" \

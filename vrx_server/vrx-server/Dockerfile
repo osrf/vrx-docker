@@ -104,7 +104,7 @@ RUN mkdir -p vrx_ws/src
 # Copy the VRX repository from the local file system
 # We can't use the USER:GROUP variables until Docker adds support to --chown
 # COPY --chown=developer:developer . vrx_ws/src/vrx/
-RUN hg clone https://tylerlum@bitbucket.org/osrf/vrx
+RUN hg clone https://bitbucket.org/osrf/vrx
 RUN mv ./vrx ./vrx_ws/src
 
 # Compile the VRX project.

@@ -57,10 +57,8 @@ This section will give descriptions of the directories in this repository:
 ### Installing Docker
 
 Docker is required to run the automated evaluation. 
-Please follow the [Docker CE for Ubuntu tutorial's](https://docs.docker.com/install/linux/docker-ce/ubuntu) __Prerequisites__ and __Install Docker CE__ sections.
-
-Then, continue to the [post-install instructions](https://docs.docker.com/engine/installation/linux/linux-postinstall/).
-Complete the __Manage Docker as a non-root user__ section to avoid having to run the commands on this page using `sudo`.
+Please follow the [VRX Docker install tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/installDocker) and the [Nvidia Docker install tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/installNvidiaDocker) if you are
+using an Nvidia GPU.
 
 ### Setting up vrx\_gazebo
 

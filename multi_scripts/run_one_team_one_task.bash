@@ -15,9 +15,31 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name> <task_name>"
+  echo "Usage: $0 [-n --nvidia] <team_name> <task_name>"
   exit 1
 }
+
+# Parse arguments
+nvidia_arg=""
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+      -n|--nvidia)
+      nvidia_arg="-n"
+      shift
+      ;;
+      *)    # unknown option
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 2 ]] && usage
@@ -58,7 +80,7 @@ for TRIAL in ${LIST_OF_TRIALS}; do
   mkdir -p ${CONSOLE_OUTPUT_DIR}
 
   # Run trial and store console output
-  ${DIR}/../run_trial.bash "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
+  ${DIR}/../run_trial.bash $nvidia_arg "${TEAM_NAME}" "${TASK_NAME}" "${TRIAL_NUM}" > ${CONSOLE_OUTPUT_DIR}/output.txt 2>&1
   exit_status=$?
 
   # Print OK or FAIL message

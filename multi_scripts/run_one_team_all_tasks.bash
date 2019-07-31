@@ -15,9 +15,31 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name>"
+  echo "Usage: $0 [-n --nvidia] <team_name>"
   exit 1
 }
+
+# Parse arguments
+nvidia_arg=""
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+      -n|--nvidia)
+      nvidia_arg="-n"
+      shift
+      ;;
+      *)    # unknown option
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 1 ]] && usage
@@ -36,7 +58,7 @@ successful_team=true
 for TASK_NAME in ${LIST_OF_TASKS}; do
   echo "Running task: ${TASK_NAME}..."
   echo "-----------------------------------"
-  ${DIR}/run_one_team_one_task.bash "${TEAM_NAME}" "${TASK_NAME}"
+  ${DIR}/run_one_team_one_task.bash $nvidia_arg "${TEAM_NAME}" "${TASK_NAME}"
 
   # Check if successful
   if [ $? -ne 0 ]; then

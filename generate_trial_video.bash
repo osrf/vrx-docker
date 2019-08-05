@@ -96,8 +96,8 @@ echo "Sanity checks complete"
 # Define constants for recording
 x=100
 y=100
-width=2000
-height=1500
+width=1000
+height=750
 BLACK_WINDOW_TIME=1
 
 # Tell gazebo client what size and place it should be

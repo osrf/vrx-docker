@@ -33,14 +33,14 @@ is_gzclient_running()
   fi
 }
 
-# Wait until the /gazebo/robotx_example_course/world_stats topic tells us that the playback
-# has been paused. This event will trigger the end of the recording.
-# Note: Depending on name of world running, may be different name from "robotx_example_course"
-# Run `gz topic -l` to see the correct topic name
+# Wait until the gazebo world stats topic (eg. /gazebo/robotx_example_course/world_stats /gazebo/<world>/world_stats)
+# tells us that the playback has been paused. This event will trigger the end of the recording.
 wait_until_playback_ends()
 {
   echo -n "Waiting for playback to end..."
-  until gz topic -e /gazebo/robotx_example_course/world_stats -d 1 -u | grep "paused: true" \
+  gz_world_stats_topic=$(gz topic -l | grep "world_stats")
+
+  until gz topic -e $gz_world_stats_topic -d 1 -u | grep "paused: true" \
     > /dev/null
   do
     sleep 1

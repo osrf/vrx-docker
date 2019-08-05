@@ -52,7 +52,7 @@ This section will give descriptions of the directories in this repository:
 
 * `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, WAM-V URDFs, trial worlds etc. More details about this below.
 
-## Quick Start Instructions (no multi_scripts): Setting up workspace to run automated evaluation
+## Quick Start Instructions For a Single Trial: Setting up workspace to run automated evaluation
 
 ### Installing Docker
 
@@ -63,7 +63,7 @@ using an Nvidia GPU.
 ### Setting up vrx\_gazebo
 
 `vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). 
-Please, follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. 
+If you have not done so already, please follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. 
 Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
 
 ### Installing dependencies
@@ -72,16 +72,25 @@ Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make
 
 * `sudo apt-get install recordmydesktop wmctrl psmisc vlc` - for generating and viewing videos
 
+### Setting up vrx-docker
+
+`vrx-docker` must be setup on your machine to run these scripts. Please note that most of the commands listed here are written to be run from the vrx-docker directory. These scripts should be able to be run from other directories, but you will need to change the command paths accordingly.
+
+```
+hg clone https://bitbucket.org/osrf/vrx-docker
+cd vrx-docker
+```
+
 ### Building your vrx-server image
 
 The next step is to build your vrx-server image. This involves running
 
 ```
 ./vrx_server/build_image.bash # for non-Nvidia computers
-# or
+
 ./vrx_server/build_image.bash -n # for Nvidia computers
 
-# ./vrx_server/build_image.bash [-n --nvidia]
+# Usage: ./vrx_server/build_image.bash [-n --nvidia]
 ```
 
 This will create the image for the vrx server that runs the simulation. This step may take 30-60 minutes the first time, but it will be cached in the future calls.
@@ -114,7 +123,11 @@ To prepare a team's system, call:
 
 This will call `generate_wamv.launch` on the files in `team_config/example_team` and store the generated files in `generated/team_generated/example_team`.
 
-This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise.
+This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. You can view this with:
+
+```
+cat generated/team_generated/example_team/compliant.txt
+```
 
 ### Preparing trials for a task
 
@@ -166,7 +179,7 @@ generated/task_generated
 
 If you are missing these files, please review the command output (either in terminal or in `multi_scripts/prepare_output/`) to investigate the issue.
 
-## Quick Start Instructions (no multi_scripts): Running a single trial for a single team
+## Quick Start Instructions For a Single Trial: Running a single trial for a single team
 
 In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/station_keeping.yaml`), call:
 
@@ -189,7 +202,7 @@ After the competition is over, it stores log files of the results. More about lo
 
 TODO: Figure out if competitor or server first and associated errors (ROS_MASTER missing? Docker build slow?)
 
-## Quick Start Instructions (no multi_scripts): Reviewing the results of a trial
+## Quick Start Instructions For a Single Trial: Reviewing the results of a trial
 
 ### Reviewing the trial performance
 
@@ -243,7 +256,7 @@ The `generated/logs` directory will have numerous directories with the date and 
 
 * video - (only created after running generate video scripts, how to do so in section below) contains the generated trial video and its record and playback command outputs
 
-## Quick Start Instructions (no multi_scripts): Trial videos and playback
+## Quick Start Instructions For a Single Trial: Trial videos and playback
 
 ### Generating a single trial video
 
@@ -275,7 +288,10 @@ generated/logs/example_team/station_keeping/0/video/
 To play back a specific trial's log file, move to `vrx-docker` and call:
 
 ```
-roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/state.log
+roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team/station_keeping/0/gazebo-server/state.log
+
+# For your team you will run:
+# roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/state.log
 ```
 
 ## Important information
@@ -284,7 +300,7 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_n
 
 * After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
 
-* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts
+* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts. As well, if your Gazebo playback window doesn't perfectly align with the recording window, you can edit `generate_trial_video.bash` to change `--width=$((width + 0)) => --width=$((width + 100))` or something similar to manually align it
 
 * Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
@@ -293,11 +309,12 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_n
 
 ## Expected errors:
 
-In `verbose_output.txt`, expect to see 
+* In `verbose_output.txt`, expect to see 
 
 ```
 Error [parser_urdf.cc:3170] Unable to call parseURDF on robot model
 Error [parser.cc:406] parse as old deprecated model file failed.
+...
 ...
 [Msg] OnReady
 [Msg] OnRunning
@@ -309,15 +326,35 @@ log file: /home/tylerlum/.ros/log/1d527252-b319-11e9-89c0-0242ac100016/gazebo-2*
 
 The parse error message comes from recording, and is a known issue that does not affect the competition. The segmentation fault at the end comes from the scoring plugin shutting down Gazebo when the competition is over.
 
-A known bug is that getting log files from the competitor container might not work, depending on the location that it is stored.
+* A known bug is that getting log files from the competitor container might not work, depending on the location that it is stored.
 
-As well, during video generation you cannot have any other windows related to Gazebo open. The script looks for a window with Gazebo in the name to move to the front for recooding, but this can be ruined by another window.
+* As well, during video generation you cannot have any other windows related to Gazebo open. The script looks for a window with Gazebo in the name to move to the front for recooding, but this can be ruined by another window.
 
-TODO(tylerlum): Describe ending sequence, logs, expected errors/warnings
+* When building the vrx server image with `./vrx_server/build_image.bash [-n --nvidia]`, you can expect to see the following types errors, which are normal:
+
+```
+WARNING: apt does not have a stable CLI interface…
+```
+
+* Depending on the size of your display, the resolution/size of the video recording may be incorrect. If your video generation does not work, type the following command and see the result.
+
+```
+cat generated/logs/<team>/<task>/<trial_num>/video/playback_video.ogv.record_output.txt
+
+Window size specification out of bounds!(current resolution:1920x1080)
+```
+
+You can look in the __Important Information__ section for details about how to change the width and height.
 
 ## Multi_scripts
 
 The above quick start instructions gave an overview of how to use the main scripts to run automated evaluation. For convenience, we also have multi_scripts that run the main scripts multiple times for convenience. We describe these below.
+
+Before beginning, you may want to remove the previously generated files to start fresh, as it may get confusing or messy if you keep old files along with new ones.
+
+```
+rm -r generated
+```
 
 ### Prepare all scripts
 
@@ -352,7 +389,7 @@ To run all trials for a given task, call:
 # ./multi_scripts/run_one_team_one_task.bash [-n --nvidia] <your_team_name> <task_name>
 ```
 
-This will run each of the trials for a given task sequentially in an automated fashion for one team.
+This will run `run_trial.bash` on all trials in `generated/task_generated/<task>/worlds` for a given task for one team.
 
 ### Running all trials for all tasks for a single team
 
@@ -367,6 +404,8 @@ To run all trials for all tasks listed in the `task_generated` directory, call:
 # ./multi_scripts/run_one_team_all_tasks.bash [-n --nvidia] <your_team_name>
 ```
 
+This will run `run_one_team_one_task.bash` on all tasks in `generated/task_generated/` for a given team.
+
 ### Running all trials for all tasks for all teams
 
 To run all trials for all tasks listed in the `task_generated` directory for all teams in `team_generated`, call:
@@ -380,7 +419,7 @@ To run all trials for all tasks listed in the `task_generated` directory for all
 # ./multi_scripts/run_all_teams_all_tasks.bash [-n --nvidia]
 ```
 
-This will run each of the trials for all tasks sequentially in an automated fashion. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
+This will run `run_one_team_all_tasks.bash` on all teams in `generated/team_generated`. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
 
 Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 
@@ -396,6 +435,8 @@ To generate all trial videos for one team and one task, run
 # ./multi_scripts/generate_one_team_one_task_videos.bash <your_team_name> <task_name>
 ```
 
+This will run `generate_trial_video.bash` for all trials in `generated/logs/<team>/<task>` for a given task and team.
+
 ### Generating all trial videos for all tasks for a single team
 To generate all trial videos for one team and all its tasks, run
 
@@ -406,6 +447,8 @@ To generate all trial videos for one team and all its tasks, run
 # ./multi_scripts/generate_one_team_all_task_videos.bash <your_team_name>
 ```
 
+This will run `generate_one_team_one_task_videos.bash` for all tasks in `generated/logs/<team>` for a given team.
+
 ### Generating all trial videos for all tasks for all teams
 To generate all trial videos for all teams and all its tasks, run
 
@@ -415,6 +458,8 @@ To generate all trial videos for all teams and all its tasks, run
 # For your team you will run:
 # ./multi_scripts/generate_all_team_all_task_videos.bash
 ```
+
+This will run `generate_one_team_all_task_videos.bash` for all teams in `generated/logs`.
 
 Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
 

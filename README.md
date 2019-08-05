@@ -200,13 +200,13 @@ This will instantiate two Docker containers.
 
 After the competition is over, it stores log files of the results. More about logs in a section below.
 
-TODO: Figure out if competitor or server first and associated errors (ROS_MASTER missing? Docker build slow?)
+This pulls the competitor image first, then starts the simulation container, then starts the competitor container. Note: Need to ensure that there is enough initial_state_duration time so that competition does not start before the competitor container has started. 
 
 ## Quick Start Instructions For a Single Trial: Reviewing the results of a trial
 
 ### Reviewing the trial performance
 
-After the trial has finished, you can go to `generated/logs/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. TODO(tylerlum) Describe how to view performance specifically and show example. TODO(tylerlum) describe video directory and playback and logging
+After the trial has finished, you can go to `generated/logs/<your_team_name>/<task_name>/<trial_number>/` to review the generated log files. 
 
 The `generated/logs` directory has the following structure:
 
@@ -256,6 +256,12 @@ The `generated/logs` directory will have numerous directories with the date and 
 
 * video - (only created after running generate video scripts, how to do so in section below) contains the generated trial video and its record and playback command outputs
 
+View the score of the trial by running
+
+```
+cat generated/logs/example_team/station_keeping/0/trial_score.txt
+```
+
 ## Quick Start Instructions For a Single Trial: Trial videos and playback
 
 ### Generating a single trial video
@@ -283,6 +289,12 @@ generated/logs/example_team/station_keeping/0/video/
 └── playback_video.ogv.record_output.txt
 ```
 
+You can play the video with
+
+```
+vlc generated/logs/example_team/station_keeping/0/video/playback_video.ogv
+```
+
 ### Playing back the simulation
 
 To play back a specific trial's log file, move to `vrx-docker` and call:
@@ -298,13 +310,14 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team
 
 * All generated files will be stored in the `generated` directory. This will include team and task generated files, log files, scoring, playback videos, etc. These files may get overwritten if scripts are called more than once. Remember to delete these generated files if you want to start fresh.
 
-* After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
+* After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh` or any file in `vrx_server/vrx-server`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
 
 * For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts. As well, if your Gazebo playback window doesn't perfectly align with the recording window, you can edit `generate_trial_video.bash` to change `--width=$((width + 0)) => --width=$((width + 100))` or something similar to manually align it
 
 * Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
 * Currently, the playback log files are always played back at the same speed. To change the speed of playback, you must change the rate of recording. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `RECORD_PERIOD=...`. A higher number means faster playback. A lower number means slower playback. 
+
 * Note that some scripts (build_image.bash, run_container.bash, run_trial.bash, all multi_scripts for running) have an optional \[-n --nvidia\] argument that should be set for Nvidia devices. Please create an issue if there are any difficulties with this.
 
 ## Expected errors:

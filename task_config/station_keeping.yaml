@@ -14,8 +14,6 @@ tasks:
         0:
             stationkeeping:
                 -
-environment:
-    steps: 2
     macros:
         ocean_waves:
             -
@@ -32,6 +30,7 @@ environment:
                 - mean_vel: 0.0
                   var_gain: 0
                   var_time: 2
+                  seed: 10
                   /**wind_objs: "
                   <wind_obj>
 
@@ -56,6 +55,7 @@ environment:
                 - mean_vel: 8.0
                   var_gain: 8.0
                   var_time: 20
+                  seed: 10
                   /**wind_objs: "
                   <wind_obj>
 
@@ -72,4 +72,9 @@ environment:
 
                   <density> 0.1 </density>"
                   /**ambient: "0.3 0.3 0.3 1"
+
+
+
+
+
 

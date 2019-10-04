@@ -88,3 +88,9 @@ Then
 source /opt/ros/melodic/setup.bash 
 rostopic list
 ```
+
+# Shutting down
+
+```
+./utils/kill_vrx_containers.bash 
+```

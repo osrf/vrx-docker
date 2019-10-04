@@ -19,14 +19,15 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 [-n --nvidia] <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 [-n --nvidia] [-c --continue] <team_name> <task_name> <trial_num>"
+  echo "  -c option sets VRX coninue on completion to false for debugging"
   exit 1
 }
 
 # Parse arguments
 nvidia_arg=""
 image_nvidia=""
-
+EXIT_ON_COMPLETION=true
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -36,6 +37,10 @@ do
       -n|--nvidia)
       nvidia_arg="-n"
       image_nvidia="-nvidia"
+      shift
+      ;;
+      -c|--continue)
+      EXIT_ON_COMPLETION=false
       shift
       ;;
       *)    # unknown option
@@ -142,7 +147,7 @@ ${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVE
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e ROS_MASTER_URI=${ROS_MASTER_URI} \
   -e ROS_IP=${SERVER_ROS_IP} \
-  -e VRX_EXIT_ON_COMPLETION=true \
+  -e VRX_EXIT_ON_COMPLETION=${EXIT_ON_COMPLETION} \
   -e VRX_DEBUG=false" \
   "${SERVER_CMD}" &
 SERVER_PID=$!

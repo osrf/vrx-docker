@@ -86,9 +86,12 @@ cd vrx-docker
 The next step is to build your vrx-server image. This involves running
 
 ```
-./vrx_server/build_image.bash # for non-Nvidia computers
-
 ./vrx_server/build_image.bash -n # for Nvidia computers
+
+OR
+
+./vrx_server/build_image.bash # for non-Nvidia computers (not recommended, runs slower than real-time.)
+
 
 # Usage: ./vrx_server/build_image.bash [-n --nvidia]
 ```
@@ -123,7 +126,33 @@ To prepare a team's system, call:
 
 This will call `generate_wamv.launch` on the files in `team_config/example_team` and store the generated files in `generated/team_generated/example_team`.
 
-This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. You can view this with:
+The end of the output for this command should look something like this:
+```
+[INFO] [1570212125.006407]: 
+Using /home/bsb/vrx_comp/vrx-docker/team_config/example_team/sensor_config.yaml as the sensor configuration yaml file
+
+
+WAM-V urdf file sucessfully generated. File location: /home/bsb/vrx_comp/vrx-docker/generated/team_generated/example_team/example_team.urdf
+================================================================================REQUIRED process [wamv_config/wamv_generator-2] has died!
+process has finished cleanly
+log file: /home/bsb/.ros/log/123992a6-e6d1-11e9-af7a-408d5c555554/wamv_config-wamv_generator-2*.log
+Initiating shutdown!
+================================================================================
+[wamv_config/wamv_generator-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+done
+OK
+
+Checking /home/bsb/.ros/log/latest/wamv_config-wamv_generator-2.log for compliance
+Compliant? true. Writing to /home/bsb/vrx_comp/vrx-docker/generated/team_generated/example_team/compliant.txt
+OK
+```
+Note that the `REQUIRED process [wamv_config/wamv_generator-2] has died!` message is expected.
+
+This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. By compliant, we are refering to the limitations for sensor and propulsion configuration described in the [VRX competition documentation](https://bitbucket.org/osrf/vrx/wiki/documentation) .You can view this result by:
 
 ```
 cat generated/team_generated/example_team/compliant.txt
@@ -133,7 +162,7 @@ cat generated/team_generated/example_team/compliant.txt
 
 In this README, we will be using some vocabulary that will be clearly defined here.
 
-* `task`: One of the major competition tasks. Eg. `station_keeping`.
+* `task`: One of the major competition tasks. Eg. `stationkeeping`, `wayfinding`, `perception`, `nav_challenge`, `dock` or `scan_and_dock`.
 
 * `trial`: A specific task with a specific set of environmental conditions (e.g., sea state, wind magnitude and direction, lighting, etc.). Each task has multiple trials. Each trial will have a specific world file associated with it.
 
@@ -142,12 +171,38 @@ In this README, we will be using some vocabulary that will be clearly defined he
 To prepare all of the trials for a task, call:
 
 ```
-./prepare_task_trials.bash station_keeping
+./prepare_task_trials.bash stationkeeping
 
 #./prepare_task_trials.bash <task_name>
 ```
 
-This will call `generate_worlds.launch` on `task_config/station_keeping.yaml` and store the generated files in `generated/task_generated/station_keeping`.
+This will call `generate_worlds.launch` on `task_config/stationkeeping.yaml` and store the generated files in `generated/task_generated/stationkeeping`.
+
+The last part of the output of this should look something 
+```
+setting /run_id to 172c61c0-e6cd-11e9-af7a-408d5c555554
+process[rosout-1]: started with pid [30491]
+started core service [/rosout]
+process[world_gen-2]: started with pid [30505]
+
+
+
+All  3  worlds generated
+================================================================================REQUIRED process [world_gen-2] has died!
+process has finished cleanly
+log file: /home/bsb/.ros/log/172c61c0-e6cd-11e9-af7a-408d5c555554/world_gen-2*.log
+Initiating shutdown!
+================================================================================
+[world_gen-2] killing on exit
+[rosout-1] killing on exit
+[master] killing on exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+done
+OK
+```
+where the important parts are `All  3  worlds generated` indicating success.  Also note that the `REQUIRED process [world_gen-2] has died!` message is expected.
+
 
 Please note that we will be writing our own private .yaml files for the tasks. Essentially, the only difference between testing out your system with these steps and the real competition is that for the real competition, we will be creating our own `.yaml` files for tasks that you have not seen, which will vary the environmental conditions. We will not be trying to surprise you with the conditions, but we want to simply reward teams that are robust to different environmental conditions.
 
@@ -168,25 +223,26 @@ After running the prepare scripts, you should have the following file structure 
 
 ```
 generated/task_generated
-├── station_keeping
+├── stationkeeping
 │   ├── worlds
-│   │   ├── station_keeping0.world
-│   │   └── station_keeping1.world
+│   │   ├── stationkeeping0.world
+│   │   └── stationkeeping1.world
 │   └── world_xacros
-│       ├── station_keeping0.world.xacro
-│       └── station_keeping1.world.xacro
+│       ├── stationkeeping0.world.xacro
+│       └── stationkeeping1.world.xacro
 ```
 
 If you are missing these files, please review the command output (either in terminal or in `multi_scripts/prepare_output/`) to investigate the issue.
 
 ## Quick Start Instructions For a Single Trial: Running a single trial for a single team
 
-In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/station_keeping.yaml`), call:
+In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/stationkeeping.yaml`), call:
 
 ```
-./run_trial.bash example_team station_keeping 0 # for non-Nvidia computers
-# or
-./run_trial.bash -n example_team station_keeping 0 # for Nvidia computers
+./run_trial.bash -n example_team stationkeeping 0 # for Nvidia computers
+# OR
+./run_trial.bash example_team stationkeeping 0 # for non-Nvidia computers
+
 
 # For your team you will run:
 # ./run_trial.bash [-n --nvidia] <your_team_name> <task_name> <trial_number>
@@ -198,7 +254,7 @@ This will instantiate two Docker containers.
 
 2. The VRX team's container, which runs their system from the Dockerhub image in `team_config/<your_team_name>/dockerhub_image.txt`.
 
-After the competition is over, it stores log files of the results. More about logs in a section below.
+After the trial is over, it stores log files of the results. More about logs in a section below.
 
 This pulls the competitor image first, then starts the simulation container, then starts the competitor container. Note: Need to ensure that there is enough initial_state_duration time so that competition does not start before the competitor container has started. 
 
@@ -213,7 +269,7 @@ The `generated/logs` directory has the following structure:
 ```
 generated/logs
 └── example_team
-    ├── station_keeping
+    ├── stationkeeping
     │   └── 0
     │       ├── gazebo-server
     │       │   ├── ogre.log
@@ -259,7 +315,7 @@ The `generated/logs` directory will have numerous directories with the date and 
 View the score of the trial by running
 
 ```
-cat generated/logs/example_team/station_keeping/0/trial_score.txt
+cat generated/logs/example_team/stationkeeping/0/trial_score.txt
 ```
 
 ## Quick Start Instructions For a Single Trial: Trial videos and playback
@@ -270,7 +326,7 @@ After running a trial, a `state.log` file is stored under `generated/logs/<team>
 To generate a trial video, please run the trial using the steps above, source vrx, and then run
 
 ```
-./generate_trial_video.bash example_team station_keeping 0
+./generate_trial_video.bash example_team stationkeeping 0
 
 # For your team you will run:
 # ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
@@ -283,7 +339,7 @@ it may find that window, instead of the actual Gazebo simulation window.
 There should be a new directory called `generated/logs/<team>/<task>/<trial_num>/video` that contains the following:
 
 ```
-generated/logs/example_team/station_keeping/0/video/
+generated/logs/example_team/stationkeeping/0/video/
 ├── playback_video.ogv
 ├── playback_video.ogv.playback_output.txt
 └── playback_video.ogv.record_output.txt
@@ -292,7 +348,7 @@ generated/logs/example_team/station_keeping/0/video/
 You can play the video with
 
 ```
-vlc generated/logs/example_team/station_keeping/0/video/playback_video.ogv
+vlc generated/logs/example_team/stationkeeping/0/video/playback_video.ogv
 ```
 
 ### Playing back the simulation
@@ -300,7 +356,7 @@ vlc generated/logs/example_team/station_keeping/0/video/playback_video.ogv
 To play back a specific trial's log file, move to `vrx-docker` and call:
 
 ```
-roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team/station_keeping/0/gazebo-server/state.log
+roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team/stationkeeping/0/gazebo-server/state.log
 
 # For your team you will run:
 # roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/state.log
@@ -496,7 +552,7 @@ and your `generated/logs` directory to look like
 ```
 generated/logs
 ├── example_team
-│   ├── station_keeping
+│   ├── stationkeeping
 │   │   ├── 0
 │   │   │   ├── gazebo-server
 │   │   │   │   ├── ogre.log

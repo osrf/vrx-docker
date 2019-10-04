@@ -2,7 +2,7 @@
 
 # run_trial.bash: A bash script to run a trial for a given team. 
 #
-# E.g.: ./run_trial.bash example_team station_keeping 0
+# E.g.: ./run_trial.bash example_team stationkeeping 0
 #
 # Note: must run prepare scripts for the trial and team before running
 #

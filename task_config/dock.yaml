@@ -1,35 +1,33 @@
 constant:
     steps: 1
     macros:
-        sandisland_minus_scene: 
+        sandisland_minus_scene:
             -
     sequence:
 
 tasks:
-    steps: 1
+    steps: 3
     macros:
         dock:
             -
-    sequence:
-        0:
-            dock:
-                -
-environment:
-    steps: 2
-    macros:
         ocean_waves:
             -
         usv_wind_gazebo:
             -
         scene_macro:
             -
+        insert_model:
+            -
     sequence:
         0:
             ocean_waves:
-                - gain: 1.0
-                  period: 1.0
+                - gain: 0.0
+                  period: 7.0
+                  direction_x: 1.0
+                  direction_y: 0.0
             usv_wind_gazebo:
-                - mean_vel: 0.0
+                - direction: 270
+                  mean_vel: 0.0
                   var_gain: 0
                   var_time: 2
                   seed: 10
@@ -44,20 +42,35 @@ environment:
 
                   </wind_obj>"
             scene_macro:
-                - /**fog: "'
-                  <color> 0.7 0.7 0.7 1 </color>
-
-                  <density> 0.0 </density>'"
-                  /**ambient: "1 1 1 1"
+                - /**fog: ""
+                  /**ambient: ""
+            # Call the dock.xacro in vrx_gazebo/worlds/xacros/dock.xacro
+            # Make sure the model (dock0.sdf.erb) defines consistent
+            # symbols as passed to the xacro, i.e., to change placard symbols
+            # change them both here and in the dock0/model.sdf.erb file!!!
+            dock:
+                - model_name: vrx_dock_blue_circle__red_cross
+                  uri: vrx_dock_blue_circle__red_cross
+                  bay1_allowed: false
+                  bay1_symbol: blue_circle
+                  bay2_allowed: true
+                  bay2_symbol: red_cross
+                  x: 138
+                  y: 103
+                  z: -0.2
+                  Y: -2.76
         1:
             ocean_waves:
-                - gain: 0.4
+                - gain: 0.2
                   period: 8.0
+                  direction_x: 1.0
+                  direction_y: 0.0
             usv_wind_gazebo:
-                - mean_vel: 8.0
-                  var_gain: 8.0
-                  var_time: 20
-                  seed: 10
+                - direction: -160
+                  mean_vel: 4.0
+                  var_gain: 2.0
+                  var_time: 2
+                  seed: 11
                   /**wind_objs: "
                   <wind_obj>
 
@@ -65,18 +78,68 @@ environment:
 
                   <link_name>base_link</link_name>
 
-                  <coeff_vector> .5 .5 .33</coeff_vector>
+                  <coeff_vector>.5 .5 .33</coeff_vector>
 
                   </wind_obj>"
             scene_macro:
-                - /**fog: "
-                  <color> 0.9 0.9 0.9 1 </color>
+                - /**fog: ""
+                  /**ambient: "0.8 0.8 0.8 1"
+            # Call the dock.xacro in vrx_gazebo/worlds/xacros/dock.xacro
+            # Make sure the model (dock0.sdf.erb) defines consistent
+            # symbols as passed to the xacro, i.e., to change placard symbols
+            # change them both here and in the dock0/model.sdf.erb file!!!
+            dock:
+                - model_name: vrx_dock_green_triangle__blue_cross
+                  uri: vrx_dock_green_triangle__blue_cross
+                  bay1_allowed: true
+                  bay1_symbol: green_triangle
+                  bay2_allowed: false
+                  bay2_symbol: blue_cross
+                  x: 79
+                  y: -23
+                  z: -0.2
+                  Y: -2.2
+        2:
+            ocean_waves:
+                - gain: 0.7
+                  period: 3.0
+                  direction_x: 0.37
+                  direction_y: -0.92
+            usv_wind_gazebo:
+                - direction: -160
+                  mean_vel: 8.0
+                  var_gain: 8.0
+                  var_time: 2
+                  seed: 12
+                  /**wind_objs: "
+                  <wind_obj>
 
-                  <density> 0.1 </density>"
-                  /**ambient: "0.3 0.3 0.3 1"
+                  <name>wamv</name>
 
+                  <link_name>base_link</link_name>
 
+                  <coeff_vector>.5 .5 .33</coeff_vector>
 
-
-
-
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: "'
+                  <fog>
+                    <type> linear</type>
+                    <color> 0.7 0.7 0.7 1 </color>
+                    <density> 0.1 </density>
+                  </fog>"
+                  /**ambient: "0.4 0.4 0.4 1"
+            # Call the dock.xacro in vrx_gazebo/worlds/xacros/dock.xacro
+            # Make sure the model (dock0.sdf.erb) defines consistent
+            # symbols as passed to the xacro, i.e., to change placard symbols
+            # change them both here and in the dock0/model.sdf.erb file!!!
+            dock:
+                - model_name: vrx_dock_red_cross__red_triangle
+                  uri: vrx_dock_red_cross__red_triangle
+                  bay1_allowed: false
+                  bay1_symbol: red_cross
+                  bay2_allowed: true
+                  bay2_symbol: red_triangle
+                  x: 45
+                  y: 85
+                  z: -0.2

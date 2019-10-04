@@ -18,22 +18,17 @@ environment:
             -
     sequence:
         0:
-            wayfinding:
-                - /**waypoints: "
-                    <waypoint>
-                      <pose>21.3109331464 -157.888776027 3.14</pose>
-                    </waypoint>
-                    <waypoint>
-                      <pose>21.3109331464 -157.888976027 3.4</pose>
-                    </waypoint>
-                    <waypoint>
-                      <pose>21.3109331464 -157.889176027 2.88</pose>
-                    </waypoint>
-                  "
+            stationkeeping:
+                - lat: "21.31085"
+                  lon: "-157.88860"
+                  heading: "1.05"
                   /**wp_markers: "
                   <markers>
+
                   <scaling>0.2 0.2 2.0</scaling>
+
                   <height>0.5</height>
+
                   </markers>"
             ocean_waves:
                 - gain: 0.0
@@ -55,27 +50,18 @@ environment:
 
                   </wind_obj>"
         1:
-            wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.3099 -157.8887 0</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3107 -157.8891 3.4</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3099 -157.8891 4.9</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3103 -157.8887 0.5</pose>
-                   </waypoint>
-                  "
+            stationkeeping:
+                - lat: "21.31099"
+                  lon: "-157.88870"
+                  heading: "3"
                   /**wp_markers: "
                   <markers>
-                  <scaling>0.2 0.2 2.0</scaling>
-                  <height>0.5</height>
-                  </markers>"
 
+                  <scaling>0.2 0.2 2.0</scaling>
+
+                  <height>0.5</height>
+
+                  </markers>"
             ocean_waves:
                 - gain: 0.2
                   period: 8.0
@@ -96,30 +82,18 @@ environment:
 
                   </wind_obj>"
         2:
-            wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.3091 -157.8895 1.57</pose>
-                   </waypoint>
-                    <waypoint>
-                     <pose>21.3105 -157.8891 2.356</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3100 -157.8895 4.7</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3109 -157.8897 3.14</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.3099 -157.8901 5.5</pose>
-                   </waypoint>
-"
+            stationkeeping:
+                - lat: "21.31092"
+                  lon: "-157.88874"
+                  heading: "2.35"
                   /**wp_markers: "
                   <markers>
-                  <scaling>0.2 0.2 2.0</scaling>
-                  <height>0.5</height>
-                  </markers>"
 
+                  <scaling>0.2 0.2 2.0</scaling>
+
+                  <height>0.5</height>
+
+                  </markers>"
             ocean_waves:
                 - gain: 0.7
                   period: 3.0

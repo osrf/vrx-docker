@@ -19,7 +19,6 @@ When a new PR comes in, add a bitbucket comment so that the rest of the team kno
 
 E.g.,
 ```
-
 rm -r vrx-events
 hg clone ssh://hg@bitbucket.org/808brick/vrx-events
 ```

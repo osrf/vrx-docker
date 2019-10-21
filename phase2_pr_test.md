@@ -2,9 +2,13 @@
 
 ## Initial setup
 
+Assumes you have VRX setup in `~/vrx_ws`
+
 ```
 cd ~/vrx_ws/src
-hg clone ssh://hg@bitbucket.org/osrf/vrx-events
+hg clone ssh://hg@bitbucket.org/osrf/vrx-docker
+# Directory for vrx-events forks/branches
+mkdir ~/vrx_comp && cd ~/vrx_comp
 ```
 
 ## Assigning PR Review
@@ -15,6 +19,7 @@ When a new PR comes in, add a bitbucket comment so that the rest of the team kno
 
 E.g.,
 ```
+
 cd ~/vrx_comp
 rm -r vrx-events
 hg clone ssh://hg@bitbucket.org/808brick/vrx-events

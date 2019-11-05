@@ -24,7 +24,5 @@ wamv_gps:
     - name: gps_wamv
 wamv_imu:
     - name: imu_wamv
-wamv_p3d:
-    - name: p3d_wamv
 lidar:
     - name: lidar_wamv

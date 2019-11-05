@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<sdf version="1.6" xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- COORDINATE: {'environment': 0, 'constant': 0} -->
+<world name="robotx_example_course">
+  <xacro:include filename="$(find vrx_gazebo)/worlds/xacros/include_all_xacros.xacro" />
+  <xacro:include_all_xacros />
+    <!-- === ocean_waves === -->
+      <xacro:ocean_waves gain="0.0" period="7.0" />
+
+    <!-- === usv_wind_gazebo === -->
+      <xacro:usv_wind_gazebo var_time="1" direction="240" seed="10" mean_vel="0" var_gain="0" >
+    <wind_objs>
+ <wind_obj>
+<name>wamv</name>
+<link_name>base_link</link_name>
+<coeff_vector>.5 .5 .33</coeff_vector>
+</wind_obj>    </wind_objs>
+  </xacro:usv_wind_gazebo>
+
+    <!-- === wayfinding === -->
+      <xacro:wayfinding >
+    <wp_markers>
+ <markers> <scaling>0.2 0.2 2.0</scaling> <height>0.5</height> </markers>    </wp_markers>
+    <waypoints>
+ <waypoint> <pose>21.3109331464 -157.888776027 3.14</pose> </waypoint> <waypoint> <pose>21.3109331464 -157.888976027 3.4</pose> </waypoint> <waypoint> <pose>21.3109331464 -157.889176027 2.88</pose> </waypoint>     </waypoints>
+  </xacro:wayfinding>
+
+    <!-- === sandisland_minus_scene === -->
+      <xacro:sandisland_minus_scene />
+
+</world>
+</sdf>

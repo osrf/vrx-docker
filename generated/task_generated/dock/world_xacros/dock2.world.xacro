@@ -5,7 +5,7 @@
   <xacro:include filename="$(find vrx_gazebo)/worlds/xacros/include_all_xacros.xacro" />
   <xacro:include_all_xacros />
     <!-- === dock === -->
-      <xacro:dock bay2_allowed="True" bay1_symbol="red_cross" uri="vrx_dock_red_cross__red_triangle" y="85" x="45" z="-0.2" bay1_allowed="False" model_name="vrx_dock_red_cross__red_triangle" bay2_symbol="red_triangle" />
+      <xacro:dock bay1_symbol="red_cross" bay2_allowed="True" uri="vrx_dock_red_cross__red_triangle" task_name="scan" enable_color_checker="False" y="85" x="45" z="-0.2" bay1_allowed="False" model_name="vrx_dock_red_cross__red_triangle" bay2_symbol="red_triangle" />
 
     <!-- === ocean_waves === -->
       <xacro:ocean_waves direction_y="-0.92" direction_x="0.37" gain="0.7" period="3.0" />

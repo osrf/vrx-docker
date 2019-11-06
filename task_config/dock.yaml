@@ -50,6 +50,8 @@ tasks:
             # change them both here and in the dock0/model.sdf.erb file!!!
             dock:
                 - model_name: vrx_dock_blue_circle__red_cross
+                  enable_color_checker: false
+                  task_name: scan
                   uri: vrx_dock_blue_circle__red_cross
                   bay1_allowed: false
                   bay1_symbol: blue_circle
@@ -90,6 +92,8 @@ tasks:
             # change them both here and in the dock0/model.sdf.erb file!!!
             dock:
                 - model_name: vrx_dock_green_triangle__blue_cross
+                  enable_color_checker: false
+                  task_name: scan
                   uri: vrx_dock_green_triangle__blue_cross
                   bay1_allowed: true
                   bay1_symbol: green_triangle
@@ -135,6 +139,8 @@ tasks:
             # change them both here and in the dock0/model.sdf.erb file!!!
             dock:
                 - model_name: vrx_dock_red_cross__red_triangle
+                  enable_color_checker: false
+                  task_name: scan
                   uri: vrx_dock_red_cross__red_triangle
                   bay1_allowed: false
                   bay1_symbol: red_cross

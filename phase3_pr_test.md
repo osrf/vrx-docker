@@ -36,7 +36,11 @@ hg update 2019_phase3_team_bumblebee
 ## Copy over the team files
 
 ```
-TEAM=bumblebee
+cd ~/vrx_comp
+TEAM=mcgill_robotics
+TEAM=Team_Kanaloa
+TEAM=owltonomous
+TEAM=tang
 PHASE=phase3_vrx_challenge
 cp -R -v ~/vrx_comp/vrx-events/2019/${PHASE}/${TEAM}/ ~/vrx_ws/src/vrx-docker/team_config/
 ```
@@ -71,11 +75,15 @@ cat team_config/${TEAM}/dockerhub_image.txt | xargs chromium-browser
 If it works post something like
 
 ```
-The yaml config files evaluate as "compliant" and the docker image is accessible.  The submission appears to be sufficient.
+The yaml config files evaluate as "compliant" and the docker image is accessible.  The submission appears to be sufficient to be evaluated in the simulator.
 
-The next step is to actually start executing your soluiton (the docker container) with the configured setup and the VRX tasks and runs.  This will take a few days.
+The next step is to begin executing your solution (the docker container) with the configured setup and the VRX simulated tasks and runs.  This will take a few days.
 
-If there are any last minute changes, please submit a new PR before 2019, November 23, 23:59 PST.
+No additional changes to the docker image should be made (deadline was November 22, 23:59 PST).
+The last time to submission files is November 23, 23:59 PST.
+
+Congratulations!
+
 ```
 
 Approve and merge.

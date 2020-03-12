@@ -58,7 +58,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # Remove previous log files, so new log data can be seen more easily
 # (currently done for log check for compliance)
 log_dir=$HOME/.ros/log/latest
-rm -fR $log_dir
+# Add trailing slash so that we remove the contents of the linked directory
+rm -fR $log_dir/
 
 # Find sensor and thruster yaml files
 echo "Looking for config files"

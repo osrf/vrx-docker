@@ -38,11 +38,39 @@ cat generated/team_generated/Team_Kanaloa/compliant.txt
 
 ## Check Acess to DockerHub Image
 
+### For full URL, open in browser
+
 Open link in a browser:
 ```
 cat team_config/Team_Kanaloa/dockerhub_image.txt | xargs chromium-browser 
 ```
 
+### For container name, try to pull
+
+```
+cat team_config/Team_Kanaloa/dockerhub_image.txt | xargs docker pull
+```
+
+
 Can also begin to pull the image - I do this to confirm access, but terminate the download b/c I'm impatient.
 ```
 docker pull 808brick/vrx_phase2
+```
+
+## Respond to PR and Merge
+
+```
+Compliance tests for sensor and propulsion configurations passed.  Successfully able to access Docker image.
+
+Next step is to evaluate run the docker image in the VRX simulation with the tasks/trials over the next few days.
+```
+
+## Summarize the configs
+
+```
+cd ~/vrx_ws/src/vrx-events/
+hg pull && hg update && hg checkout default
+cd ~/vrx_comp/vrx-private/utils/
+hg pull && hg update && hg checkout summary
+python summarize_entries.py
+```

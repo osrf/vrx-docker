@@ -13,20 +13,28 @@ mkdir ~/vrx_comp && cd ~/vrx_comp
 
 ## Assigning PR Review
 
-When a new PR comes in, add a bitbucket comment so that the rest of the team knows you are reviewing the PR and avoid duplication of effort.
+When a new PR comes in, add a bitbucket comment (e.g., "Reviewing.") so that the rest of the team knows you are reviewing the PR and avoid duplication of effort.
 
 ## Checkout the PR from the forked repo
 
-E.g.,
+A couple ways:
+
+Edit .hg/hgrc to change the url to the fork url.  Then pull and checkout the branch.
+
+OR
+
 ```
+cd ~/vrx_comp
 rm -r vrx-events
 hg clone ssh://hg@bitbucket.org/808brick/vrx-events
 ```
 
-Copy over the team files
+## Copy over the team files
+
 ```
+TEAM=bumblebee
 cd ~/vrx_ws/src/vrx-docker
-cp -R ~/vrx_comp/vrx-events/2019/phase2_dress_rehearsal/Team_Kanaloa/ ./team_config/
+cp -R ~/vrx_comp/vrx-events/2019/phase2_dress_rehearsal/${TEAM}/ ~/vrx_ws/src/vrx-docker/team_config/
 ```
 
 ## Check Propulsion and Sensor Compliance

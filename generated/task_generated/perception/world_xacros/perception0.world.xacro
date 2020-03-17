@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<sdf version="1.6" xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- COORDINATE: {'tasks': 0, 'constant': 0} -->
+<world name="robotx_example_course">
+  <xacro:include filename="$(find vrx_gazebo)/worlds/xacros/include_all_xacros.xacro" />
+  <xacro:include_all_xacros />
+    <!-- === ocean_waves === -->
+      <xacro:ocean_waves gain="0.0" period="8.0" />
+
+    <!-- === usv_wind_gazebo === -->
+      <xacro:usv_wind_gazebo var_time="2" seed="10" mean_vel="0.0" var_gain="0" >
+    <wind_objs>
+ <wind_obj>
+<name>wamv</name>
+<link_name>base_link</link_name>
+<coeff_vector>.5 .5 .33</coeff_vector>
+</wind_obj>    </wind_objs>
+  </xacro:usv_wind_gazebo>
+
+    <!-- === scene_macro === -->
+      <xacro:scene_macro >
+    <fog>
+    </fog>
+    <ambient>
+1 1 1 1    </ambient>
+  </xacro:scene_macro>
+
+    <!-- === perception === -->
+      <xacro:perception >
+    <object_sequence>
+ <include> <name>red_0</name> <pose>-200 100 1 0 0 0</pose> <uri>model://surmark950410</uri> </include> <include> <name>green_0</name> <pose>-200 102 1 0 0 0</pose> <uri>model://surmark950400</uri> </include> <include> <name>yellow_0</name> <pose>-200 104 1 0 0 0</pose> <uri>model://yellow_totem</uri> </include>    </object_sequence>
+    <model_includes>
+ <object> <time>5.0</time> <type>surmark950410</type> <name>red_0</name> <pose>7.8 2.1 0.7 0 0 0</pose> </object> <object> <time>15.0</time> <type>surmark950400</type> <name>green_0</name> <pose>8.3 0.1 0.7 0 0 0</pose> </object> <object> <time>25.0</time> <type>yellow_totem</type> <name>yellow_0</name> <pose>4.9 -2.32 0.2 0 0 0</pose> </object>    </model_includes>
+  </xacro:perception>
+
+    <!-- === sandisland_minus_scene === -->
+      <xacro:sandisland_minus_scene />
+
+</world>
+</sdf>

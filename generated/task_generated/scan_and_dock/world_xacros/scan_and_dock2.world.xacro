@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<sdf version="1.6" xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- COORDINATE: {'tasks': 2, 'constant': 0} -->
+<world name="robotx_example_course">
+  <xacro:include filename="$(find vrx_gazebo)/worlds/xacros/include_all_xacros.xacro" />
+  <xacro:include_all_xacros />
+    <!-- === dock === -->
+      <xacro:dock bay1_symbol="red_cross" Y="-1.2" color_3="green" color_2="blue" color_1="red" z="-0.2" light_buoy_present="True" bay2_allowed="True" bay1_allowed="False" uri="vrx_dock_red_cross__red_triangle" y="85" x="45" lb_y="65" lb_x="-10" model_name="vrx_dock_red_cross__red_triangle" bay2_symbol="red_triangle" />
+
+    <!-- === ocean_waves === -->
+      <xacro:ocean_waves direction_y="-0.92" direction_x="0.37" gain="0.7" period="3.0" />
+
+    <!-- === usv_wind_gazebo === -->
+      <xacro:usv_wind_gazebo var_time="2" direction="-160" seed="12" mean_vel="8.0" var_gain="8.0" >
+    <wind_objs>
+ <wind_obj>
+<name>wamv</name>
+<link_name>base_link</link_name>
+<coeff_vector>.5 .5 .33</coeff_vector>
+</wind_obj>    </wind_objs>
+  </xacro:usv_wind_gazebo>
+
+    <!-- === scene_macro === -->
+      <xacro:scene_macro >
+    <fog>
+' <fog> <type> linear</type> <color> 0.7 0.7 0.7 1 </color> <density> 0.1 </density> </fog>    </fog>
+    <ambient>
+0.4 0.4 0.4 1    </ambient>
+  </xacro:scene_macro>
+
+    <!-- === sandisland_minus_scene === -->
+      <xacro:sandisland_minus_scene />
+
+</world>
+</sdf>

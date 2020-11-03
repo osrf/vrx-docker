@@ -6,14 +6,14 @@ Assumes you have VRX setup in `~/vrx_ws`
 
 ```
 cd ~/vrx_ws/src
-hg clone ssh://hg@bitbucket.org/osrf/vrx-docker
+git clone https://github.com/osrf/vrx-docker.git
 # Directory for vrx-events forks/branches
 mkdir ~/vrx_comp && cd ~/vrx_comp
 ```
 
 ## Assigning PR Review
 
-When a new PR comes in, add a bitbucket comment (e.g., "Reviewing.") so that the rest of the team knows you are reviewing the PR and avoid duplication of effort.
+When a new PR comes in, add a GitHub comment (e.g., "Reviewing.") so that the rest of the team knows you are reviewing the PR and avoid duplication of effort.
 
 ## Checkout the PR from the forked repo
 
@@ -27,7 +27,7 @@ OR
 cd ~/vrx_comp
 rm -r vrx-events
 # CHANGE THE URL BELOW
-hg clone ssh://hg@bitbucket.org/ziyun99/vrx-events
+git clone https://github.com/osrf/vrx-events.git
 # CHANGE THE BRANCH NAME BELOW
 hg update 2019_phase3_team_bumblebee
 

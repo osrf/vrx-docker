@@ -57,13 +57,13 @@ This section will give descriptions of the directories in this repository:
 ### Installing Docker
 
 Docker is required to run the automated evaluation. 
-Please follow the [VRX Docker install tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/installDocker) and the [Nvidia Docker install tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/installNvidiaDocker) if you are
+Please follow the [VRX Docker install tutorial](https://github.com/osrf/vrx/wiki/tutorials-installDocker) and the [Nvidia Docker install tutorial](https://github.com/osrf/vrx/wiki/tutorials-installNvidiaDocker) if you are
 using an Nvidia GPU.
 
 ### Setting up vrx\_gazebo
 
 `vrx_gazebo` must be setup on your machine to run these scripts. As of July 23, 2019, having vrx from source is required (this is related to Issue#1 of this repository). 
-If you have not done so already, please follow the [VRX System Setup Tutorial](https://bitbucket.org/osrf/vrx/wiki/tutorials/SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. 
+If you have not done so already, please follow the [VRX System Setup Tutorial](https://github.com/osrf/vrx/wiki/tutorials-SystemSetupInstall) sections __Install all prerequisites in your host system__ and __Option 2: Build VRX from source__. 
 Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make sure that your file structure is `/home/<username>/vrx_ws`, as this will assure reliable functionality.
 
 ### Installing dependencies
@@ -77,7 +77,7 @@ Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make
 `vrx-docker` must be setup on your machine to run these scripts. Please note that most of the commands listed here are written to be run from the vrx-docker directory. These scripts should be able to be run from other directories, but you will need to change the command paths accordingly.
 
 ```
-hg clone https://bitbucket.org/osrf/vrx-docker
+git clone https://github.com/osrf/vrx-docker.git
 cd vrx-docker
 ```
 
@@ -152,7 +152,7 @@ OK
 ```
 Note that the `REQUIRED process [wamv_config/wamv_generator-2] has died!` message is expected.
 
-This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. By compliant, we are refering to the limitations for sensor and propulsion configuration described in the [VRX competition documentation](https://bitbucket.org/osrf/vrx/wiki/documentation) .You can view this result by:
+This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. By compliant, we are refering to the limitations for sensor and propulsion configuration described in the [VRX competition documentation](https://github.com/osrf/vrx/wiki/documentation) .You can view this result by:
 
 ```
 cat generated/team_generated/example_team/compliant.txt
@@ -162,7 +162,7 @@ cat generated/team_generated/example_team/compliant.txt
 
 In this README, we will be using some vocabulary that will be clearly defined here.
 
-* `task`: One of the major competition tasks. Eg. `stationkeeping`, `wayfinding`, `perception`, `nav_challenge`, `dock` or `scan_and_dock`.
+* `task`: One of the major competition tasks, e.g., `stationkeeping`, `wayfinding`, `perception`, `nav_challenge`, `dock` or `scan_and_dock`.
 
 * `trial`: A specific task with a specific set of environmental conditions (e.g., sea state, wind magnitude and direction, lighting, etc.). Each task has multiple trials. Each trial will have a specific world file associated with it.
 
@@ -368,7 +368,7 @@ roslaunch vrx_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team
 
 * After calling `./vrx_server/build_image.bash` the first time, your image will be cached. This means that it will use the old image until this script is called again. If you update `vrx_server/vrx-server/run_vrx_trial.sh` or any file in `vrx_server/vrx-server`, those changes will not affect things until you call `./vrx_server/build_image.bash` again after making the change
 
-* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts. As well, if your Gazebo playback window doesn't perfectly align with the recording window, you can edit `generate_trial_video.bash` to change `--width=$((width + 0)) => --width=$((width + 100))` or something similar to manually align it
+* For video generation, you can edit `generate_trial_video.bash` to change the `x, y, width, height, or BLACK_WINDOW_TIME` variables to change the position and size of recording as well as the length of time that is waited before recording starts.
 
 * Currently, only the `/vrx/task/info` topic is recorded in the generated rosbag to save space. You can change this by editing `vrx_server/vrx-server/run_vrx_trial.sh` and changing the `rosbag record ...` line to `rosbag record -O ~/vrx_rostopics.bag --all &`
 
@@ -421,6 +421,8 @@ The above quick start instructions gave an overview of how to use the main scrip
 
 Before beginning, you may want to remove the previously generated files to start fresh, as it may get confusing or messy if you keep old files along with new ones.
 
+Note that some of the files are tracked in the Git repository, so you may want to rename rather than remove, or plan on stashing and dropping the removals afterwards.
+
 ```
 rm -r generated
 ```
@@ -443,7 +445,7 @@ Prepare all tasks:
 # Runs ./prepare_task_trials.bash on all task yaml files in task_config
 ```
 
-To keep the terminal output clean, all of the output will be stored in `generated/multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+To keep the terminal output clean, all of the output will be stored in `generated/multi_scripts/prepare_output/`. These scripts should end if there is an error and show `OK` if it is working. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://github.com/osrf/vrx-docker/issues).
 
 ### Running all trials for a given task for a single team
 
@@ -488,9 +490,9 @@ To run all trials for all tasks listed in the `task_generated` directory for all
 # ./multi_scripts/run_all_teams_all_tasks.bash [-n --nvidia]
 ```
 
-This will run `run_one_team_all_tasks.bash` on all teams in `generated/team_generated`. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the trial\_config directory, you're ready for the competition.
+This will run `run_one_team_all_tasks.bash` on all teams in `generated/team_generated`. This is the invocation that will be used to test submissions for the Finals: your system will not be provided with any information about the conditions of the trials. If your system performs correctly with this invocation, regardless of the set of configuration files in the `task_config` directory, you're ready for the competition.
 
-Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+Note: To keep the terminal output clean, all of the output from `multi_scripts` will be stored in `generated/multi_scripts/run_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://github.com/osrf/vrx-docker/issues).
 
 
 ### Generating all trial videos for a given task for a single team
@@ -530,7 +532,7 @@ To generate all trial videos for all teams and all its tasks, run
 
 This will run `generate_one_team_all_task_videos.bash` for all teams in `generated/logs`.
 
-Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://bitbucket.org/osrf/vrx-docker/issues?status=new&status=open).
+Note: To keep the terminal output clean, all of the output from multi_scripts will be stored in `generated/multi_scripts/generate_video_output/`. These convenience scripts are more bug-prone, so if you notice any issues, please submit an issue [here](https://github.com/osrf/vrx-docker/issues).
 
 ### Expected Output After Multi_scripts
 
@@ -678,17 +680,17 @@ From here, you can investigate what is happening inside of your container.
 
 All VRX teams must submit one folder containing three files for automated evaluation. The name of the folder should be the name of the team. Please note that the filenames must be identical with how they are listed below.
 
-1. `sensor_config.yaml`: The team's sensor configuration yaml file. One sensor configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
+1. `sensor_config.yaml`: The team's sensor configuration yaml file. One sensor configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 
-2. `thruster_config.yaml`: The team's thruster configuration yaml file. One thruster configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
+2. `thruster_config.yaml`: The team's thruster configuration yaml file. One thruster configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 
-3. `dockerhub_image.txt`: A text file containing only the name of their docker image publicly available on Dockerhub. Eg. `tylerlum/vrx-competitor-example:v2.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://bitbucket.org/osrf/vrx/wiki/tutorials/Creating%20a%20Dockerhub%20image%20for%20submission)
+3. `dockerhub_image.txt`: A text file containing only the name of their docker image publicly available on Dockerhub, e.g., `tylerlum/vrx-competitor-example:v2.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20Dockerhub%20image%20for%20submission)
 
 ### Testing Your Submission
 
-All teams should test their submissions by following the instructions above. It details how to run the scripts to test your system in a mock competition.
+All teams should test their submissions by following the instructions above. They detail how to run the scripts to test your system in a mock competition.
 
-It is imperative that teams use the outlined process for testing their system, as it replicates the process that will be used during automated evaluation. If your system does not work in the mock competition setup, then it will not work for the real competition.
+It is imperative that teams use the outlined process for testing their systems, as it replicates the process that will be used during automated evaluation. If your system does not work in the mock competition setup, then it will not work for the real competition.
 
 ### Uploading Your Submission
 

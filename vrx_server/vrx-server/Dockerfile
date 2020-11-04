@@ -68,6 +68,7 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     ros-${DIST}-teleop-tools \
     ros-${DIST}-teleop-twist-keyboard \
     ros-${DIST}-velodyne-simulator \
+    python-rosdep \
  && rosdep init \
  && apt clean
 
@@ -104,7 +105,7 @@ RUN mkdir -p vrx_ws/src
 # Copy the VRX repository from the local file system
 # We can't use the USER:GROUP variables until Docker adds support to --chown
 # COPY --chown=developer:developer . vrx_ws/src/vrx/
-RUN hg clone https://bitbucket.org/osrf/vrx
+RUN git clone https://github.com/osrf/vrx.git
 RUN mv ./vrx ./vrx_ws/src
 
 # Compile the VRX project.

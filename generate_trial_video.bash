@@ -98,7 +98,7 @@ x=100
 y=100
 width=1000
 height=750
-BLACK_WINDOW_TIME=1
+BLACK_WINDOW_TIME=2
 
 # Tell gazebo client what size and place it should be
 echo "[geometry]
@@ -150,8 +150,7 @@ echo -e "${GREEN}OK${NOCOLOR}"
 
 # Start recording the Gazebo Window.
 echo -n "Recording..."
-# Note: Can add hardcoded adjustments to x,y,width,height, as Gazebo window sometimes not aligned with recordmydesktop
-recordmydesktop --fps=30 -x $((x + 0)) -y $((y + 0)) --width=$((width + 0)) --height=$((height + 0)) --no-sound -o $OUTPUT \
+recordmydesktop --fps=30 --windowid=${GAZEBO_WINDOW_ID} --no-sound -o $OUTPUT \
   > $OUTPUT.record_output.txt 2>&1 &
 echo -e "${GREEN}OK${NOCOLOR}"
 

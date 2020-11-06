@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# run_vrx_trial.sh: A shell script to execute one vrx trial.
+# run_vorc_trial.sh: A shell script to execute one vorc trial.
 
 is_gzserver_running()
 {
@@ -39,14 +39,13 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <wamv_urdf> <trial_world> <destination_folder>"
+  echo "Usage: $0 <trial_world> <destination_folder>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
 
-WAMV_URDF=$1
 TRIAL_WORLD=$2
 DESTINATION_FOLDER=$3
 
@@ -57,12 +56,12 @@ if [ -d "$DESTINATION_FOLDER" ]; then
 fi
 mkdir -p $DESTINATION_FOLDER
 
-echo "Starting vrx trial..."
+echo "Starting vorc trial..."
 
 # Run the trial.
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
-roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
+roslaunch vorc_gazebo marina.launch gui:=false world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -70,7 +69,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Store topics in rosbag 
 # July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
-rosbag record -O ~/vrx_rostopics.bag /vrx/task/info &
+rosbag record -O ~/vorc_rostopics.bag /vorc/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Run simulation until shutdown

@@ -10,7 +10,7 @@ ARG DIST=melodic
 ARG GAZ=gazebo9
 
 # Tools useful during development.
- RUN apt update \
+RUN apt update \
   && apt install -y \
          build-essential \
          cppcheck \
@@ -19,6 +19,7 @@ ARG GAZ=gazebo9
          lsb-release \
          gdb \
          git \
+         gnupg2 \
          mercurial \
          python3-dbg \
          python3-pip \
@@ -69,8 +70,11 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     ros-${DIST}-teleop-twist-keyboard \
     ros-${DIST}-velodyne-simulator \
     python-rosdep \
+    python3-colcon-common-extensions \
  && rosdep init \
  && apt clean
+# TODO(mabelzhang) Delete if not needed
+# g++ python ros-${DIST}-joint-state-publisher ros-${DIST}-rqt ros-${DIST}-rqt-common-plugins protobuf-compiler
 
 # TODO(tylerlum): Change to specific gazebo ros pkgs with limited topics (may just use ARIAC's)
 RUN rosdep update
@@ -82,13 +86,13 @@ ARG GROUP=developer
 # Add a user with the same user_id as the user outside the container
 # Requires a docker build argument `user_id`.
 
-RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - && \
-    chown root:root /usr/local/bin/fixuid && \
-    chmod 4755 /usr/local/bin/fixuid && \
-    mkdir -p /etc/fixuid && \
-    printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
-RUN addgroup --gid 1000 $USER && \
-    adduser --uid 1000 --ingroup $USER --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER
+RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.4-linux-amd64.tar.gz | tar -C /usr/local/bin -xzf - \
+ && chown root:root /usr/local/bin/fixuid \
+ && chmod 4755 /usr/local/bin/fixuid \
+ && mkdir -p /etc/fixuid \
+ && printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
+RUN addgroup --gid 1000 $USER \
+ && adduser --uid 1000 --ingroup $USER --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER
 
 RUN adduser $USER sudo \
  && echo "$USER ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USER
@@ -100,21 +104,19 @@ USER $USER:$GROUP
 WORKDIR /home/$USER
 
 # Create workspace
-RUN mkdir -p vrx_ws/src
+RUN mkdir -p vorc_ws/src
 
-# Copy the VRX repository from the local file system
-# We can't use the USER:GROUP variables until Docker adds support to --chown
-# COPY --chown=developer:developer . vrx_ws/src/vrx/
-RUN git clone https://github.com/osrf/vrx.git
-RUN mv ./vrx ./vrx_ws/src
+RUN cd /home/$USER/vorc_ws/src \
+ && git clone https://github.com/osrf/vrx.git \
+ && git clone https://github.com/osrf/vorc.git
 
-# Compile the VRX project.
-RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vrx_ws && catkin_make"
+# Compile VRX and VORC
+RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". ~/vrx_ws/devel/setup.sh" >> ~/.bashrc'
+ && /bin/sh -c 'echo ". ~/vorc_ws/devel/setup.sh" >> ~/.bashrc'
 ## END OF SECTION BASED ON vrx/docker/Dockerfile
 
 # Expose port used to communiate with gzserver
@@ -137,7 +139,7 @@ ENV LANG en_US.UTF-8
 #  && rm /tmp/default.tar.gz
 
 # setup entrypoint
-COPY ./vrx_entrypoint.sh /
-COPY ./run_vrx_trial.sh /
+COPY ./vorc_entrypoint.sh /
+COPY ./run_vorc_trial.sh /
 
-ENTRYPOINT ["/vrx_entrypoint.sh"]
+ENTRYPOINT ["/vorc_entrypoint.sh"]

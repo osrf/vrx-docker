@@ -7,9 +7,9 @@ source "/usr/share/gazebo/setup.sh"
 # setup ros environment.
 source "/opt/ros/melodic/setup.bash" > /dev/null
 
-# setup vrx environment
-source ~/vrx_ws/devel/setup.sh
-echo "vrx entrypoint executed"
+# setup vorc environment
+source ~/vorc_ws/devel/setup.sh
+echo "vorc entrypoint executed"
 
 # TODO: optionally disable this so a gzclient can be run on the host for development.
 export GAZEBO_IP=127.0.0.1

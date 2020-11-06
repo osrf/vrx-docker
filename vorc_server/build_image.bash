@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# build_image.bash: A bash script to build the vrx server image
+# build_image.bash: A bash script to build the vorc server image
 #
 # E.g.: ./build_image.bash    # non-Nvidia
 #   or  ./build_image.bash -n # Nvidia
 
-echo "Building vrx-server image"
+echo "Building vorc-server image"
 echo "================================="
 
 set -e
@@ -29,7 +29,7 @@ fi
 
 # Parse arguments
 BUILD_BASE=""
-image_name="vrx-server-melodic"
+image_name="vorc-server-melodic"
 
 # Parse args related to NVIDIA
 POSITIONAL=()
@@ -63,7 +63,7 @@ fi
 echo "Build image: $image_name"
 set -x
 image_plus_tag=$image_name:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
-docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag --build-arg USER=$USER --build-arg GROUP=$USER $BUILD_BASE $DIR/vrx-server && \
+docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag --build-arg USER=$USER --build-arg GROUP=$USER $BUILD_BASE $DIR/vorc-server && \
 docker tag $image_plus_tag $image_name:latest && \
 echo "Built $image_plus_tag and tagged as $image_name:latest"
 

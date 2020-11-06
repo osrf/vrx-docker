@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# run_container.bash: A bash script to build the vrx server image in a container
+# run_container.bash: A bash script to build the vorc server image in a
+# container
 #
 # This script is used to create and run a docker container from an image
 # (usually from a built src-cloudsim image).
@@ -11,8 +12,8 @@
 # --- 4) An optional command to execute in the run container. E.g. /bin/bash 
 #
 # Example command line:
-# E.g.: ./run_container.bash vrx-server-system vrx-server-melodic "-e ROS_IP=172.XX.XX.XX" "/run_script.sh"    # non-Nvidia
-#   or  ./run_container.bash -n vrx-server-system vrx-server-melodic-nvidia "-e ROS_IP=172.XX.XX.XX" "/run_script.sh" # Nvidia
+# E.g.: ./run_container.bash vorc-server-system vorc-server-melodic "-e ROS_IP=172.XX.XX.XX" "/run_script.sh"    # non-Nvidia
+#   or  ./run_container.bash -n vorc-server-system vorc-server-melodic-nvidia "-e ROS_IP=172.XX.XX.XX" "/run_script.sh" # Nvidia
 #
 # Requires:
 #   docker

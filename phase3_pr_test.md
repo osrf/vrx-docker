@@ -45,13 +45,6 @@ PHASE=phase3_vrx_challenge
 cp -R -v ~/vrx_comp/vrx-events/2019/${PHASE}/${TEAM}/ ~/vrx_ws/src/vrx-docker/team_config/
 ```
 
-## Check Propulsion and Sensor Compliance
-```
-source ~/vrx_ws/devel/setup.bash
-~/vrx_ws/src/vrx-docker/prepare_team_wamv.bash ${TEAM}
-cat ~/vrx_ws/src/vrx-docker/generated/team_generated/${TEAM}/compliant.txt 
-```
-
 ## Check Access to DockerHub Image
 
 Peek at the file

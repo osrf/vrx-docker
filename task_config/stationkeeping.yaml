@@ -1,7 +1,7 @@
 constant:
     steps: 1
     macros:
-        sandisland_minus_scene: 
+        marina_minus_scene: 
             -
     sequence:
 
@@ -30,6 +30,7 @@ environment:
                   <height>0.5</height>
 
                   </markers>"
+                  namespace: "cora"
             ocean_waves:
                 - gain: 0.0
                   period: 7.0
@@ -42,7 +43,7 @@ environment:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -62,6 +63,7 @@ environment:
                   <height>0.5</height>
 
                   </markers>"
+                  namespace: "cora"
             ocean_waves:
                 - gain: 0.2
                   period: 8.0
@@ -74,7 +76,7 @@ environment:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -94,6 +96,7 @@ environment:
                   <height>0.5</height>
 
                   </markers>"
+                  namespace: "cora"
             ocean_waves:
                 - gain: 0.7
                   period: 3.0
@@ -106,7 +109,7 @@ environment:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# prepare_all_team_wamvs.bash: A bash script to run prepare_team_wamv.bash on all teams in team_config
+# prepare_all_teams.bash: A bash script to run prepare_team.bash on all teams in team_config
 #
 # All terminal output it piped to generated/multi_scripts/prepare_output to keep things clear
 #
-# eg. ./prepare_all_team_wamvs.bash
+# eg. ./prepare_all_teams.bash
 
-echo "Preparing all team wamvs"
+echo "Preparing all teams"
 echo "================================="
 
 # Constants.
@@ -40,7 +40,7 @@ for TEAM_NAME in ${LIST_OF_TEAMS}; do
   echo -e "Preparing WAM-V URDF for team: ${TEAM_NAME}"
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}
-  ${DIR}/../prepare_team_wamv.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1
+  ${DIR}/../prepare_team.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1
   exit_status=$?
 
   # Print OK or FAIL message
@@ -52,3 +52,4 @@ for TEAM_NAME in ${LIST_OF_TEAMS}; do
 done
 
 echo -e "${GREEN}Finished preparing WAM-V URDFs for all teams${NOCOLOR}"
+

@@ -116,7 +116,7 @@ RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". ~/vorc_ws/devel/setup.sh" >> ~/.bashrc'
+ && /bin/sh -c 'echo ". ~/vorc_ws/install/setup.bash" >> ~/.bashrc'
 ## END OF SECTION BASED ON vrx/docker/Dockerfile
 
 # Expose port used to communiate with gzserver

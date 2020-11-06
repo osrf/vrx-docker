@@ -33,7 +33,7 @@ is_gzclient_running()
   fi
 }
 
-# Wait until the gazebo world stats topic (eg. /gazebo/robotx_example_course/world_stats /gazebo/<world>/world_stats)
+# Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
 # tells us that the playback has been paused. This event will trigger the end of the recording.
 wait_until_playback_ends()
 {

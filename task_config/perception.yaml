@@ -1,7 +1,7 @@
 constant:
     steps: 1
     macros:
-        sandisland_minus_scene:
+        marina_minus_scene:
             -
     sequence:
 
@@ -29,7 +29,7 @@ tasks:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -75,6 +75,7 @@ tasks:
                     <name>yellow_0</name>
                     <pose>4.9 -2.32 0.2 0 0 0</pose>
                   </object>"
+                  namespace: "cora"
         1:
             ocean_waves:
                 - gain: 0.3
@@ -89,7 +90,7 @@ tasks:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -204,7 +205,7 @@ tasks:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 

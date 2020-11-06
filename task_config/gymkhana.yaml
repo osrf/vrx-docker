@@ -29,7 +29,7 @@ tasks:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -72,7 +72,7 @@ tasks:
                   /**wind_objs: "
                   <wind_obj>
 
-                  <name>wamv</name>
+                  <name>cora</name>
 
                   <link_name>base_link</link_name>
 
@@ -128,7 +128,7 @@ tasks:
                 /**wind_objs: "
                 <wind_obj>
 
-                <name>wamv</name>
+                <name>cora</name>
 
                 <link_name>base_link</link_name>
 

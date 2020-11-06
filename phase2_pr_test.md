@@ -37,14 +37,7 @@ cd ~/vrx_ws/src/vrx-docker
 cp -R ~/vrx_comp/vrx-events/2019/phase2_dress_rehearsal/${TEAM}/ ~/vrx_ws/src/vrx-docker/team_config/
 ```
 
-## Check Propulsion and Sensor Compliance
-```
-source ~/vrx_ws/devel/setup.bash
-./prepare_team_wamv.bash Team_Kanaloa
-cat generated/team_generated/Team_Kanaloa/compliant.txt 
-```
-
-## Check Acess to DockerHub Image
+## Check Access to DockerHub Image
 
 ### For full URL, open in browser
 

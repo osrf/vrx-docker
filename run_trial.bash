@@ -55,9 +55,10 @@ TASK_NAME=$2
 TRIAL_NUM=$3
 
 # Constants for containers
-SERVER_CONTAINER_NAME=vrx-server-system
+SERVER_CONTAINER_NAME=vorc-server-system
 ROS_DISTRO=melodic
-LOG_DIR=/vrx/logs
+LOG_DIR=/vorc/logs
+# TODO(mabelzhang): Change to vorc-network after have team dockerfile
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
 SERVER_ROS_IP="172.16.0.22"
@@ -87,15 +88,8 @@ mkdir -p ${HOST_LOG_DIR}
 chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
-# Find wamv urdf and task world files
+# Find task world files
 echo "Looking for generated files"
-TEAM_GENERATED_DIR=${DIR}/generated/team_generated/${TEAM_NAME}
-if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
-  echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
-else
-  echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
-fi
-
 COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
 if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world"
@@ -105,10 +99,10 @@ fi
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Ensure any previous containers are killed and removed.
-${DIR}/utils/kill_vrx_containers.bash
+${DIR}/utils/kill_vorc_containers.bash
 
 # Create the network for the containers to talk to each other.
-${DIR}/utils/vrx_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
+${DIR}/utils/vorc_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 
 echo "Building competitor image"
 echo "---------------------------------"
@@ -132,12 +126,11 @@ echo "---------------------------------"
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
-SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
-SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
-${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
+SERVER_CMD="/run_vorc_trial.sh /task_generated/{$TASK_NAME}/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
+SERVER_IMG="vorc-server-${ROS_DISTRO}${image_nvidia}:latest"
+${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
-  -v ${TEAM_GENERATED_DIR}:/team_generated \
   -v ${COMP_GENERATED_DIR}:/task_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e ROS_MASTER_URI=${ROS_MASTER_URI} \
@@ -156,6 +149,7 @@ echo "---------------------------------"
 
 # Start the competitors container and let it run in the background.
 echo -e "Creating container for ${DOCKERHUB_IMAGE}\n"
+# TODO(mabelzhang): Change to vorc when have team Dockerfile
 COMPETITOR_CONTAINER_NAME="vrx-competitor-system"
 docker run \
     --net ${NETWORK} \
@@ -174,7 +168,7 @@ echo "---------------------------------"
 echo "Copying ROS log files from server container..."
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vorc_rostopics.bag $HOST_LOG_DIR/
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt $HOST_LOG_DIR/
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -191,6 +185,6 @@ docker cp --follow-link $COMPETITOR_CONTAINER_NAME:/root/.ros/log $HOST_LOG_DIR/
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill and remove all containers before exit
-${DIR}/utils/kill_vrx_containers.bash
+${DIR}/utils/kill_vorc_containers.bash
 
 exit 0

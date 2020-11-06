@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# kill_vrx_containers.bash: A bash script that kills all vrx containers
+# kill_vorc_containers.bash: A bash script that kills all vorc containers
 # 
-# eg. ./kill_vrx_containers.bash
+# eg. ./kill_vorc_containers.bash
 
 # Constants.
 RED='\033[0;31m'
@@ -22,6 +22,6 @@ kill_matching_containers () {
 }
 
 echo "Killing containers"
-kill_matching_containers "vrx-competitor-*"
-kill_matching_containers "vrx-server-*"
+kill_matching_containers "vorc-competitor-*"
+kill_matching_containers "vorc-server-*"
 echo -e "${GREEN}Done.${NOCOLOR}\n"

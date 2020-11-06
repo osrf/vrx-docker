@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# vrx_network.bash: A bash script that creates a Docker network
+# vorc_network.bash: A bash script that creates a Docker network
 #
-# eg. ./vrx_network.bash vrx-network 172.16.0.10/16
+# eg. ./vorc_network.bash vorc-network 172.16.0.10/16
 
 # Constants.
 RED='\033[0;31m'

@@ -44,10 +44,10 @@ usage()
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 3 ]] && usage
+[[ $# -ne 2 ]] && usage
 
-TRIAL_WORLD=$2
-DESTINATION_FOLDER=$3
+TRIAL_WORLD=$1
+DESTINATION_FOLDER=$2
 
 # Create a directory for the Gazebo log and the score file.
 if [ -d "$DESTINATION_FOLDER" ]; then

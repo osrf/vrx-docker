@@ -56,12 +56,19 @@ if [ -d "$DESTINATION_FOLDER" ]; then
 fi
 mkdir -p $DESTINATION_FOLDER
 
+# Sanity check if file exists
+if [ -f "${TRIAL_WORLD}" ]; then
+  echo "Successfully found: ${TRIAL_WORLD}"
+else
+  echo -e "${RED}Err: ${TRIAL_WORLD} not found."; ls /task_generated; exit 1;
+fi
+
 echo "Starting vorc trial..."
 
 # Run the trial.
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
-roslaunch vorc_gazebo marina.launch gui:=false world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
+roslaunch vorc_gazebo marina.launch gui:=false world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true robot_locked:=true non_competition_mode:=false > $HOME/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -69,7 +76,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Store topics in rosbag 
 # July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
-rosbag record -O ~/vorc_rostopics.bag /vorc/task/info &
+rosbag record -O $HOME/vorc_rostopics.bag /vorc/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Run simulation until shutdown

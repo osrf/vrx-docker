@@ -8,7 +8,9 @@ source "/usr/share/gazebo/setup.sh"
 source "/opt/ros/melodic/setup.bash" > /dev/null
 
 # setup vorc environment
-source ~/vorc_ws/install/setup.bash
+# TODO(mabelzhang): change to install after fixing vrx package to work with install
+# source ~/vorc_ws/install/setup.bash
+source ~/vorc_ws/devel/setup.bash
 echo "vorc entrypoint executed"
 
 # TODO: optionally disable this so a gzclient can be run on the host for development.

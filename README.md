@@ -421,9 +421,9 @@ To keep the terminal output clean, all of the output will be stored in `generate
 To run all trials for a given task, call:
 
 ```
-./multi_scripts/run_one_team_one_task.bash example_team example_task # for non-Nvidia computers
-# or
 ./multi_scripts/run_one_team_one_task.bash -n example_team example_task # for Nvidia computers
+# or
+./multi_scripts/run_one_team_one_task.bash example_team example_task # for non-Nvidia computers
 
 # For your team you will run:
 # ./multi_scripts/run_one_team_one_task.bash [-n --nvidia] <your_team_name> <task_name>
@@ -436,9 +436,9 @@ This will run `run_trial.bash` on all trials in `generated/task_generated/<task>
 To run all trials for all tasks listed in the `task_generated` directory, call:
 
 ```
-./multi_scripts/run_one_team_all_tasks.bash example_team # for non-Nvidia computers
-# or
 ./multi_scripts/run_one_team_all_tasks.bash -n example_team # for Nvidia computers
+# or
+./multi_scripts/run_one_team_all_tasks.bash example_team # for non-Nvidia computers
 
 # For your team you will run:
 # ./multi_scripts/run_one_team_all_tasks.bash [-n --nvidia] <your_team_name>
@@ -451,9 +451,9 @@ This will run `run_one_team_one_task.bash` on all tasks in `generated/task_gener
 To run all trials for all tasks listed in the `task_generated` directory for all teams, call:
 
 ```
-./multi_scripts/run_all_teams_all_tasks.bash # for non-Nvidia computers
-# or
 ./multi_scripts/run_all_teams_all_tasks.bash -n # for Nvidia computers
+# or
+./multi_scripts/run_all_teams_all_tasks.bash # for non-Nvidia computers
 
 # For your team you will run:
 # ./multi_scripts/run_all_teams_all_tasks.bash [-n --nvidia]

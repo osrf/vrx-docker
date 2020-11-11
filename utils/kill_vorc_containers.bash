@@ -22,6 +22,7 @@ kill_matching_containers () {
 }
 
 echo "Killing containers"
-kill_matching_containers "vorc-competitor-*"
+# TODO(mabelzhang): Change to vorc-competitor when have competitor dockerfile
+kill_matching_containers "vrx-competitor-*"
 kill_matching_containers "vorc-server-*"
 echo -e "${GREEN}Done.${NOCOLOR}\n"

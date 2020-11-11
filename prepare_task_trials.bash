@@ -50,4 +50,4 @@ mkdir -p ${world_target}
 echo "Generating worlds..."
 roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target competition_pkg:="vorc_gazebo" world_name:="vorc_example_course"
 echo -e "${GREEN}OK${NOCOLOR}\n"
-echo -e "${GREEN}Worlds generated in \n  $world_xacro_target and \n  $world_target${NOCOLOR}\n"
+echo -e "${GREEN}If successful, worlds are generated in \n  $world_xacro_target and \n  $world_target${NOCOLOR}\n"

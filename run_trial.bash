@@ -91,10 +91,11 @@ echo -e "${GREEN}Done.${NOCOLOR}\n"
 # Find task world files
 echo "Looking for generated files"
 COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
-if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world" ]; then
-  echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world"
+WORLD_FILE_SUFFIX=worlds/${TASK_NAME}${TRIAL_NUM}.world
+if [ -f "${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX}" ]; then
+  echo "Successfully found: ${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX}"
 else
-  echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world not found."; exit 1;
+  echo -e "${RED}Err: ${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX} not found."; exit 1;
 fi
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
@@ -126,7 +127,8 @@ echo "---------------------------------"
 # TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
 #       competitior container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
-SERVER_CMD="/run_vorc_trial.sh /task_generated/{$TASK_NAME}/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
+WORLD_FILE=/task_generated/${WORLD_FILE_SUFFIX}
+SERVER_CMD="/run_vorc_trial.sh ${WORLD_FILE} ${LOG_DIR}"
 SERVER_IMG="vorc-server-${ROS_DISTRO}${image_nvidia}:latest"
 ${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \

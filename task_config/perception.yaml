@@ -21,39 +21,40 @@ tasks:
             ocean_waves:
                 - gain: 0.0
                   period: 8.0
+                  scale: 2.6
             usv_wind_gazebo:
                 - mean_vel: 0.0
                   var_gain: 0
                   var_time: 2
                   seed: 10
+                  topic_wind_speed: "/vorc/debug/wind/speed"
+                  topic_wind_direction: "/vorc/debug/wind/direction"
                   /**wind_objs: "
                   <wind_obj>
-
-                  <name>cora</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector>.5 .5 .33</coeff_vector>
-
+                    <name>cora</name>
+                    <link_name>base_link</link_name>
+                    <coeff_vector>.5 .5 .33</coeff_vector>
                   </wind_obj>"
             scene_macro:
                 - /**fog: ""
                   /**ambient: "1 1 1 1"
             perception:
-                - /**object_sequence: "
+                - namespace: "cora"
+                  competition: "vorc"
+                  /**object_sequence: "
                   <include>
                     <name>red_0</name>
-                    <pose>-200 100 1 0 0 0</pose>
+                    <pose>400 -600 1 0 0 0</pose>
                     <uri>model://surmark950410</uri>
                   </include>
                   <include>
                     <name>green_0</name>
-                    <pose>-200 102 1 0 0 0</pose>
+                    <pose>400 -598 1 0 0 0</pose>
                     <uri>model://surmark950400</uri>
                   </include>
                   <include>
                     <name>yellow_0</name>
-                    <pose>-200 104 1 0 0 0</pose>
+                    <pose>400 -596 1 0 0 0</pose>
                     <uri>model://yellow_totem</uri>
                   </include>"
                   /**model_includes: "
@@ -75,33 +76,34 @@ tasks:
                     <name>yellow_0</name>
                     <pose>4.9 -2.32 0.2 0 0 0</pose>
                   </object>"
-                  namespace: "cora"
+        # TODO(anyone): Tweak numbers for make sense for VORC
         1:
             ocean_waves:
                 - gain: 0.3
                   period: 8.0
                   direction_x: 0.92
                   direction_y: 0.37
+                  scale: 2.6
             usv_wind_gazebo:
                 - mean_vel: 0.0
                   var_gain: 0.0
                   var_time: 2
                   seed: 10
+                  topic_wind_speed: "/vorc/debug/wind/speed"
+                  topic_wind_direction: "/vorc/debug/wind/direction"
                   /**wind_objs: "
                   <wind_obj>
-
-                  <name>cora</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector> .5 .5 .33</coeff_vector>
-
+                    <name>cora</name>
+                    <link_name>base_link</link_name>
+                    <coeff_vector> .5 .5 .33</coeff_vector>
                   </wind_obj>"
             scene_macro:
                 - /**fog: ""
                   /**ambient: "0.8 0.8 0.8 1"
             perception:
-                - /**object_sequence: "
+                - namespace: "cora"
+                  competition: "vorc"
+                  /**object_sequence: "
                   <include>
                     <name>white_0</name>
                     <pose>-200 100 1 0 0 0</pose>
@@ -191,26 +193,26 @@ tasks:
                     <name>red_1</name>
                     <pose>4.67 0.11 0.7 0 0 0</pose>
                   </object>"
+        # TODO(anyone): Tweak numbers for make sense for VORC
         2:
             ocean_waves:
                 - gain: 0.7
                   period: 3
                   direction_x: 0.37
                   direction_y: -0.92
+                  scale: 2.6
             usv_wind_gazebo:
                 - mean_vel: 0.0
                   var_gain: 0
                   var_time: 2
                   seed: 10
+                  topic_wind_speed: "/vorc/debug/wind/speed"
+                  topic_wind_direction: "/vorc/debug/wind/direction"
                   /**wind_objs: "
                   <wind_obj>
-
-                  <name>cora</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector>.5 .5 .33</coeff_vector>
-
+                    <name>cora</name>
+                    <link_name>base_link</link_name>
+                    <coeff_vector>.5 .5 .33</coeff_vector>
                   </wind_obj>"
             scene_macro:
                 - /**fog: "'
@@ -221,7 +223,9 @@ tasks:
                 </fog>"
                   /**ambient: "0.3 0.3 0.3 1"
             perception:
-                - /**object_sequence: "
+                - namespace: "cora"
+                  competition: "vorc"
+                  /**object_sequence: "
                   <include>
                     <name>a3_0</name>
                     <pose>-200 100 1 0 0 0</pose>

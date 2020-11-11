@@ -106,12 +106,14 @@ WORKDIR /home/$USER
 # Create workspace
 RUN mkdir -p vorc_ws/src
 
+# TODO(mabelzhang): Clone master branches once merged!
 RUN cd /home/$USER/vorc_ws/src \
- && git clone https://github.com/osrf/vrx.git \
- && git clone https://github.com/osrf/vorc.git
+ && git clone -b install_for_docker https://github.com/osrf/vrx.git \
+ && git clone -b for_vorc_docker https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
-RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
+#RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
+RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && catkin_make"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \

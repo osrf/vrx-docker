@@ -37,7 +37,7 @@ echo -e "Found teams: \n$LIST_OF_TEAMS"
 echo -e "Storing command outputs to $CONSOLE_OUTPUT_DIR\n"
 
 for TEAM_NAME in ${LIST_OF_TEAMS}; do
-  echo -e "Preparing WAM-V URDF for team: ${TEAM_NAME}"
+  echo -e "Preparing team: ${TEAM_NAME}"
 
   mkdir -p ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}
   ${DIR}/../prepare_team.bash "${TEAM_NAME}" > ${CONSOLE_OUTPUT_DIR}/${TEAM_NAME}/output.txt 2>&1
@@ -51,5 +51,5 @@ for TEAM_NAME in ${LIST_OF_TEAMS}; do
   fi
 done
 
-echo -e "${GREEN}Finished preparing WAM-V URDFs for all teams${NOCOLOR}"
+echo -e "${GREEN}Finished preparing all teams${NOCOLOR}"
 

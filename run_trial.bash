@@ -58,8 +58,7 @@ TRIAL_NUM=$3
 SERVER_CONTAINER_NAME=vorc-server-system
 ROS_DISTRO=melodic
 LOG_DIR=/vorc/logs
-# TODO(mabelzhang): Change to vorc-network after have team dockerfile
-NETWORK=vrx-network
+NETWORK=vorc-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
 SERVER_ROS_IP="172.16.0.22"
 COMPETITOR_ROS_IP="172.16.0.20"
@@ -151,8 +150,7 @@ echo "---------------------------------"
 
 # Start the competitors container and let it run in the background.
 echo -e "Creating container for ${DOCKERHUB_IMAGE}\n"
-# TODO(mabelzhang): Change to vorc when have team Dockerfile
-COMPETITOR_CONTAINER_NAME="vrx-competitor-system"
+COMPETITOR_CONTAINER_NAME="vorc-competitor-system"
 docker run \
     --net ${NETWORK} \
     --name $COMPETITOR_CONTAINER_NAME \

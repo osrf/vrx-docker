@@ -77,7 +77,7 @@ Make sure it is sourced so that you can run launch files from `vorc_gazebo`. Mak
 `vorc-docker` must be setup on your machine to run these scripts. Please note that most of the commands listed here are written to be run from the vorc-docker directory. These scripts should be able to be run from other directories, but you will need to change the command paths accordingly.
 
 ```
-git clone -b vorc-docker https://github.com/osrf/vrx-docker.git
+git clone -b vorc https://github.com/osrf/vrx-docker.git
 cd vrx-docker
 ```
 
@@ -649,7 +649,7 @@ From here, you can investigate what is happening inside of your container.
 
 All teams must submit a folder containing one file for automated evaluation. The name of the folder should be the name of the team. Please note that the file name must be identical with how they are listed below.
 
-`dockerhub_image.txt`: A text file containing only the name of the team's docker image publicly available on Dockerhub, e.g., `tylerlum/vrx-competitor-example:v2.2019`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20Dockerhub%20image%20for%20submission)
+`dockerhub_image.txt`: A text file containing only the name of the team's docker image publicly available on Dockerhub, e.g., `crvogt/ghostship:v1`. For more information about this file, please refer to the [Creating a Dockerhub image for submission](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20Dockerhub%20image%20for%20submission)
 
 ### Testing Your Submission
 

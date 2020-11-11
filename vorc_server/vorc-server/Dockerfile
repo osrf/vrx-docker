@@ -73,8 +73,6 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     python3-colcon-common-extensions \
  && rosdep init \
  && apt clean
-# TODO(mabelzhang) Delete if not needed
-# g++ python ros-${DIST}-joint-state-publisher ros-${DIST}-rqt ros-${DIST}-rqt-common-plugins protobuf-compiler
 
 # TODO(tylerlum): Change to specific gazebo ros pkgs with limited topics (may just use ARIAC's)
 RUN rosdep update

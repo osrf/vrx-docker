@@ -68,7 +68,7 @@ ROS_MASTER_URI="http://${SERVER_ROS_IP}:11311"
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Running $TEAM_NAME WAM-V in $TASK_NAME $TRIAL_NUM"
+echo "Running $TEAM_NAME solution in $TASK_NAME $TRIAL_NUM"
 echo -e "=================================\n"
 
 echo "Setting up"

@@ -42,7 +42,7 @@ This section will give descriptions of the directories in this repository:
 
 * `vorc_server` - contains scripts for building and running the vorc-server container, as well as its Docker files
 
-* `team_config` - stores the team config files. The prepare team scripts look inside of this directory to generate the WAM-V URDF files. More details about this below.
+* `team_config` - stores the team config files. For VORC, this is just a stub file for bookkeeping purpose.
 
 * `task_config` - stores the task config files. The prepare task scripts look inside of this directory to generate the trial world files. More details about this below.
 
@@ -50,7 +50,7 @@ This section will give descriptions of the directories in this repository:
 
 * `multi_scripts` - contains convenience scripts that call the main scripts multiple times
 
-* `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, WAM-V URDFs, trial worlds etc. More details about this below.
+* `generated` - contains generated files from all the scripts. This includes command outputs, scores, ROS logs, Gazebo logs, videos, trial worlds etc. More details about this below.
 
 ## Quick Start Instructions For a Single Trial: Setting up workspace to run automated evaluation
 

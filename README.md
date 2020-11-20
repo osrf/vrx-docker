@@ -103,28 +103,28 @@ This will create the image for the vorc server that runs the simulation. This st
 To run the competition with a team's configuration, the team's folder containing its configuration files must be put into the `team_config` directory.
 
 We have provided example submissions in the `team_config` directory of this repository. 
-You should see that there is a directory called `example_team` that has the following configuration files in it:
+You should see that there is a directory called `ghostship` that has the following configuration files in it:
 
 ```
-$ ls team_config/example_team/
+$ ls team_config/ghostship/
 dockerhub_image.txt
 ```
 
 This constitutes a submission. The files are explained in the __Files Required from Teams for Submission__ section below. 
-We will work with the files of the `example_team` submission for this tutorial; you can use them as a template for your own team's submission.
+We will work with the files of the `ghostship` submission for this tutorial; you can use them as a template for your own team's submission.
 
 ### Preparing a team
 
 To prepare a team, call
 ```
-./prepare_team.bash example_team
+./prepare_team.bash ghostship
 ```
 
 The end of the output should look something like
 ```
-Preparing team: example_team
+Preparing team: ghostship
 OK
-File generated in /home/developer/vrx_ws/src/vrx-docker/generated/team_generated/example_team
+File generated in /home/developer/vrx_ws/src/vrx-docker/generated/team_generated/ghostship
 ```
 
 ### Preparing trials for a task
@@ -185,7 +185,7 @@ After running the prepare scripts, you should have the following file structure 
 
 ```
 generated/team_generated
-├── example_team
+├── ghostship
 ```
 
 After running the prepare scripts, you should have the following file structure in `generated/task_generated`:
@@ -205,12 +205,12 @@ If you are missing these files, please review the command output (either in term
 
 ## Quick Start Instructions For a Single Trial: Running a single trial for a single team
 
-In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/example_team` and the trial with trial\_number 0 associated with `task_config/stationkeeping.yaml`), call:
+In order to run a trial with a specific team, the prepare scripts above must have been called on the associated task and team before running. To run a single trial with a specific team (in this case the team from`team_config/ghostship` and the trial with trial\_number 0 associated with `task_config/stationkeeping.yaml`), call:
 
 ```
-./run_trial.bash -n example_team stationkeeping 0 # for Nvidia computers
+./run_trial.bash -n ghostship stationkeeping 0 # for Nvidia computers
 # OR
-./run_trial.bash example_team stationkeeping 0 # for non-Nvidia computers
+./run_trial.bash ghostship stationkeeping 0 # for non-Nvidia computers
 
 
 # For your team you will run:
@@ -237,7 +237,7 @@ The `generated/logs` directory has the following structure:
 
 ```
 generated/logs
-└── example_team
+└── ghostship
     ├── stationkeeping
     │   └── 0
     │       ├── gazebo-server
@@ -284,7 +284,7 @@ The `generated/logs` directory will have numerous directories with the date and 
 View the score of the trial by running
 
 ```
-cat generated/logs/example_team/stationkeeping/0/trial_score.txt
+cat generated/logs/ghostship/stationkeeping/0/trial_score.txt
 ```
 
 ## Quick Start Instructions For a Single Trial: Trial videos and playback
@@ -295,7 +295,7 @@ After running a trial, a `state.log` file is stored under `generated/logs/<team>
 To generate a trial video, please run the trial using the steps above, source vorc, and then run
 
 ```
-./generate_trial_video.bash example_team stationkeeping 0
+./generate_trial_video.bash ghostship stationkeeping 0
 
 # For your team you will run:
 # ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
@@ -308,7 +308,7 @@ it may find that window, instead of the actual Gazebo simulation window.
 There should be a new directory called `generated/logs/<team>/<task>/<trial_num>/video` that contains the following:
 
 ```
-generated/logs/example_team/stationkeeping/0/video/
+generated/logs/ghostship/stationkeeping/0/video/
 ├── playback_video.ogv
 ├── playback_video.ogv.playback_output.txt
 └── playback_video.ogv.record_output.txt
@@ -317,7 +317,7 @@ generated/logs/example_team/stationkeeping/0/video/
 You can play the video with
 
 ```
-vlc generated/logs/example_team/stationkeeping/0/video/playback_video.ogv
+vlc generated/logs/ghostship/stationkeeping/0/video/playback_video.ogv
 ```
 
 ### Playing back the simulation
@@ -325,7 +325,7 @@ vlc generated/logs/example_team/stationkeeping/0/video/playback_video.ogv
 To play back a specific trial's log file, move to `vorc-docker` and call:
 
 ```
-roslaunch vorc_gazebo playback.launch log_file:=`pwd`/generated/logs/example_team/stationkeeping/0/gazebo-server/state.log
+roslaunch vorc_gazebo playback.launch log_file:=`pwd`/generated/logs/ghostship/stationkeeping/0/gazebo-server/state.log
 
 # For your team you will run:
 # roslaunch vorc_gazebo playback.launch log_file:=`pwd`/generated/logs/<your_team_name>/<task_name>/<trial_number>/gazebo-server/state.log
@@ -421,9 +421,9 @@ To keep the terminal output clean, all of the output will be stored in `generate
 To run all trials for a given task, call:
 
 ```
-./multi_scripts/run_one_team_one_task.bash -n example_team example_task # for Nvidia computers
+./multi_scripts/run_one_team_one_task.bash -n ghostship example_task # for Nvidia computers
 # or
-./multi_scripts/run_one_team_one_task.bash example_team example_task # for non-Nvidia computers
+./multi_scripts/run_one_team_one_task.bash ghostship example_task # for non-Nvidia computers
 
 # For your team you will run:
 # ./multi_scripts/run_one_team_one_task.bash [-n --nvidia] <your_team_name> <task_name>
@@ -436,9 +436,9 @@ This will run `run_trial.bash` on all trials in `generated/task_generated/<task>
 To run all trials for all tasks listed in the `task_generated` directory, call:
 
 ```
-./multi_scripts/run_one_team_all_tasks.bash -n example_team # for Nvidia computers
+./multi_scripts/run_one_team_all_tasks.bash -n ghostship # for Nvidia computers
 # or
-./multi_scripts/run_one_team_all_tasks.bash example_team # for non-Nvidia computers
+./multi_scripts/run_one_team_all_tasks.bash ghostship # for non-Nvidia computers
 
 # For your team you will run:
 # ./multi_scripts/run_one_team_all_tasks.bash [-n --nvidia] <your_team_name>
@@ -469,7 +469,7 @@ Note: To keep the terminal output clean, all of the output from `multi_scripts` 
 To generate all trial videos for one team and one task, run
 
 ```
-./multi_scripts/generate_one_team_one_task_videos.bash example_team example_task
+./multi_scripts/generate_one_team_one_task_videos.bash ghostship example_task
 
 # For your team you will run:
 # ./multi_scripts/generate_one_team_one_task_videos.bash <your_team_name> <task_name>
@@ -481,7 +481,7 @@ This will run `generate_trial_video.bash` for all trials in `generated/logs/<tea
 To generate all trial videos for one team and all its tasks, run
 
 ```
-./multi_scripts/generate_one_team_all_task_videos.bash example_team
+./multi_scripts/generate_one_team_all_task_videos.bash ghostship
 
 # For your team you will run:
 # ./multi_scripts/generate_one_team_all_task_videos.bash <your_team_name>
@@ -522,7 +522,7 @@ and your `generated/logs` directory to look like
 
 ```
 generated/logs
-├── example_team
+├── ghostship
 │   ├── stationkeeping
 │   │   ├── 0
 │   │   │   ├── gazebo-server

@@ -104,20 +104,20 @@ WORKDIR /home/$USER
 # Create workspace
 RUN mkdir -p vorc_ws/src
 
-# TODO(mabelzhang): Clone master branches once merged!
 RUN /bin/sh -c 'echo "Cloning git repos..."'
 RUN cd /home/$USER/vorc_ws/src \
- && git clone -b install_for_docker https://github.com/osrf/vrx.git \
- && git clone -b for_vorc_docker https://github.com/osrf/vorc.git
+ && git clone https://github.com/osrf/vrx.git \
+ && git clone https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
 #RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
 RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && catkin_make"
 
 # Source all the needed environment files.
+# TODO(mabelzhang): Source from install/setup.bash once fix vrx package setup
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". ~/vorc_ws/install/setup.bash" >> ~/.bashrc'
+ && /bin/sh -c 'echo ". ~/vorc_ws/devel/setup.bash" >> ~/.bashrc'
 ## END OF SECTION BASED ON vrx/docker/Dockerfile
 
 # Expose port used to communiate with gzserver

@@ -41,6 +41,7 @@ tasks:
             gymkhana:
                 - namespace: "cora"
                   competition: "vorc"
+                  nav_name: short_navigation_course_0
                   nav_uri: short_navigation_course0
                   nav_x: 60
                   nav_y: -362

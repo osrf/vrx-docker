@@ -107,8 +107,8 @@ RUN mkdir -p vorc_ws/src
 # TODO(mabelzhang): Clone master branches once merged!
 RUN /bin/sh -c 'echo "Cloning git repos..."'
 RUN cd /home/$USER/vorc_ws/src \
- && git clone -b install_for_docker https://github.com/osrf/vrx.git \
- && git clone -b for_vorc_docker https://github.com/osrf/vorc.git
+ && git clone https://github.com/osrf/vrx.git \
+ && git clone https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
 #RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"

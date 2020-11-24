@@ -111,8 +111,7 @@ RUN cd /home/$USER/vorc_ws/src \
  && git clone https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
-#RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
-RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && catkin_make"
+RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \

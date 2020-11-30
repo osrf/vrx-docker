@@ -104,7 +104,6 @@ WORKDIR /home/$USER
 # Create workspace
 RUN mkdir -p vorc_ws/src
 
-# TODO(mabelzhang): Clone master branches once merged!
 RUN /bin/sh -c 'echo "Cloning git repos..."'
 RUN cd /home/$USER/vorc_ws/src \
  && git clone https://github.com/osrf/vrx.git \

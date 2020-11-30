@@ -173,7 +173,7 @@ docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt 
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
-# Record trial score
+# Record trial score. This requires rosbag on host machine
 echo "Creating text file for trial score"
 python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
 echo -e "${GREEN}OK${NOCOLOR}\n"

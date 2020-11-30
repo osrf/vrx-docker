@@ -114,10 +114,9 @@ RUN cd /home/$USER/vorc_ws/src \
 RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && catkin_make"
 
 # Source all the needed environment files.
-# TODO(mabelzhang): Source from install/setup.bash once fix vrx package setup
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \
  && /bin/sh -c 'echo ". /usr/share/gazebo/setup.sh" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". ~/vorc_ws/devel/setup.bash" >> ~/.bashrc'
+ && /bin/sh -c 'echo ". ~/vorc_ws/install/setup.bash" >> ~/.bashrc'
 ## END OF SECTION BASED ON vrx/docker/Dockerfile
 
 # Expose port used to communiate with gzserver

@@ -107,7 +107,7 @@ RUN mkdir -p vorc_ws/src
 RUN /bin/sh -c 'echo "Cloning git repos..."'
 RUN cd /home/$USER/vorc_ws/src \
  && git clone https://github.com/osrf/vrx.git \
- && git clone https://github.com/osrf/vorc.git
+ && git clone -b fix_log_playback https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
 RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
@@ -137,8 +137,12 @@ ENV LANG en_US.UTF-8
 #  && tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1 \
 #  && rm /tmp/default.tar.gz
 
+#RUN sudo apt-get install -y psmisc
+
 # setup entrypoint
 COPY ./vorc_entrypoint.sh /
 COPY ./run_vorc_trial.sh /
+COPY ./play_vorc_log.sh /
+COPY ./gz_utils.sh /
 
 ENTRYPOINT ["/vorc_entrypoint.sh"]

@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # generate_trial_video.bash: A bash script to generate a video from a Gazebo playback log file.
+# Input: Gazebo log file state.log
+# Output: Recorded video in .ogv
 #
-# E.g.: ./generate_trial_video.bash example_team station_keeping 0
+# E.g.: ./generate_trial_video.bash -n example_team station_keeping 0
 #
 # Please, install the following dependencies before using the script:
 #   sudo apt-get install recordmydesktop wmctrl psmisc
@@ -19,38 +21,33 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 [-n --nvidia] <team_name> <task_name> <trial_num>"
   exit 1
 }
 
-# Check if gzclient is running
-is_gzclient_running()
-{
-  if pgrep gzclient >/dev/null; then
-    true
-  else
-    false
-  fi
-}
+# Parse arguments
+nvidia_arg=""
+image_nvidia=""
 
-# Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
-# tells us that the playback has been paused. This event will trigger the end of the recording.
-wait_until_playback_ends()
-{
-  echo -n "Waiting for playback to end..."
-  gz_world_stats_topic=$(gz topic -l | grep "world_stats")
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
 
-  until gz topic -e $gz_world_stats_topic -d 1 -u | grep "paused: true" \
-    > /dev/null
-  do
-    sleep 1
-    if ! is_gzclient_running ; then
-      echo 1>&2 "GZ client not running, bailing"
-      return 0
-    fi
-  done
-  echo -e "${GREEN}OK${NOCOLOR}"
-}
+  case $key in
+      -n|--nvidia)
+      nvidia_arg="-n"
+      image_nvidia="-nvidia"
+      shift
+      ;;
+      *)    # unknown option
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
@@ -59,39 +56,61 @@ TEAM_NAME=$1
 TASK_NAME=$2
 TRIAL_NUM=$3
 
+# Constants for containers
+SERVER_CONTAINER_NAME=vorc-server-system
+ROS_DISTRO=melodic
+LOG_DIR=/vorc/logs
+NETWORK=vorc-network
+NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
+SERVER_ROS_IP="172.16.0.22"
+COMPETITOR_ROS_IP="172.16.0.20"
+ROS_MASTER_URI="http://${SERVER_ROS_IP}:11311"
+
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-GZ_LOG_FILE=$DIR/generated/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/gazebo-server/state.log
+# Create the network for the containers to talk to each other.
+${DIR}/utils/vorc_network.bash "${NETWORK}" "${NETWORK_SUBNET}"
 
-# Output directory
-OUTPUT_DIR=$DIR/generated/logs/$TEAM_NAME/$TASK_NAME/$TRIAL_NUM/video
-if [ -d "$OUTPUT_DIR" ]; then
-  echo "Overwriting directory: ${OUTPUT_DIR}"
-  rm -R $OUTPUT_DIR
-else
-  echo "Creating directory: ${OUTPUT_DIR}"
-fi
+echo "Playing back $TEAM_NAME solution in $TASK_NAME $TRIAL_NUM"
+echo -e "=================================\n"
 
-mkdir -p $OUTPUT_DIR
-OUTPUT=$OUTPUT_DIR/playback_video.ogv
+echo "Setting up"
+echo "---------------------------------"
 
+# Input file
+HOST_LOG_DIR=${DIR}/generated/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+LOG_SUFFIX=/gazebo-server/state.log
+LOG_FILE=${LOG_DIR}${LOG_SUFFIX}
+HOST_LOG_FILE=${HOST_LOG_DIR}${LOG_SUFFIX}
 # Sanity check: Make sure that the log file exists.
-if [ ! -f $GZ_LOG_FILE ]; then
-    echo "Gazebo log file [$GZ_LOG_FILE] not found!"
+if [ ! -f $HOST_LOG_FILE ]; then
+    echo "Gazebo log file [$HOST_LOG_FILE] not found!"
     exit 1
 else
-    echo "Found Gazebo log file [$GZ_LOG_FILE]"
+    echo "Found Gazebo log file [$HOST_LOG_FILE]"
 fi
 
-# Sanity check: Make sure that catkin_find is found.
-which catkin_find > /dev/null || { echo "Unable to find catkin_find."\
-  "Did you source your ROS setup.bash file?" ; exit 1; }
+# Output directory
+HOST_OUTPUT_DIR=${HOST_LOG_DIR}/video
+OUTPUT_DIR=${LOG_DIR}/video
+if [ -d "$HOST_OUTPUT_DIR" ]; then
+  echo "Overwriting directory: ${HOST_OUTPUT_DIR}"
+  rm -R $HOST_OUTPUT_DIR
+else
+  echo "Creating directory: ${HOST_OUTPUT_DIR}"
+fi
 
-# Sanity check: Kill any dangling Gazebo before moving forward.
-killall -wq gzserver gzclient || true
+mkdir -p $HOST_OUTPUT_DIR
+OUTPUT_SUFFIX=/playback_video.ogv
+HOST_OUTPUT=$HOST_OUTPUT_DIR$OUTPUT_SUFFIX
+OUTPUT=$OUTPUT_DIR$OUTPUT_SUFFIX
 
-echo "Sanity checks complete"
+# Ensure any previous containers are killed and removed.
+${DIR}/utils/kill_vorc_containers.bash
+
+echo "Starting simulation server container for playback"
+echo "-------------------------------------------------"
 
 # Define constants for recording
 x=100
@@ -100,26 +119,42 @@ width=1000
 height=750
 BLACK_WINDOW_TIME=2
 
+HOST_GZ_GUI_CONFIG_DIR=${DIR}/generated/logs/playback_gazebo
+GZ_GUI_CONFIG_DIR=/home/$USER/.gazebo
+if [ -d "$HOST_GZ_GUI_CONFIG_DIR" ]; then
+  echo "Overwriting directory: ${HOST_GZ_GUI_CONFIG_DIR}"
+  rm -R $HOST_GZ_GUI_CONFIG_DIR
+else
+  echo "Creating directory: ${HOST_GZ_GUI_CONFIG_DIR}"
+fi
+mkdir -p $HOST_GZ_GUI_CONFIG_DIR
+
 # Tell gazebo client what size and place it should be
 echo "[geometry]
 width=$width
 height=$height
 x=$x
-y=$y" > ~/.gazebo/gui.ini
+y=$y" > ${HOST_GZ_GUI_CONFIG_DIR}/gui.ini
 
-# Start Gazebo in playback mode
-roslaunch vorc_gazebo playback.launch log_file:=$GZ_LOG_FILE paused:=true verbose:=true \
-  > $OUTPUT.playback_output.txt 2>&1 &
-sleep 1s
+# Run Gazebo simulation server container
+SERVER_CMD="/play_vorc_log.sh ${LOG_FILE} ${OUTPUT}"
+SERVER_IMG="vorc-server-${ROS_DISTRO}${image_nvidia}:latest"
+${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
+  "--net ${NETWORK} \
+  --ip ${SERVER_ROS_IP} \
+  -v ${HOST_LOG_DIR}:${LOG_DIR} \
+  -v ${HOST_OUTPUT_DIR}:${OUTPUT_DIR} \
+  -v ${HOST_GZ_GUI_CONFIG_DIR}:${GZ_GUI_CONFIG_DIR} \
+  -e ROS_MASTER_URI=${ROS_MASTER_URI} \
+  -e ROS_IP=${SERVER_ROS_IP} \
+  -e VRX_DEBUG=false" \
+  "${SERVER_CMD}" &
+SERVER_PID=$!
 
-# Check if the log file has errors, likely forgot to source ws
-if grep -Fq "RLException" $OUTPUT.playback_output.txt
-then
-  echo "Failed to find playback launch file. Did you source your vorc_ws?"
-  exit 1
-fi
+echo "Waiting for server to start up"
+sleep 9s
 
-echo "Setting up for playback..."
+echo "Setting up screen recording..."
 
 # Wait and find the Gazebo Window ID.
 # Note: May find Gazebo in browser tab, which is wrong. Please close all Gazebo related tabs.
@@ -132,7 +167,6 @@ GAZEBO_WINDOW_ID=`wmctrl -lp | grep Gazebo | cut -d" " -f 1`
 if [ -z "$GAZEBO_WINDOW_ID" ]; then
   echo "Gazebo window not detected. Exiting..."
   sleep 2
-  killall -w gzserver gzclient
   exit 1
 fi
 
@@ -144,20 +178,29 @@ wmctrl -i -a ${GAZEBO_WINDOW_ID}
 sleep $BLACK_WINDOW_TIME
 
 # Unpause the simulation.
-echo -n "Playing back..."
-gz world -p 0
+echo -n "Unpausing Gazebo..."
+# Inject command into Docker container
+UNPAUSE_CMD="gz world -p 0"
+docker exec -it ${SERVER_CONTAINER_NAME} ${UNPAUSE_CMD}
 echo -e "${GREEN}OK${NOCOLOR}"
 
 # Start recording the Gazebo Window.
-echo -n "Recording..."
-recordmydesktop --fps=30 --windowid=${GAZEBO_WINDOW_ID} --no-sound -o $OUTPUT \
-  > $OUTPUT.record_output.txt 2>&1 &
+echo "Recording screen..."
+recordmydesktop --fps=30 --windowid=${GAZEBO_WINDOW_ID} --no-sound -o $HOST_OUTPUT \
+  > $HOST_OUTPUT.record_output.txt 2>&1 #&
 echo -e "${GREEN}OK${NOCOLOR}"
 
-# Wait until the playback ends.
-wait_until_playback_ends
-
-# Terminate Gazebo.
 echo -n "Encoding video and storing in $OUTPUT ..."
-killall -w gzserver gzclient recordmydesktop
+killall -w recordmydesktop
 echo -e "${GREEN}OK${NOCOLOR}"
+
+# Wait for Docker container to terminate
+wait $SERVER_PID
+
+echo "Playback ended"
+echo "---------------------------------"
+
+# Kill and remove all containers before exit
+${DIR}/utils/kill_vorc_containers.bash
+
+exit 0

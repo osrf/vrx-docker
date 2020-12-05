@@ -93,21 +93,15 @@ is_gzclient_running()
 # tells us that the playback has been paused. This event will trigger the end of the recording.
 wait_until_playback_ends()
 {
-  echo "0000000000000"
   echo -n "Waiting for playback to end..."
-  echo "111111111111111"
   gz_world_stats_topic=$(gz topic -l | grep "world_stats")
-  echo "222222222222222"
-  echo [${gz_world_stats_topic}]
+  echo "[${gz_world_stats_topic}]"
 
-  until gz topic -e ${gz_world_stats_topic} -d 1 -u | grep "paused: true" \
+  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" \
     > /dev/null
   do
-    echo "333333333333333"
     sleep 1
-    echo "444444444444444"
     if ! is_gzclient_running ; then
-      echo "55555555555555555"
       echo 1>&2 "GZ client not running, bailing"
       return 0
     fi

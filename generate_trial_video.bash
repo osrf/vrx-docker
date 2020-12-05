@@ -85,10 +85,10 @@ LOG_FILE=${LOG_DIR}${LOG_SUFFIX}
 HOST_LOG_FILE=${HOST_LOG_DIR}${LOG_SUFFIX}
 # Sanity check: Make sure that the log file exists.
 if [ ! -f $HOST_LOG_FILE ]; then
-    echo "Gazebo log file [$HOST_LOG_FILE] not found!"
-    exit 1
+  echo "Gazebo log file [$HOST_LOG_FILE] not found!"
+  exit 1
 else
-    echo "Found Gazebo log file [$HOST_LOG_FILE]"
+  echo "Found Gazebo log file [$HOST_LOG_FILE]"
 fi
 
 # Output directory

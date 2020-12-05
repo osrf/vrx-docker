@@ -86,9 +86,15 @@ wait_for_unpause_signal()
   # Source ROS
   source $HOME/vorc_ws/install/setup.bash
 
-  # Wait for Docker injection from host to tell us it is ready to record screen
-  until rostopic echo /record_ready -n 1 | grep "data: True" &> /dev/null
+  # Wait for Docker injection from host to tell us it is ready
+  #until rostopic echo /host_ready -n 1 | grep "data: True" &> /dev/null
+  #do
+  #  echo `rostopic echo /host_ready -n 1 | grep "data: True"`
+  # TODO(mabelzhang): This is never set! Maybe need to set ROS_MASTER_URI
+  # in the injection??
+  until rosparam get /host_ready | grep "true" &> /dev/null
   do
+    echo `rosparam get /host_ready`
     sleep 1
   done
   echo -e "${GREEN}OK${NOCOLOR}"

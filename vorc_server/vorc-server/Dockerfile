@@ -137,7 +137,7 @@ ENV LANG en_US.UTF-8
 #  && tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1 \
 #  && rm /tmp/default.tar.gz
 
-#RUN sudo apt-get install -y psmisc
+RUN sudo apt-get install -y psmisc
 
 # setup entrypoint
 COPY ./vorc_entrypoint.sh /

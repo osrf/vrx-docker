@@ -156,6 +156,9 @@ sleep 9s
 
 echo "Setting up screen recording..."
 
+ADVERTISE_CMD="bash /home/master/vorc_ws/install/setup.bash && rostopic pub /record_ready std_msgs/Bool 0"
+docker exec -it ${SERVER_CONTAINER_NAME} ${ADVERTISE_CMD}
+
 # Wait and find the Gazebo Window ID.
 # Note: May find Gazebo in browser tab, which is wrong. Please close all Gazebo related tabs.
 until wmctrl -lp | grep Gazebo > /dev/null
@@ -177,10 +180,10 @@ wmctrl -i -a ${GAZEBO_WINDOW_ID}
 # screen for a long time.
 sleep $BLACK_WINDOW_TIME
 
-# Unpause the simulation.
-echo -n "Unpausing Gazebo..."
+# Unpause the simulation right before starting recordmydesktop
+echo "Injecting signal to unpause Gazebo..."
 # Inject command into Docker container
-UNPAUSE_CMD="gz world -p 0"
+UNPAUSE_CMD="bash /home/master/vorc_ws/install/setup.bash && rostopic pub /record_ready std_msgs/Bool 1"
 docker exec -it ${SERVER_CONTAINER_NAME} ${UNPAUSE_CMD}
 echo -e "${GREEN}OK${NOCOLOR}"
 
@@ -190,7 +193,7 @@ recordmydesktop --fps=30 --windowid=${GAZEBO_WINDOW_ID} --no-sound -o $HOST_OUTP
   > $HOST_OUTPUT.record_output.txt 2>&1 #&
 echo -e "${GREEN}OK${NOCOLOR}"
 
-echo -n "Encoding video and storing in $OUTPUT ..."
+echo "Encoding video and storing in $OUTPUT ..."
 killall -w recordmydesktop
 echo -e "${GREEN}OK${NOCOLOR}"
 

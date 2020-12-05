@@ -79,6 +79,26 @@ fi
 
 echo "Playing back log file..."
 
+wait_for_unpause_signal()
+{
+  echo "Waiting for unpause signal from host machine..."
+
+  # Source ROS
+  source $HOME/vorc_ws/install/setup.bash
+
+  # Wait for Docker injection from host to tell us it is ready to record screen
+  until rostopic echo /record_ready -n 1 | grep "data: True" &> /dev/null
+  do
+    sleep 1
+  done
+  echo -e "${GREEN}OK${NOCOLOR}"
+}
+
+wait_for_unpause_signal
+echo "Unpausing to start playback..."
+gz world -u 0
+echo -e "${GREEN}OK${NOCOLOR}"
+
 # Check if gzclient is running
 is_gzclient_running()
 {
@@ -93,13 +113,14 @@ is_gzclient_running()
 # tells us that the playback has been paused. This event will trigger the end of the recording.
 wait_until_playback_ends()
 {
-  echo -n "Waiting for playback to end..."
+  echo "Waiting for playback to end..."
   gz_world_stats_topic=$(gz topic -l | grep "world_stats")
   echo "[${gz_world_stats_topic}]"
 
-  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" \
-    > /dev/null
+  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" &> /dev/null
   do
+    echo `gz topic -e /gazebo/vorc_example_course/world_stats -d 1 -u | grep "paused: true"`
+
     sleep 1
     if ! is_gzclient_running ; then
       echo 1>&2 "GZ client not running, bailing"
@@ -111,7 +132,7 @@ wait_until_playback_ends()
 
 wait_until_playback_ends
 
-echo -n "Terminating Gazebo..."
+echo "Terminating Gazebo..."
 killall -w gzserver gzclient
 wait_until_gzserver_is_down
 echo -e "${GREEN}OK${NOCOLOR}\n"

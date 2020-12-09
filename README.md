@@ -304,7 +304,6 @@ A side effect is that it will shut down if the playback is paused (which happens
 
 To inspect more carefully, you may wish to pause playback without Gazebo shutting down.
 That can be done by issuing `--keep-gz` on the command line:
-
 ```
 ./replay_trial.bash -n --keep-gz ghostship wayfinding 0
 ```
@@ -315,7 +314,7 @@ docker exec -it vorc-server-system killall -w gzclient gzserver
 ```
 The autopilot will detect Gazebo termination and shut down the rest of the container.
 
-`replay_trial.bash accepts a few options for more manual inspections, which you can view in the usage by running it alone without arguments.
+`replay_trial.bash` accepts a few options for more manual inspections, which you can view in the usage by running it alone without arguments.
 
 ### Generating a single trial video
 

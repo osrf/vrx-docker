@@ -10,7 +10,17 @@
 
 is_gzserver_running()
 {
-  if pgrep gzserver >/dev/null; then
+  if pgrep gzserver > /dev/null; then
+    true
+  else
+    false
+  fi
+}
+
+# Check if gzclient is running
+is_gzclient_running()
+{
+  if pgrep gzclient > /dev/null; then
     true
   else
     false
@@ -70,6 +80,9 @@ roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
+echo "Waiting for server to start up"
+sleep 9s
+
 # Check if the log file has errors, likely forgot to source ws
 if grep -Fq "RLException" $OUTPUT.playback_output.txt
 then
@@ -81,7 +94,8 @@ echo "Playing back log file..."
 
 wait_for_unpause_signal()
 {
-  echo "Waiting for unpause signal from host machine..."
+  echo "Waiting for unpause signal or manual unpause..."
+  gz_world_stats_topic=$(gz topic -l | grep "world_stats")
 
   # Source ROS
   source $HOME/vorc_ws/install/setup.bash
@@ -90,11 +104,22 @@ wait_for_unpause_signal()
   #until rostopic echo /host_ready -n 1 | grep "data: True" &> /dev/null
   #do
   #  echo `rostopic echo /host_ready -n 1 | grep "data: True"`
-  # TODO(mabelzhang): This is never set! Maybe need to set ROS_MASTER_URI
-  # in the injection??
-  until rosparam get /host_ready | grep "true" &> /dev/null
+  # TODO(mabelzhang): This is never set!
+  # Try rosparam instead of rostopic
+  until rosparam list | grep "host_ready" --quiet && \
+    rosparam get /host_ready | grep "true" --quiet
   do
-    echo `rosparam get /host_ready`
+    # If user manually unpaused, no need to wait for host signal
+    if gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: false" --quiet ; then
+      break
+    fi
+
+    # If user manually closed Gazebo, no need to wait for host signal
+    if ! is_gzclient_running || ! is_gzserver_running ; then
+      echo "Detected gzserver or gzclient no longer running"
+      break
+    fi
+
     sleep 1
   done
   echo -e "${GREEN}OK${NOCOLOR}"
@@ -102,30 +127,21 @@ wait_for_unpause_signal()
 
 wait_for_unpause_signal
 echo "Unpausing to start playback..."
-gz world -u 0
+gz world -p 0
 echo -e "${GREEN}OK${NOCOLOR}"
 
-# Check if gzclient is running
-is_gzclient_running()
-{
-  if pgrep gzclient >/dev/null; then
-    true
-  else
-    false
-  fi
-}
-
 # Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
-# tells us that the playback has been paused. This event will trigger the end of the recording.
+# tells us that the playback has been paused. This event will trigger the end of
+# the recording.
 wait_until_playback_ends()
 {
   echo "Waiting for playback to end..."
   gz_world_stats_topic=$(gz topic -l | grep "world_stats")
-  echo "[${gz_world_stats_topic}]"
 
-  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" &> /dev/null
+  # Sleep until Gazebo is paused
+  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" & > /dev/null
   do
-    echo `gz topic -e /gazebo/vorc_example_course/world_stats -d 1 -u | grep "paused: true"`
+    #echo `gz topic -e /gazebo/vorc_example_course/world_stats -d 1 -u | grep "paused: true"`
 
     sleep 1
     if ! is_gzclient_running ; then

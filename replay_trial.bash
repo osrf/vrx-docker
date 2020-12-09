@@ -7,9 +7,6 @@
 #
 # Usage:
 # ./replay_trial.bash -n example_team station_keeping 0
-#
-# Dependencies:
-# sudo apt-get install psmisc
 
 # Exit on error
 set -e

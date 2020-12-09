@@ -2,31 +2,10 @@
 
 # run_vorc_trial.sh: A shell script to execute one vorc trial.
 
-is_gzserver_running()
-{
-  if pgrep gzserver >/dev/null; then
-    true
-  else
-    false
-  fi
-}
+# Get directory of this file
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-wait_until_gzserver_is_down()
-{
-  until ! is_gzserver_running
-  do
-    sleep 1
-  done
-}
-
-
-wait_until_gzserver_is_up()
-{
-  until is_gzserver_running
-  do
-    sleep 1
-  done
-}
+source ${DIR}/gz_utils.sh
 
 set -e
 

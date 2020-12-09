@@ -32,6 +32,7 @@ RUN apt update \
          libeigen3-dev \
          pkg-config \
          language-pack-en \
+         psmisc \
   && apt clean
 
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -140,5 +141,7 @@ ENV LANG en_US.UTF-8
 # setup entrypoint
 COPY ./vorc_entrypoint.sh /
 COPY ./run_vorc_trial.sh /
+COPY ./play_vorc_log.sh /
+COPY ./gz_utils.sh /
 
 ENTRYPOINT ["/vorc_entrypoint.sh"]

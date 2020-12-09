@@ -54,6 +54,13 @@ TEAM_NAME=$1
 TASK_NAME=$2
 TRIAL_NUM=$3
 
+# Check ROS has been sourced, so user isn't surprised after trial has finished
+if rosversion -d | grep unknown --quiet ; then
+  echo "rosbag is not found (needed for trial score after the run)."
+  echo "Did you source ROS on host machine?"
+  exit
+fi
+
 # Constants for containers
 SERVER_CONTAINER_NAME=vorc-server-system
 ROS_DISTRO=melodic
@@ -93,10 +100,10 @@ COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
 WORLD_FILE_SUFFIX=worlds/${TASK_NAME}${TRIAL_NUM}.world
 if [ -f "${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX}" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX}"
+  echo -e "${GREEN}Done.${NOCOLOR}\n"
 else
   echo -e "${RED}Err: ${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX} not found."; exit 1;
 fi
-echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Ensure any previous containers are killed and removed.
 ${DIR}/utils/kill_vorc_containers.bash
@@ -123,8 +130,9 @@ docker image pull $DOCKERHUB_IMAGE
 echo "Starting simulation server container"
 echo "---------------------------------"
 
-# TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
-#       competitior container waiting for ROS master and has error before server is created.
+# TODO(anyone): Figure out if we can start competitor container first, so
+# simulation doesn't start too early, but may have issues if competitior
+# container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
 WORLD_FILE=/task_generated/${WORLD_FILE_SUFFIX}
 SERVER_CMD="/run_vorc_trial.sh ${WORLD_FILE} ${LOG_DIR}"

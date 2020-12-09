@@ -54,6 +54,13 @@ TEAM_NAME=$1
 TASK_NAME=$2
 TRIAL_NUM=$3
 
+# Check ROS has been sourced, so user isn't surprised after trial has finished
+if rosversion -d | grep unknown --quiet ; then
+  echo "rosbag is not found (needed for trial score after the run)."
+  echo "Did you source ROS on host machine?"
+  exit
+fi
+
 # Constants for containers
 SERVER_CONTAINER_NAME=vorc-server-system
 ROS_DISTRO=melodic

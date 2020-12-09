@@ -4,44 +4,9 @@
 # trial.
 
 # Get directory of this file
-#DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-#source ${DIR}/gz_utils.sh
-
-is_gzserver_running()
-{
-  if pgrep gzserver > /dev/null; then
-    true
-  else
-    false
-  fi
-}
-
-# Check if gzclient is running
-is_gzclient_running()
-{
-  if pgrep gzclient > /dev/null; then
-    true
-  else
-    false
-  fi
-}
-
-wait_until_gzserver_is_down()
-{
-  until ! is_gzserver_running
-  do
-    sleep 1
-  done
-}
-
-wait_until_gzserver_is_up()
-{
-  until is_gzserver_running
-  do
-    sleep 1
-  done
-}
+source ${DIR}/gz_utils.sh
 
 # Constants.
 RED='\033[0;31m'
@@ -59,9 +24,6 @@ usage()
   echo "  By default, they are shut down automatically."
   exit 1
 }
-
-# Call usage() function if arguments not supplied.
-[[ $# -ne 2 ]] && usage
 
 autoplay=1
 kill_gz=1
@@ -91,6 +53,9 @@ do
 done
 
 set -- "${POSITIONAL[@]}"
+
+# Call usage() function if arguments not supplied.
+[[ $# -ne 2 ]] && usage
 
 LOG_FILE=$1
 OUTPUT=$2
@@ -123,15 +88,10 @@ then
   exit 1
 fi
 
-echo "Playing back log file..."
-
 wait_for_unpause_signal()
 {
   echo "Waiting for unpause signal or manual unpause..."
   gz_world_stats_topic=$(gz topic -l | grep "world_stats")
-
-  # Source ROS
-  source $HOME/vorc_ws/install/setup.bash
 
   # Wait for Docker injection to unpause
   until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: false" --quiet
@@ -155,9 +115,8 @@ if [ $autoplay -eq 1 ]; then
 else
   wait_for_unpause_signal
 fi
-# Sleep a little before start checking for pause status, to give Gazebo time
-# to unpause. Otherwise an oudated pause is detected immediately.
-sleep 1s
+
+echo "Playing back log file..."
 
 # Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
 # tells us that the playback has been paused. This event will trigger the end of
@@ -179,14 +138,13 @@ wait_until_playback_ends()
   echo -e "${GREEN}OK${NOCOLOR}"
 }
 
-wait_until_playback_ends
-
 if [ $kill_gz -eq 1 ]; then
+  wait_until_playback_ends
   killall -w gzserver gzclient
 else
   echo "Waiting for Docker injection to terminate Gazebo..."
+  wait_until_gzserver_is_down
 fi
-wait_until_gzserver_is_down
 
 # Kill rosnodes
 echo "Killing rosnodes"

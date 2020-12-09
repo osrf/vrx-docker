@@ -1,15 +1,27 @@
 #!/bin/bash
 
-is_gzserver_running()
+# gz_utils.sh: Utility functions used for running and playing back trials.
+
+function is_gzserver_running()
 {
-  if pgrep gzserver >/dev/null; then
+  if pgrep gzserver > /dev/null; then
     true
   else
     false
   fi
 }
 
-wait_until_gzserver_is_down()
+# Check if gzclient is running
+function is_gzclient_running()
+{
+  if pgrep gzclient > /dev/null; then
+    true
+  else
+    false
+  fi
+}
+
+function wait_until_gzserver_is_down()
 {
   until ! is_gzserver_running
   do
@@ -17,8 +29,7 @@ wait_until_gzserver_is_down()
   done
 }
 
-
-wait_until_gzserver_is_up()
+function wait_until_gzserver_is_up()
 {
   until is_gzserver_running
   do

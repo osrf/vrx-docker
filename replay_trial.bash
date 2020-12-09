@@ -23,18 +23,24 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 [-n --nvidia] [--keep-open] <team_name> <task_name> <trial_num>"
-  echo "--keep-open: Keep Gazebo window open and Docker container running after playback ends."
+  echo "Usage: $0 [-n --nvidia] [--keep-docker] [--manual-play] [--keep-gz] <team_name> <task_name> <trial_num>"
+  echo "--keep-docker: Keep Gazebo window open and Docker container running after playback ends."
+  echo "  By default, everything is terminated automatically."
+  echo "--manual-play: Do not automatically start playback. Wait for user to click in GUI."
+  echo "  By default, playack automatically starts."
+  echo "--keep-gz: Keep Gazebo server and client running after playback ends."
+  echo "  Implies --keep-docker. By default, they are shut down automatically."
   exit 1
 }
-
-# Call usage() function if arguments not supplied.
-[[ $# -lt 3 ]] && echo "Invalid arguments: $@" && usage
 
 # Parse arguments
 nvidia_arg=""
 image_nvidia=""
-terminate=1
+keep_docker=1
+
+# Args to pass to script internal to Docker container
+manual_play=""
+keep_gz=""
 
 POSITIONAL=()
 while [[ $# -gt 0 ]]
@@ -48,8 +54,19 @@ do
       shift
       ;;
 
-    --keep-open)
-      terminate=0
+    --keep-docker)
+      keep_docker=1
+      shift
+      ;;
+
+    --manual-play)
+      manual_play="--manual-play"
+      shift
+      ;;
+
+    --keep-gz)
+      keep_docker=1
+      keep_gz="--keep-gz"
       shift
       ;;
 
@@ -62,6 +79,9 @@ do
 done
 
 set -- "${POSITIONAL[@]}"
+
+# Call usage() function if arguments not supplied.
+[[ $# -ne 3 ]] && echo "Invalid arguments: $@" && usage
 
 TEAM_NAME=$1
 TASK_NAME=$2
@@ -148,7 +168,7 @@ x=$x
 y=$y" > ${HOST_GZ_GUI_CONFIG_DIR}/gui.ini
 
 # Run Gazebo simulation server container
-SERVER_CMD="/play_vorc_log.sh ${LOG_FILE} ${OUTPUT}"
+SERVER_CMD="/play_vorc_log.sh ${LOG_FILE} ${OUTPUT} ${manual_play} ${keep_gz}"
 SERVER_IMG="vorc-server-${ROS_DISTRO}${image_nvidia}:latest"
 ${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
@@ -162,7 +182,7 @@ ${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERV
   "${SERVER_CMD}" &
 SERVER_PID=$!
 
-if [ $terminate -eq 1 ]; then
+if [ $keep_docker -eq 0 ]; then
   # Wait for Docker container to terminate
   wait $SERVER_PID
 

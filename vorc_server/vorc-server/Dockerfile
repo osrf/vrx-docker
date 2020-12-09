@@ -32,6 +32,7 @@ RUN apt update \
          libeigen3-dev \
          pkg-config \
          language-pack-en \
+         psmisc \
   && apt clean
 
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -107,7 +108,7 @@ RUN mkdir -p vorc_ws/src
 RUN /bin/sh -c 'echo "Cloning git repos..."'
 RUN cd /home/$USER/vorc_ws/src \
  && git clone https://github.com/osrf/vrx.git \
- && git clone -b fix_log_playback https://github.com/osrf/vorc.git
+ && git clone https://github.com/osrf/vorc.git
 
 # Compile VRX and VORC
 RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vorc_ws && colcon build"
@@ -136,8 +137,6 @@ ENV LANG en_US.UTF-8
 #  && mkdir -p $HOME/.gazebo/models \
 #  && tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1 \
 #  && rm /tmp/default.tar.gz
-
-RUN sudo apt-get install -y psmisc
 
 # setup entrypoint
 COPY ./vorc_entrypoint.sh /

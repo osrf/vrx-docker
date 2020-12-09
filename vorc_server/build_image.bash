@@ -62,10 +62,9 @@ fi
 # Build image
 echo "Build image: $image_name"
 set -x
-#image_plus_tag=$image_name:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
-image_plus_tag=$image_name:latest
+image_plus_tag=$image_name:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
 docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag --build-arg USER=$USER --build-arg GROUP=$USER $BUILD_BASE $DIR/vorc-server && \
-#docker tag $image_plus_tag $image_name:latest && \
+docker tag $image_plus_tag $image_name:latest && \
 echo "Built $image_plus_tag and tagged as $image_name:latest"
 
 set +x

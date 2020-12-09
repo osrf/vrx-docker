@@ -7,8 +7,6 @@
 #
 # Usage:
 # ./replay_trial.bash -n example_team station_keeping 0
-# --keep-open: Keeps Gazebo window open and Docker container running after
-# playback ends.
 #
 # Dependencies:
 # sudo apt-get install psmisc
@@ -26,8 +24,12 @@ NOCOLOR='\033[0m'
 usage()
 {
   echo "Usage: $0 [-n --nvidia] [--keep-open] <team_name> <task_name> <trial_num>"
+  echo "--keep-open: Keep Gazebo window open and Docker container running after playback ends."
   exit 1
 }
+
+# Call usage() function if arguments not supplied.
+[[ $# -lt 3 ]] && echo "Invalid arguments: $@" && usage
 
 # Parse arguments
 nvidia_arg=""
@@ -45,16 +47,14 @@ do
       image_nvidia="-nvidia"
       shift
       ;;
-      *)    # unknown option
-      POSITIONAL+=("$1")
-      shift
-      ;;
 
     --keep-open)
       terminate=0
       shift
       ;;
-      *)
+
+    # Treat unknown options as positional args
+    *)
       POSITIONAL+=("$1")
       shift
       ;;
@@ -62,9 +62,6 @@ do
 done
 
 set -- "${POSITIONAL[@]}"
-
-# Call usage() function if arguments not supplied.
-[[ $# -ne 3 ]] && usage
 
 TEAM_NAME=$1
 TASK_NAME=$2
@@ -164,9 +161,6 @@ ${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERV
   -e VRX_DEBUG=false" \
   "${SERVER_CMD}" &
 SERVER_PID=$!
-
-#echo "Waiting for server to start up"
-#sleep 9s
 
 if [ $terminate -eq 1 ]; then
   # Wait for Docker container to terminate

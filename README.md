@@ -289,20 +289,29 @@ cat generated/logs/ghostship/stationkeeping/0/trial_score.txt
 
 ## Quick Start Instructions For a Single Trial: Trial videos and playback
 
-### Generating a single trial video
+### Playing back the recorded log of a single trial
 
 After running a trial, a `state.log` file is stored under `generated/logs/<team>/<task>/<trial_num>/gazebo-server`. This is a playback log file that allows you to play back the trial. 
-To generate a trial video, please run the trial using the steps above, source vorc, and then run
+
+To play back the trial with Gazebo GUI from within the competition Docker container, run
 
 ```
-./generate_trial_video.bash ghostship stationkeeping 0
+./replay_trial.bash -n example_team station_keeping 0
+```
+
+### Generating a single trial video
+
+To make a screen recording of the trial while playing back, run the following command. Internally, this calls `replay_trial.bash` above.
+
+```
+./generate_trial_video.bash -n ghostship stationkeeping 0
 
 # For your team you will run:
-# ./generate_trial_video.bash <your_team_name> <task_name> <trial_number>
+# ./generate_trial_video.bash -n <your_team_name> <task_name> <trial_number>
 ```
 
 This will start the Gazebo trial playback, begin screen capture on the Gazebo window, and then store the video file, record output and playback output in `generated/logs/<team>/<task>/<trial_num>/video`. 
-Please note that you must close other tabs related to Gazebo for this to work properly, as it puts the Gazebo window at the front (not background). If you have a browser tab open related to Gazebo,
+Please note that you must close other tabs related to Gazebo for this to work properly, as it puts the Gazebo window at the front (not background). Keep the Gazebo window on top. If you have a browser tab open related to Gazebo,
 it may find that window, instead of the actual Gazebo simulation window.
 
 There should be a new directory called `generated/logs/<team>/<task>/<trial_num>/video` that contains the following:

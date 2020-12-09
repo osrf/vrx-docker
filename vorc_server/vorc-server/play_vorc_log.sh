@@ -52,12 +52,45 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <log_file> <destination_file>"
+  echo "Usage: $0 <log_file> <destination_file> [--keep-gz]"
+  echo "--manual-play: Do not automatically start playback. Wait for user to click in GUI."
+  echo "  By default, playack automatically starts."
+  echo "--keep-gz: Keep Gazebo server and client running after playback ends."
+  echo "  By default, they are shut down automatically."
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 2 ]] && usage
+
+autoplay=1
+kill_gz=1
+
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+    --manual-play)
+      autoplay=0
+      shift
+      ;;
+
+    --keep-gz)
+      kill_gz=0
+      shift
+      ;;
+
+    # Treat unknown options as positional args
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}"
 
 LOG_FILE=$1
 OUTPUT=$2
@@ -100,20 +133,9 @@ wait_for_unpause_signal()
   # Source ROS
   source $HOME/vorc_ws/install/setup.bash
 
-  # Wait for Docker injection from host to tell us it is ready
-  #until rostopic echo /host_ready -n 1 | grep "data: True" &> /dev/null
-  #do
-  #  echo `rostopic echo /host_ready -n 1 | grep "data: True"`
-  # TODO(mabelzhang): This is never set!
-  # Try rosparam instead of rostopic
-  until rosparam list | grep "host_ready" --quiet && \
-    rosparam get /host_ready | grep "true" --quiet
+  # Wait for Docker injection to unpause
+  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: false" --quiet
   do
-    # If user manually unpaused, no need to wait for host signal
-    if gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: false" --quiet ; then
-      break
-    fi
-
     # If user manually closed Gazebo, no need to wait for host signal
     if ! is_gzclient_running || ! is_gzserver_running ; then
       echo "Detected gzserver or gzclient no longer running"
@@ -122,13 +144,20 @@ wait_for_unpause_signal()
 
     sleep 1
   done
+
   echo -e "${GREEN}OK${NOCOLOR}"
 }
 
-wait_for_unpause_signal
-echo "Unpausing to start playback..."
-gz world -p 0
-echo -e "${GREEN}OK${NOCOLOR}"
+if [ $autoplay -eq 1 ]; then
+  echo "Unpausing to start playback..."
+  gz world -p 0
+  echo -e "${GREEN}OK${NOCOLOR}"
+else
+  wait_for_unpause_signal
+fi
+# Sleep a little before start checking for pause status, to give Gazebo time
+# to unpause. Otherwise an oudated pause is detected immediately.
+sleep 1s
 
 # Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
 # tells us that the playback has been paused. This event will trigger the end of
@@ -139,13 +168,11 @@ wait_until_playback_ends()
   gz_world_stats_topic=$(gz topic -l | grep "world_stats")
 
   # Sleep until Gazebo is paused
-  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" & > /dev/null
+  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" --quiet
   do
-    #echo `gz topic -e /gazebo/vorc_example_course/world_stats -d 1 -u | grep "paused: true"`
-
     sleep 1
     if ! is_gzclient_running ; then
-      echo 1>&2 "GZ client not running, bailing"
+      echo 1>&2 "Detected gzclient no longer running"
       return 0
     fi
   done
@@ -154,10 +181,12 @@ wait_until_playback_ends()
 
 wait_until_playback_ends
 
-echo "Terminating Gazebo..."
-killall -w gzserver gzclient
+if [ $kill_gz -eq 1 ]; then
+  killall -w gzserver gzclient
+else
+  echo "Waiting for Docker injection to terminate Gazebo..."
+fi
 wait_until_gzserver_is_down
-echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill rosnodes
 echo "Killing rosnodes"

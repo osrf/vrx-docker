@@ -20,11 +20,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # clean up processes, as we will do that later in this script.
 # Specify --manual-play to start playback from this script after screen
 # recording is ready to begin.
-# Specify --keep-gz to keep Gazebo client window open until screen recording
-# stops.
-# TODO: leaving --keep-gz out for now, cannot detect playback ended from here
-# for some reason, so Docker injection to kill Gazebo is not being issued.
-# Letting play_vorc_log.sh terminate Gazebo until this is fixed.
 source ${DIR}/replay_trial.bash --keep-docker --manual-play "$@"
 
 echo "Setting up screen recording..."
@@ -65,51 +60,6 @@ echo "Injecting signal into Docker container to unpause Gazebo..."
 UNPAUSE_CMD="gz world -p 0"
 docker exec -it ${SERVER_CONTAINER_NAME} ${UNPAUSE_CMD}
 echo -e "${GREEN}OK${NOCOLOR}"
-
-# TODO: leaving --keep-gz out for now, cannot detect playback ended from here
-# for some reason, so Docker injection to kill Gazebo is not being issued.
-# Letting play_vorc_log.sh terminate Gazebo until this is fixed.
-## Check if gzclient is running
-#is_gzclient_running()
-#{
-#  if docker exec -it ${SERVER_CONTAINER_NAME} pgrep gzclient > /dev/null; then
-#    true
-#  else
-#    false
-#  fi
-#}
-#
-## Wait until the gazebo world stats topic (eg. /gazebo/<world>/world_stats)
-## tells us that the playback has been paused. This event will trigger the end of
-## the recording.
-#wait_until_playback_ends()
-#{
-#  echo "Waiting for playback in container [${SERVER_CONTAINER_NAME}] to end..."
-#  gz_world_stats_topic=$(docker exec -it ${SERVER_CONTAINER_NAME} gz topic -l | grep "world_stats")
-#
-#  # Sleep until Gazebo is paused
-#  until docker exec -it ${SERVER_CONTAINER_NAME} gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" --quiet
-#  do
-#
-#    # DEBUG
-#    docker exec -it ${SERVER_CONTAINER_NAME} gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true"
-#
-#    sleep 1
-#    if ! is_gzclient_running ; then
-#      echo "Detected gzclient no longer running in container"
-#      return 0
-#    fi
-#  done
-#  echo -e "${GREEN}OK${NOCOLOR}"
-#}
-#
-#wait_until_playback_ends
-#
-## Terminate Gazebo only after recording ends, so that we don't record the screen
-## content behind the Gazebo window.
-#echo "Injecting signal into Docker container to terminate Gazebo..."
-#docker exec -it ${SERVER_CONTAINER_NAME} killall -w gzserver gzclient
-#echo -e "${GREEN}OK${NOCOLOR}"
 
 # Wait for Docker container to terminate
 echo "Waiting for Docker container to terminate..."

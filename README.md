@@ -666,8 +666,28 @@ To investigate a running container for investigation, run:
 docker exec -it vorc-competitor-system bash
 ```
 
-
 From here, you can investigate what is happening inside of your container.
+
+### Docker network error
+
+If you encounter an error that looks like this:
+```
+docker: Error response from daemon: network vorc-network not found.
+ERRO[0000] error waiting for container: context canceled
+```
+
+This usually happens when you run the VORC branch of the repository right after you have run the VRX branch.
+The cause is that a Docker network has already been established at the same IP and subnet, and a new one cannot be established until the old one is removed.
+
+You can double-check that there is already a vrx-network by running
+```
+docker network ls
+```
+
+and remove it using
+```
+docker network rm vrx-network
+```
 
 ## Submission Details
 

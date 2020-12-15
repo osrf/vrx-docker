@@ -56,6 +56,7 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     libgles2-mesa-dev \
     ${GAZ} \
     lib${GAZ}-dev \
+    ros-${DIST}-compressed-image-transport \
     ros-${DIST}-ros-base \
     ros-${DIST}-xacro \
     ros-${DIST}-gazebo-ros \

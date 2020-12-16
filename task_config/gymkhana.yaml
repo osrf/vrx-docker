@@ -3,6 +3,8 @@ constant:
     macros:
         marina_minus_scene:
             -
+    yamls:
+
     sequence:
 
 tasks:
@@ -16,6 +18,16 @@ tasks:
             -
         gymkhana:
             -
+
+    # For Gymkhana, also specify pinger positions here to generate yaml files
+    # NOTE:
+    # Position must be the same as pinger_x, pinger_y, pinger_z in the sequence
+    # block below, otherwise behavior will be undefined. This is not enforced
+    # in code and must be manually checked for now.
+    yamls:
+        0:
+            position_1: [116, -278, -5]
+
     sequence:
         0:
             ocean_waves:

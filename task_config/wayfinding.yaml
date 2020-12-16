@@ -14,7 +14,7 @@ environment:
             -
         scene_macro:
             -
-        stationkeeping:
+        wayfinding:
             -
     sequence:
         0:

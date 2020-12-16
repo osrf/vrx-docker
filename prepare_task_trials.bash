@@ -2,7 +2,7 @@
 
 # prepare_task_trials.bash: A bash script to generate single tasks's world files, one for each task.
 #
-# E.g.: ./prepare_task_trials.bash station_keeping
+# E.g.: ./prepare_task_trials.bash stationkeeping
 
 set -e
 
@@ -46,8 +46,15 @@ world_target=${DIR}/generated/task_generated/${TASK_NAME}/worlds/
 mkdir -p ${world_xacro_target}
 mkdir -p ${world_target}
 
+extra_gen_args=""
+if [ "${TASK_NAME}" = "gymkhana" ]; then
+  config_target=${DIR}/generated/task_generated/${TASK_NAME}/config/
+  mkdir -p ${config_target}
+  extra_gen_args="config_target:=${config_target}"
+fi
+
 # Generate worlds
 echo "Generating worlds..."
-roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target competition_pkg:="vorc_gazebo" world_name:="vorc_example_course"
+roslaunch vrx_gazebo generate_worlds.launch requested:=$TASK_CONFIG world_xacro_target:=$world_xacro_target world_target:=$world_target competition_pkg:="vorc_gazebo" world_name:="vorc_example_course" ${extra_gen_args}
 echo -e "${GREEN}OK${NOCOLOR}\n"
 echo -e "${GREEN}If successful, worlds are generated in \n  $world_xacro_target and \n  $world_target${NOCOLOR}\n"

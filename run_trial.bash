@@ -105,6 +105,12 @@ else
   echo -e "${RED}Err: ${COMP_GENERATED_DIR}/${WORLD_FILE_SUFFIX} not found."; exit 1;
 fi
 
+EXTRA_LAUNCH_ARGS=""
+if [ "${TASK_NAME}" = "gymkhana" ]; then
+  CONFIG_FILE_SUFFIX=config/${TASK_NAME}${TRIAL_NUM}.yaml
+  EXTRA_LAUNCH_ARGS="pinger_params:=/task_generated/${CONFIG_FILE_SUFFIX}"
+fi
+
 # Ensure any previous containers are killed and removed.
 ${DIR}/utils/kill_vorc_containers.bash
 
@@ -135,7 +141,7 @@ echo "---------------------------------"
 # container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
 WORLD_FILE=/task_generated/${WORLD_FILE_SUFFIX}
-SERVER_CMD="/run_vorc_trial.sh ${WORLD_FILE} ${LOG_DIR}"
+SERVER_CMD="/run_vorc_trial.sh ${TASK_NAME} ${WORLD_FILE} ${LOG_DIR} ${EXTRA_LAUNCH_ARGS}"
 SERVER_IMG="vorc-server-${ROS_DISTRO}${image_nvidia}:latest"
 ${DIR}/vorc_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \

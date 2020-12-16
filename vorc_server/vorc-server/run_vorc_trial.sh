@@ -18,15 +18,34 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 <trial_world> <destination_folder>"
+  echo "Usage: $0 <task> <trial_world> <destination_folder> [extra_launch_args]"
+  echo "  extra_launch_args: If task == gymkhana, specify the absolute path to the YAML file with acoustic pinger position(s) as rosparams, e.g. pinger_params:=<path>"
   exit 1
 }
 
 # Call usage() function if arguments not supplied.
-[[ $# -ne 2 ]] && usage
+[[ $# -lt 3 ]] && usage
 
-TRIAL_WORLD=$1
-DESTINATION_FOLDER=$2
+TASK=$1
+TRIAL_WORLD=$2
+DESTINATION_FOLDER=$3
+
+# Set the launch file for the given task
+LAUNCH_FILE=marina.launch
+if [ "$TASK" = "gymkhana" ]; then
+  LAUNCH_FILE="gymkhana.launch"
+  [[ $# -lt 4 ]] && usage
+  EXTRA_LAUNCH_ARGS=$4
+elif [ "$TASK" = "perception" ]; then
+  LAUNCH_FILE="perception.launch"
+elif [ "$TASK" = "stationkeeping" ]; then
+  LAUNCH_FILE="station_keeping.launch"
+elif [ "$TASK" = "wayfinding" ]; then
+  LAUNCH_FILE="wayfinding.launch"
+else
+  echo "Undefined task $TASK. Check your task name."
+  exit 1
+fi
 
 # Create a directory for the Gazebo log and the score file.
 if [ -d "$DESTINATION_FOLDER" ]; then
@@ -48,7 +67,7 @@ echo "Starting vorc trial..."
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
 # To watch the actual competition run, set gui:=true.
-roslaunch vorc_gazebo marina.launch gui:=false world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true robot_locked:=true non_competition_mode:=false > $HOME/verbose_output.txt 2>&1 &
+roslaunch vorc_gazebo ${LAUNCH_FILE} ${EXTRA_LAUNCH_ARGS} gui:=true world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true robot_locked:=true non_competition_mode:=false > $HOME/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"

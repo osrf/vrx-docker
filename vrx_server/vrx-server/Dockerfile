@@ -31,6 +31,7 @@ ARG GAZ=gazebo9
          libeigen3-dev \
          pkg-config \
          language-pack-en \
+         psmisc \
   && apt clean
 
 RUN export DEBIAN_FRONTEND=noninteractive \
@@ -139,5 +140,7 @@ ENV LANG en_US.UTF-8
 # setup entrypoint
 COPY ./vrx_entrypoint.sh /
 COPY ./run_vrx_trial.sh /
+COPY ./play_vrx_log.sh /
+COPY ./gz_utils.sh /
 
 ENTRYPOINT ["/vrx_entrypoint.sh"]

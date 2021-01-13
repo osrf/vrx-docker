@@ -24,6 +24,7 @@ usage()
 }
 
 # Parse arguments
+RUNTIME="runc"
 nvidia_arg=""
 image_nvidia=""
 
@@ -34,6 +35,7 @@ do
 
   case $key in
       -n|--nvidia)
+      RUNTIME="nvidia"
       nvidia_arg="-n"
       image_nvidia="-nvidia"
       shift
@@ -171,6 +173,8 @@ docker run \
     --env ROS_MASTER_URI=${ROS_MASTER_URI} \
     --env ROS_IP=${COMPETITOR_ROS_IP} \
     --ip ${COMPETITOR_ROS_IP} \
+    --privileged \
+    --runtime=$RUNTIME \
     ${DOCKERHUB_IMAGE} &
 
 # Run competition until server is ended

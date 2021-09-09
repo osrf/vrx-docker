@@ -1,37 +1,11 @@
-## START OF SECTION BASED ON vrx/docker/Dockerfile
-# Ubuntu 18.04 with nvidia-docker2 beta opengl support.
-ARG BASEIMG=ubuntu:bionic
+ARG BASEIMG=ubuntu:focal
 FROM $BASEIMG
 
 # Set ROS distribution
-ARG DIST=melodic
+ARG DIST=noetic
 
 # Set Gazebo verison
-ARG GAZ=gazebo9
-
-# Tools useful during development.
- RUN apt update \
-  && apt install -y \
-         build-essential \
-         cppcheck \
-         curl \
-         cmake \
-         lsb-release \
-         gdb \
-         git \
-         mercurial \
-         python3-dbg \
-         python3-pip \
-         python3-venv \
-         ruby \
-         software-properties-common \
-         sudo \
-         vim \
-         wget \
-         libeigen3-dev \
-         pkg-config \
-         language-pack-en \
-  && apt clean
+ARG GAZ=gazebo11
 
 RUN export DEBIAN_FRONTEND=noninteractive \
  && apt update \
@@ -41,7 +15,33 @@ RUN export DEBIAN_FRONTEND=noninteractive \
  && dpkg-reconfigure --frontend noninteractive tzdata \
  && apt clean
 
-# Get ROS melodic and Gazebo 9.
+# Tools useful during development.
+ RUN apt update \
+  && apt install -y \
+         build-essential \
+         cmake \
+         cppcheck \
+         curl \
+         git \
+         language-pack-en \
+         libeigen3-dev \
+         libgles2-mesa-dev \
+         lsb-release \
+         gdb \
+         mercurial \
+         pkg-config \
+         python3-dbg \
+         python3-pip \
+         python3-venv \
+         qtbase5-dev \
+         ruby \
+         software-properties-common \
+         sudo \
+         vim \
+         wget \
+  && apt clean
+
+# Get ROS and Gazebo
 RUN wget -P /tmp/ http://packages.osrfoundation.org/gazebo.key
 RUN wget -P /tmp/ http://packages.ros.org/ros.key
 RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
@@ -50,14 +50,11 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
  && apt-key add /tmp/gazebo.key \
  && apt update \
  && apt install -y \
-    qtbase5-dev \
-    libgles2-mesa-dev \
     ${GAZ} \
     lib${GAZ}-dev \
     ros-${DIST}-ros-base \
-    ros-${DIST}-xacro \
-    ros-${DIST}-gazebo-ros \
     ros-${DIST}-gazebo-plugins \
+    ros-${DIST}-gazebo-ros \
     ros-${DIST}-hector-gazebo-plugins \
     ros-${DIST}-joy \
     ros-${DIST}-joy-teleop \
@@ -68,12 +65,13 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
     ros-${DIST}-teleop-tools \
     ros-${DIST}-teleop-twist-keyboard \
     ros-${DIST}-velodyne-simulator \
-    python-rosdep \
- && rosdep init \
+    ros-${DIST}-xacro \
  && apt clean
 
-# TODO(tylerlum): Change to specific gazebo ros pkgs with limited topics (may just use ARIAC's)
-RUN rosdep update
+# Removed
+#    python-rosdep \
+# && rosdep init \
+# RUN rosdep update
 
 # Set USER and GROUP
 ARG USER=developer
@@ -126,7 +124,7 @@ ENV PATH /usr/local/nvidia/bin:${PATH}
 ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}
 
 # Set encoding to use unicode characters
-RUN sudo locale-gen en_US.UTF-8
+# RUN sudo locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 
 # Takes too long to do, probably not needed

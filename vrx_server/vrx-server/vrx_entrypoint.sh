@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
+echo $HOME
+
 # first, execute overriden entrypoint from gazebo
 source "/usr/share/gazebo/setup.sh"
 
 # setup ros environment.
-source "/opt/ros/melodic/setup.bash" > /dev/null
+source "/opt/ros/noetic/setup.bash" > /dev/null
 
 # setup vrx environment
 source ~/vrx_ws/devel/setup.sh

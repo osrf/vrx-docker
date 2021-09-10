@@ -76,6 +76,8 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
 # Set USER and GROUP
 ARG USER=developer
 ARG GROUP=developer
+ARG USERID=1000
+ARG GROUPID=1000
 
 # Add a user with the same user_id as the user outside the container
 # Requires a docker build argument `user_id`.
@@ -85,8 +87,9 @@ RUN curl -SsL https://github.com/boxboat/fixuid/releases/download/v0.4/fixuid-0.
     chmod 4755 /usr/local/bin/fixuid && \
     mkdir -p /etc/fixuid && \
     printf "user: $USER\ngroup: $GROUP\n" > /etc/fixuid/config.yml
-RUN addgroup --gid 1000 $USER && \
-    adduser --uid 1000 --ingroup $USER --home /home/$USER --shell /bin/sh --disabled-password --gecos "" $USER
+
+RUN addgroup --gid $GROUPID $USER && \
+    useradd --no-log-init --create-home --uid $USERID --gid $GROUPID --home-dir /home/$USER --shell /bin/sh -c "" $USER
 
 RUN adduser $USER sudo \
  && echo "$USER ALL=NOPASSWD: ALL" >> /etc/sudoers.d/$USER

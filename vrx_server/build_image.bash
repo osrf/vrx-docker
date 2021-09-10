@@ -20,9 +20,10 @@ NOCOLOR='\033[0m'
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Setup docker args
-USERID=`id -u $USER`
+USERID=`id -u`
+GROUPID=`id -g`
 if [[ ${USERID} != 0 ]]; then
-  DOCKER_ARGS="--build-arg USERID=${USERID}"
+  DOCKER_ARGS="--build-arg USERID=${USERID} --build-arg GROUPID=${GROUPID}"
 fi
 
 # DOCKER_ARGS="$DOCKER_ARGS --no-cache"

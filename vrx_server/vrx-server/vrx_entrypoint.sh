@@ -1,8 +1,6 @@
 #!/bin/bash
 set -e
 
-echo $HOME
-
 # first, execute overriden entrypoint from gazebo
 source "/usr/share/gazebo/setup.sh"
 

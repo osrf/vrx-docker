@@ -181,7 +181,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Record trial score
 echo "Creating text file for trial score"
-python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
+python3 ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Copy the ROS log files from the competitor's container.

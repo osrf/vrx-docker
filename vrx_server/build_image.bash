@@ -20,16 +20,17 @@ NOCOLOR='\033[0m'
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Setup docker args
-USERID=`id -u $USER`
+USERID=`id -u`
+GROUPID=`id -g`
 if [[ ${USERID} != 0 ]]; then
-  DOCKER_ARGS="--build-arg USERID=${USERID}"
+  DOCKER_ARGS="--build-arg USERID=${USERID} --build-arg GROUPID=${GROUPID}"
 fi
 
 # DOCKER_ARGS="$DOCKER_ARGS --no-cache"
 
 # Parse arguments
 BUILD_BASE=""
-image_name="vrx-server-melodic"
+image_name="vrx-server-noetic"
 
 # Parse args related to NVIDIA
 POSITIONAL=()
@@ -39,7 +40,7 @@ do
 
     case $key in
         -n|--nvidia)
-        BUILD_BASE="--build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu18.04"
+        BUILD_BASE="--build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu20.04"
         image_name="$image_name-nvidia"
         shift
         ;;

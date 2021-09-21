@@ -56,7 +56,7 @@ TRIAL_NUM=$3
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
-ROS_DISTRO=melodic
+ROS_DISTRO=noetic
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
@@ -181,7 +181,7 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Record trial score
 echo "Creating text file for trial score"
-python ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
+python3 ${DIR}/utils/get_trial_score.py $TEAM_NAME $TASK_NAME $TRIAL_NUM
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Copy the ROS log files from the competitor's container.

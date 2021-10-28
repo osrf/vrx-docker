@@ -11,8 +11,8 @@
 # --- 4) An optional command to execute in the run container. E.g. /bin/bash 
 #
 # Example command line:
-# E.g.: ./run_container.bash vrx-server-system vrx-server-melodic "-e ROS_IP=172.XX.XX.XX" "/run_script.sh"    # non-Nvidia
-#   or  ./run_container.bash -n vrx-server-system vrx-server-melodic-nvidia "-e ROS_IP=172.XX.XX.XX" "/run_script.sh" # Nvidia
+# E.g.: ./run_container.bash vrx-server-system vrx-server-noetic "-e ROS_IP=172.XX.XX.XX" "/run_script.sh"    # non-Nvidia
+#   or  ./run_container.bash -n vrx-server-system vrx-server-noetic-nvidia "-e ROS_IP=172.XX.XX.XX" "/run_script.sh" # Nvidia
 #
 # Requires:
 #   docker

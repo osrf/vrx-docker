@@ -6,7 +6,7 @@ constant:
     sequence:
 
 environment:
-    steps: 3
+    steps: 1
     macros:
         ocean_waves:
             -
@@ -46,66 +46,4 @@ environment:
                     <name>cora</name>
                     <link_name>base_link</link_name>
                     <coeff_vector>.5 .5 .33</coeff_vector>
-                  </wind_obj>"
-        # TODO(anyone): Tweak numbers for make sense for VORC
-        1:
-            stationkeeping:
-                - namespace: "cora"
-                  competition: "vorc"
-                  lat: "21.31099"
-                  lon: "-157.88870"
-                  heading: "3"
-                  /**wp_markers: "
-                  <markers>
-                    <scaling>0.2 0.2 2.0</scaling>
-                    <height>0.5</height>
-                  </markers>"
-            ocean_waves:
-                - gain: 0.2
-                  period: 8.0
-                  scale: 2.6
-            usv_wind_gazebo:
-                - mean_vel: 4.0
-                  var_gain: 2.0
-                  var_time: 2
-                  seed: 15
-                  direction: 192
-                  topic_wind_speed: "/vorc/debug/wind/speed"
-                  topic_wind_direction: "/vorc/debug/wind/direction"
-                  /**wind_objs: "
-                  <wind_obj>
-                    <name>cora</name>
-                    <link_name>base_link</link_name>
-                    <coeff_vector> .5 .5 .33</coeff_vector>
-                  </wind_obj>"
-        # TODO(anyone): Tweak numbers for make sense for VORC
-        2:
-            stationkeeping:
-                - namespace: "cora"
-                  competition: "vorc"
-                  lat: "21.31092"
-                  lon: "-157.88874"
-                  heading: "2.35"
-                  /**wp_markers: "
-                  <markers>
-                    <scaling>0.2 0.2 2.0</scaling>
-                    <height>0.5</height>
-                  </markers>"
-            ocean_waves:
-                - gain: 0.7
-                  period: 3.0
-                  scale: 2.6
-            usv_wind_gazebo:
-                - mean_vel: 8.0
-                  var_gain: 8.0
-                  var_time: 2
-                  seed: 11
-                  direction: 45
-                  topic_wind_speed: "/vorc/debug/wind/speed"
-                  topic_wind_direction: "/vorc/debug/wind/direction"
-                  /**wind_objs: "
-                  <wind_obj>
-                    <name>cora</name>
-                    <link_name>base_link</link_name>
-                    <coeff_vector> .5 .5 .33</coeff_vector>
                   </wind_obj>"

@@ -66,7 +66,7 @@ echo "Waiting for Docker container to terminate..."
 wait $SERVER_PID
 echo -e "${GREEN}OK${NOCOLOR}"
 
-echo "Encoding video and storing in $OUTPUT before terminating Gazebo..."
+echo "Encoding video and storing in $HOST_OUTPUT before terminating Gazebo..."
 killall -w recordmydesktop
 echo -e "${GREEN}OK${NOCOLOR}"
 

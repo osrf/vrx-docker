@@ -30,6 +30,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
          gdb \
          mercurial \
          pkg-config \
+         psmisc \
          python3-dbg \
          python3-pip \
          python3-venv \
@@ -52,6 +53,7 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) 
  && apt install -y \
     ${GAZ} \
     lib${GAZ}-dev \
+    ros-${DIST}-compressed-image-transport \
     ros-${DIST}-ros-base \
     ros-${DIST}-gazebo-plugins \
     ros-${DIST}-gazebo-ros \
@@ -140,5 +142,7 @@ ENV LANG en_US.UTF-8
 # setup entrypoint
 COPY ./vrx_entrypoint.sh /
 COPY ./run_vrx_trial.sh /
+COPY ./play_vrx_log.sh /
+COPY ./gz_utils.sh /
 
 ENTRYPOINT ["/vrx_entrypoint.sh"]

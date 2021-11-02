@@ -24,6 +24,7 @@ usage()
 }
 
 # Parse arguments
+RUNTIME="runc"
 nvidia_arg=""
 image_nvidia=""
 
@@ -34,6 +35,7 @@ do
 
   case $key in
       -n|--nvidia)
+      RUNTIME="nvidia"
       nvidia_arg="-n"
       image_nvidia="-nvidia"
       shift
@@ -53,6 +55,13 @@ set -- "${POSITIONAL[@]}"
 TEAM_NAME=$1
 TASK_NAME=$2
 TRIAL_NUM=$3
+
+# Check ROS has been sourced, so user isn't surprised after trial has finished
+if rosversion -d | grep unknown --quiet ; then
+  echo "rosbag is not found (needed for trial score after the run)."
+  echo "Did you source ROS on host machine?"
+  exit
+fi
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
@@ -92,6 +101,7 @@ echo "Looking for generated files"
 TEAM_GENERATED_DIR=${DIR}/generated/team_generated/${TEAM_NAME}
 if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
   echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
+  echo -e "${GREEN}Done.${NOCOLOR}\n"
 else
   echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
@@ -102,7 +112,6 @@ if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world" ]; then
 else
   echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.world not found."; exit 1;
 fi
-echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Ensure any previous containers are killed and removed.
 ${DIR}/utils/kill_vrx_containers.bash
@@ -129,8 +138,9 @@ docker image pull $DOCKERHUB_IMAGE
 echo "Starting simulation server container"
 echo "---------------------------------"
 
-# TODO: Figure out if we can start competitor container first, so simulation doesn't start too early, but may have issues if
-#       competitior container waiting for ROS master and has error before server is created.
+# TODO(anyone): Figure out if we can start competitor container first, so
+# simulation doesn't start too early, but may have issues if competitior
+# container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
 SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
 SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
@@ -163,6 +173,8 @@ docker run \
     --env ROS_MASTER_URI=${ROS_MASTER_URI} \
     --env ROS_IP=${COMPETITOR_ROS_IP} \
     --ip ${COMPETITOR_ROS_IP} \
+    --privileged \
+    --runtime=$RUNTIME \
     ${DOCKERHUB_IMAGE} &
 
 # Run competition until server is ended

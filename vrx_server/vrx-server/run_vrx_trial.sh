@@ -2,31 +2,9 @@
 
 # run_vrx_trial.sh: A shell script to execute one vrx trial.
 
-is_gzserver_running()
-{
-  if pgrep gzserver >/dev/null; then
-    true
-  else
-    false
-  fi
-}
-
-wait_until_gzserver_is_down()
-{
-  until ! is_gzserver_running
-  do
-    sleep 1
-  done
-}
-
-
-wait_until_gzserver_is_up()
-{
-  until is_gzserver_running
-  do
-    sleep 1
-  done
-}
+# Get directory of this file
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+source ${DIR}/gz_utils.sh
 
 set -e
 
@@ -62,7 +40,7 @@ echo "Starting vrx trial..."
 # Run the trial.
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
-roslaunch vrx_gazebo sandisland.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
+roslaunch vrx_gazebo vrx.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true robot_locked:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"

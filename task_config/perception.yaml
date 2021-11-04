@@ -184,7 +184,7 @@ environment:
         2:
             ocean_waves:
                 - gain: 0.7
-                  period: 5.0
+                  period: 4.5
                   scale: 2.5
                   direction_x: -1.0
                   direction_y: 0.0

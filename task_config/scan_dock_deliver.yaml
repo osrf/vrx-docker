@@ -54,7 +54,7 @@ environment:
                   bay3_symbol: yellow_circle 
                   x: -480
                   y: 190
-                  z: 0.25
+                  z: 0
                   Y: 1.0
                   # Add light buoy and make sure that the light sequence 
                   # is consistent with the allowed bay symbol
@@ -117,17 +117,17 @@ environment:
 
         2:
             ocean_waves:
-                - gain: 0.2
-                  period: 9.0
+                - gain: 0.5
+                  period: 4.0
                   scale: 2.5
-                  direction_x: 0.35
-                  direction_y: -0.4
+                  direction_x: 0.0
+                  direction_y: -1.0
             usv_wind_gazebo:
-                - mean_vel: 3.0
-                  var_gain: 2.0
+                - mean_vel: 8.0
+                  var_gain: 4.0
                   var_time: 1
-                  seed: 11
-                  direction: 96
+                  seed: 19
+                  direction: 17
                   /**wind_objs: "
                   <wind_obj>
 
@@ -140,7 +140,7 @@ environment:
                   </wind_obj>"
             scene_macro:
                 - /**fog: ""
-                  /**ambient: "0.42 0.42 0.42 1"
+                  /**ambient: "0.19 0.19 0.19 1"
             scan_dock_deliver:
                 - model_name: robotx_dock_2022 
                   uri: dock_2022 

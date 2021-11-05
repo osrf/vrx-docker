@@ -52,10 +52,10 @@ environment:
                   bay2_symbol: blue_triangle
                   bay3_allowed: false
                   bay3_symbol: yellow_circle 
-                  x: -532
-                  y: 175
+                  x: -480
+                  y: 190
                   z: 0.25
-                  Y: 0
+                  Y: 1.0
                   # Add light buoy and make sure that the light sequence 
                   # is consistent with the allowed bay symbol
                   light_buoy_present: true
@@ -63,7 +63,8 @@ environment:
                   color_2: green
                   color_3: yellow
                   lb_x: -532 
-                  lb_y: 190
+                  lb_y: 175
+                  lb_z: 0.25
 
         1:
             ocean_waves:
@@ -112,6 +113,7 @@ environment:
                   color_3: red
                   lb_x: -515
                   lb_y: 180
+                  lb_z: 0.25
 
         2:
             ocean_waves:
@@ -143,11 +145,11 @@ environment:
                 - model_name: robotx_dock_2022 
                   uri: dock_2022 
                   bay1_allowed: true 
-                  bay1_symbol: red_cross
+                  bay1_symbol: yellow_triangle
                   bay2_allowed: false
-                  bay2_symbol: red_triangle
+                  bay2_symbol: blue_cross
                   bay3_allowed: false 
-                  bay3_symbol: red_triangle
+                  bay3_symbol: green_rectangle 
                   x: -540
                   y: 210 
                   z: 0
@@ -160,3 +162,4 @@ environment:
                   color_3: green
                   lb_x: -510
                   lb_y: 175
+                  lb_z: 0.25

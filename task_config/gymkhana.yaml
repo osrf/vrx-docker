@@ -71,7 +71,7 @@ environment:
         1:
             ocean_waves:
                 - gain: 0.35
-                  period: 6.0
+                  period: 10.0
                   scale: 2.5
                   direction_x: 0.1
                   direction_y: 0.1

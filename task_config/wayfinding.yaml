@@ -1,263 +1,157 @@
 constant:
     steps: 1
     macros:
-        sandisland_minus_scene: 
+        sydneyregatta_minus_scene: 
             -
     sequence:
 
 environment:
-    steps: 6
+    steps: 3
     macros:
+        wayfinding:
+            -
         ocean_waves:
             -
         usv_wind_gazebo:
             -
         scene_macro:
             -
-        stationkeeping:
-            -
     sequence:
         0:
             wayfinding:
-                - /**waypoints: "
-                    <waypoint>
-                      <pose>21.31093 -157.88877 3.4</pose>
-                    </waypoint>
-                    <waypoint>
-                      <pose>21.31078 -157.88897 4.4</pose>
-                    </waypoint>
-                    <waypoint>
-                      <pose>21.31058 -157.88897 5.4</pose>
-                    </waypoint>
-                  "
-                  /**wp_markers: "
+                - /**wp_markers: "
                   <markers>
                   <scaling>0.2 0.2 2.0</scaling>
                   <height>0.5</height>
                   </markers>"
+                  /**waypoints: "
+                    <waypoint>
+                      <pose>-33.722611 150.674051 1.0</pose>
+                    </waypoint>
+                    <waypoint>
+                      <pose>-33.722574 150.6744381 0.0</pose>
+                    </waypoint>
+                    <waypoint>
+                      <pose>-33.722680 150.674756 -1.0</pose>
+                    </waypoint>
+                  "
             ocean_waves:
                 - gain: 0.0
-                  period: 7.0
+                  period: 5.0
+                  scale: 2.5
+                  direction_x: 1.0
+                  direction_y: 0.0
             usv_wind_gazebo:
-                - mean_vel: 0
+                - mean_vel: 0.0
                   var_gain: 0
                   var_time: 1
-                  seed: 13
+                  seed: 10
                   direction: 240
                   /**wind_objs: "
                   <wind_obj>
 
                   <name>wamv</name>
 
-                  <link_name>base_link</link_name>
+                  <link_name>wamv/base_link</link_name>
 
                   <coeff_vector>.5 .5 .33</coeff_vector>
 
                   </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "1 1 1 1"
         1:
             wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.31120 -157.89060 1</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31120 -157.88960 3.65</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31070 -157.88910 3</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31070 -157.89010 3.3</pose>
-                   </waypoint>
-                  "
-                  /**wp_markers: "
+                - /**wp_markers: "
                   <markers>
                   <scaling>0.2 0.2 2.0</scaling>
                   <height>0.5</height>
                   </markers>"
-
+                  /**waypoints: "
+                   <waypoint>
+                     <pose>-33.722726 150.674110 1.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.722418 150.673634 1.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.722106 150.673663 0.5</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.722006 150.674110 -3</pose>
+                   </waypoint>
+                  "
             ocean_waves:
                 - gain: 0.2
                   period: 8.0
+                  scale: 2.5
+                  direction_x: 0.5
+                  direction_y: 0.5
             usv_wind_gazebo:
                 - mean_vel: 4.0
                   var_gain: 2.0
-                  var_time: 2
-                  seed: 13
-                  direction: 192
+                  var_time: 1
+                  seed: 15
+                  direction: 315
                   /**wind_objs: "
                   <wind_obj>
 
                   <name>wamv</name>
 
-                  <link_name>base_link</link_name>
+                  <link_name>wamv/base_link</link_name>
 
                   <coeff_vector> .5 .5 .33</coeff_vector>
 
                   </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.3 0.3 0.3 1"
         2:
             wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.31050 -157.88860 4.25</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31000 -157.88910 1.5</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.30950 -157.88845 4.25</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.30900 -157.88925 1.5</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.30850 -157.88850 3.14</pose>
-                   </waypoint>
-                  "
-                  /**wp_markers: "
+                - /**wp_markers: "
                   <markers>
                   <scaling>0.2 0.2 2.0</scaling>
                   <height>0.5</height>
                   </markers>"
+                  /**waypoints: "
+                   <waypoint>
+                     <pose>-33.722462 150.674268 1.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.722262 150.674800 -1.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.7226908 150.6751165 0.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.722925 150.675304 1.0</pose>
+                   </waypoint>
+                   <waypoint>
+                     <pose>-33.7226908 150.6755165 -2.5</pose>
+                   </waypoint>
+                  "
             ocean_waves:
-                - gain: 0.7
-                  period: 3.0
+                - gain: 0.8
+                  period: 5.0
+                  scale: 2.5
+                  direction_x: -0.95
+                  direction_y: 0.1
             usv_wind_gazebo:
                 - mean_vel: 8.0
-                  var_gain: 8.0
+                  var_gain: 2.0
                   var_time: 2
-                  seed: 13
-                  direction: 45
+                  seed: 9
+                  direction: 244
                   /**wind_objs: "
                   <wind_obj>
 
                   <name>wamv</name>
 
-                  <link_name>base_link</link_name>
+                  <link_name>wamv/base_link</link_name>
 
                   <coeff_vector> .5 .5 .33</coeff_vector>
 
                   </wind_obj>"
-        3:
-            wayfinding:
-                - /**waypoints: "
-                    <waypoint>
-                      <pose>21.31122 -157.88905 2.55</pose>
-                    </waypoint>
-                    <waypoint>
-                      <pose>21.31103  -157.88884 2.55</pose>
-                    </waypoint>
-                  "
-                  /**wp_markers: "
-                  <markers>
-                  <scaling>0.2 0.2 2.0</scaling>
-                  <height>0.5</height>
-                  </markers>"
-            ocean_waves:
-                - gain: 0.0
-                  period: 7.0
-            usv_wind_gazebo:
-                - mean_vel: 0
-                  var_gain: 0
-                  var_time: 1
-                  seed: 13
-                  direction: 240
-                  /**wind_objs: "
-                  <wind_obj>
-
-                  <name>wamv</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector>.5 .5 .33</coeff_vector>
-
-                  </wind_obj>"
-        4:
-            wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.31087 -157.88915 3.5</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31065  -157.88985 2.7</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31102  -157.88997 6</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31060  -157.88896 6</pose>
-                   </waypoint>
-                  "
-                  /**wp_markers: "
-                  <markers>
-                  <scaling>0.2 0.2 2.0</scaling>
-                  <height>0.5</height>
-                  </markers>"
-
-            ocean_waves:
-                - gain: 0.2
-                  period: 7.0
-            usv_wind_gazebo:
-                - mean_vel: 5.0
-                  var_gain: 0.0
-                  var_time: 2
-                  seed: 13
-                  direction: 50
-                  /**wind_objs: "
-                  <wind_obj>
-
-                  <name>wamv</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector> .5 .5 .33</coeff_vector>
-
-                  </wind_obj>"
-        5:
-            wayfinding:
-                - /**waypoints: "
-                   <waypoint>
-                     <pose>21.31060  -157.88896 3</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31122  -157.88997 3.7</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31094  -157.89100 6</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31065  -157.88985 1</pose>
-                   </waypoint>
-                   <waypoint>
-                     <pose>21.31187 -157.88915 2</pose>
-                   </waypoint>
-                  "
-                  /**wp_markers: "
-                  <markers>
-                  <scaling>0.2 0.2 2.0</scaling>
-                  <height>0.5</height>
-                  </markers>"
-
-            ocean_waves:
-                - gain: 0.4
-                  period: 4.0
-                  direction_x: -0.1
-                  direction_y: 0.9
-            usv_wind_gazebo:
-                - mean_vel: 4.0
-                  var_gain: 4.0
-                  var_time: 10
-                  seed: 13
-                  direction: 45
-                  /**wind_objs: "
-                  <wind_obj>
-
-                  <name>wamv</name>
-
-                  <link_name>base_link</link_name>
-
-                  <coeff_vector> .5 .5 .33</coeff_vector>
-
-                  </wind_obj>"
-
-
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.3 0.3 0.3 1"

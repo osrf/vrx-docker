@@ -1,0 +1,170 @@
+constant:
+    steps: 1
+    macros:
+        sydneyregatta_minus_scene: 
+            -
+    sequence:
+
+environment:
+    steps: 3
+    macros:
+        gymkhana:
+            -
+        ocean_waves:
+            -
+        usv_wind_gazebo:
+            -
+        scene_macro:
+            -
+    sequence:
+        0:
+            ocean_waves:
+                - gain: 0.0
+                  period: 5.0
+                  scale: 2.5
+                  direction_x: 1.0
+                  direction_y: 0.0
+            usv_wind_gazebo:
+                - mean_vel: 0.0
+                  var_gain: 0
+                  var_time: 1
+                  seed: 10
+                  direction: 240
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector>.5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.85 0.85 0.85 1"
+            gymkhana:
+                - nav_uri: short_navigation_course0 
+                  obstacle_uri: obstacle_course0
+                  nx: -524
+                  ny: 186
+                  nY: -1.44
+                  ox: -477
+                  oy: 275
+                  oY: -2.54
+                  gx: -503
+                  gy: 302.5
+                  /**gates: "
+                  <gate>
+                    <left_marker>red_bound_0</left_marker>
+                    <right_marker>green_bound_0</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_1</left_marker>
+                    <right_marker>green_bound_1</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_2</left_marker>
+                    <right_marker>green_bound_2</right_marker>
+                  </gate>"
+
+        1:
+            ocean_waves:
+                - gain: 0.35
+                  period: 10.0
+                  scale: 2.5
+                  direction_x: 0.1
+                  direction_y: 0.1
+            usv_wind_gazebo:
+                - mean_vel: 5.0
+                  var_gain: 4.0
+                  var_time: 1
+                  seed: 7
+                  direction: 72
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector> .5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.5 0.5 0.5 1"
+            gymkhana:
+                - nav_uri: short_navigation_course1
+                  obstacle_uri: obstacle_course1
+                  nx: -535
+                  ny: 180
+                  nY: -1.44
+                  ox: -500
+                  oy: 250
+                  oY: 0.44
+                  gx: -495
+                  gy: 265
+                  /**gates: "
+                  <gate>
+                    <left_marker>red_bound_0</left_marker>
+                    <right_marker>green_bound_0</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_1</left_marker>
+                    <right_marker>green_bound_1</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_2</left_marker>
+                    <right_marker>green_bound_2</right_marker>
+                  </gate>"
+        2:
+            ocean_waves:
+                - gain: 0.8
+                  period: 5.0
+                  scale: 2.5
+                  direction_x: -0.6
+                  direction_y: -0.32
+            usv_wind_gazebo:
+                - mean_vel: 9.0
+                  var_gain: 5.0
+                  var_time: 1
+                  seed: 19
+                  direction: 355
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector> .5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.3 0.3 0.3 1"
+            gymkhana:
+                - nav_uri: short_navigation_course2
+                  obstacle_uri: obstacle_course2
+                  nx: -524
+                  ny: 186
+                  nY: -1.44
+                  ox: -530
+                  oy: 290
+                  oY: 1.17
+                  gx: -533
+                  gy: 293
+                  /**gates: "
+                  <gate>
+                    <left_marker>red_bound_0</left_marker>
+                    <right_marker>green_bound_0</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_1</left_marker>
+                    <right_marker>green_bound_1</right_marker>
+                  </gate>
+                  <gate>
+                    <left_marker>red_bound_2</left_marker>
+                    <right_marker>green_bound_2</right_marker>
+                  </gate>"

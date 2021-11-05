@@ -1,0 +1,162 @@
+constant:
+    steps: 1
+    macros:
+        sydneyregatta_minus_scene: 
+            -
+    sequence:
+
+environment:
+    steps: 3
+    macros:
+        scan_dock_deliver:
+            -
+        ocean_waves:
+            -
+        usv_wind_gazebo:
+            -
+        scene_macro:
+            -
+    sequence:
+        0:
+            ocean_waves:
+                - gain: 0.0
+                  period: 5.0
+                  scale: 2.5
+                  direction_x: 1.0
+                  direction_y: 0.0
+            usv_wind_gazebo:
+                - mean_vel: 0.0
+                  var_gain: 0
+                  var_time: 1
+                  seed: 10
+                  direction: 240
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector>.5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.89 0.89 0.89 1"
+            scan_dock_deliver:
+                - model_name: dock_2022 
+                  uri: dock_2022 
+                  bay1_allowed: true
+                  bay1_symbol: red_rectangle
+                  bay2_allowed: false
+                  bay2_symbol: blue_triangle
+                  bay3_allowed: false
+                  bay3_symbol: yellow_circle 
+                  x: -532
+                  y: 175
+                  z: 0.25
+                  Y: 0
+                  # Add light buoy and make sure that the light sequence 
+                  # is consistent with the allowed bay symbol
+                  light_buoy_present: true
+                  color_1: red
+                  color_2: green
+                  color_3: yellow
+                  lb_x: -532 
+                  lb_y: 190
+
+        1:
+            ocean_waves:
+                - gain: 0.2
+                  period: 9.0
+                  scale: 2.5
+                  direction_x: 0.35
+                  direction_y: -0.4
+            usv_wind_gazebo:
+                - mean_vel: 3.0
+                  var_gain: 2.0
+                  var_time: 1
+                  seed: 11
+                  direction: 96
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector> .5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.52 0.52 0.52 1"
+            scan_dock_deliver:
+                - model_name: dock_2022 
+                  uri: dock_2022 
+                  bay1_allowed: false
+                  bay1_symbol: blue_rectangle
+                  bay2_allowed: false
+                  bay2_symbol: red_cross
+                  bay3_allowed: true 
+                  bay3_symbol: yellow_circle 
+                   x: -500
+                  y: 190
+                  z: 0
+                  Y: 0
+                  # Add light buoy and make sure that the light sequence 
+                  # is consistent with the allowed bay symbol
+                  light_buoy_present: true
+                  color_1: yellow
+                  color_2: blue
+                  color_3: red
+                  lb_x: -515
+                  lb_y: 180
+
+        2:
+            ocean_waves:
+                - gain: 0.2
+                  period: 9.0
+                  scale: 2.5
+                  direction_x: 0.35
+                  direction_y: -0.4
+            usv_wind_gazebo:
+                - mean_vel: 3.0
+                  var_gain: 2.0
+                  var_time: 1
+                  seed: 11
+                  direction: 96
+                  /**wind_objs: "
+                  <wind_obj>
+
+                  <name>wamv</name>
+
+                  <link_name>wamv/base_link</link_name>
+
+                  <coeff_vector> .5 .5 .33</coeff_vector>
+
+                  </wind_obj>"
+            scene_macro:
+                - /**fog: ""
+                  /**ambient: "0.42 0.42 0.42 1"
+            dock:
+                - model_name: dock_2022 
+                  uri: dock_2022 
+                  bay1_allowed: true 
+                  bay1_symbol: red_cross
+                  bay2_allowed: false
+                  bay2_symbol: red_triangle
+                  bay3_allowed: false 
+                  bay3_symbol: red_triangle
+                   x: -540
+                  y: 210 
+                  z: 0
+                  Y: 3.14
+                  # Add light buoy and make sure that the light sequence 
+                  # is consistent with the allowed bay symbol
+                  light_buoy_present: true
+                  color_1: yellow 
+                  color_2: red
+                  color_3: green
+                  lb_x: -510
+                  lb_y: 175

@@ -44,7 +44,7 @@ environment:
                 - /**fog: ""
                   /**ambient: "0.89 0.89 0.89 1"
             scan_dock_deliver:
-                - model_name: dock_2022 
+                - model_name: robotx_dock_2022 
                   uri: dock_2022 
                   bay1_allowed: true
                   bay1_symbol: red_rectangle
@@ -92,7 +92,7 @@ environment:
                 - /**fog: ""
                   /**ambient: "0.52 0.52 0.52 1"
             scan_dock_deliver:
-                - model_name: dock_2022 
+                - model_name: robotx_dock_2022 
                   uri: dock_2022 
                   bay1_allowed: false
                   bay1_symbol: blue_rectangle
@@ -100,7 +100,7 @@ environment:
                   bay2_symbol: red_cross
                   bay3_allowed: true 
                   bay3_symbol: yellow_circle 
-                   x: -500
+                  x: -500
                   y: 190
                   z: 0
                   Y: 0
@@ -139,8 +139,8 @@ environment:
             scene_macro:
                 - /**fog: ""
                   /**ambient: "0.42 0.42 0.42 1"
-            dock:
-                - model_name: dock_2022 
+            scan_dock_deliver:
+                - model_name: robotx_dock_2022 
                   uri: dock_2022 
                   bay1_allowed: true 
                   bay1_symbol: red_cross
@@ -148,7 +148,7 @@ environment:
                   bay2_symbol: red_triangle
                   bay3_allowed: false 
                   bay3_symbol: red_triangle
-                   x: -540
+                  x: -540
                   y: 210 
                   z: 0
                   Y: 3.14

@@ -68,7 +68,7 @@ docker pull 808brick/vrx_phase2
 ## Respond to PR and Merge
 
 ```
-Compliance tests for sensor and propulsion configurations passed.  Successfully able to access Docker image.
+Compliance tests for component and propulsion configurations passed.  Successfully able to access Docker image.
 
 Next step is to evaluate run the docker image in the VRX simulation with the tasks/trials over the next few days.
 ```

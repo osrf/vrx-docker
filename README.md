@@ -107,7 +107,7 @@ You should see that there is a directory called `example_team` that has the foll
 
 ```
 $ ls team_config/example_team/
-dockerhub_image.txt sensor_config.yaml thruster_config.yaml
+dockerhub_image.txt component_config.yaml thruster_config.yaml
 ```
 
 Together these files constitute a submission. The files are explained in the __Files Required From VRX Teams For Submission__ section below. 
@@ -129,7 +129,7 @@ This will call `generate_wamv.launch` on the files in `team_config/example_team`
 The end of the output for this command should look something like this:
 ```
 [INFO] [1570212125.006407]: 
-Using /home/bsb/vrx_comp/vrx-docker/team_config/example_team/sensor_config.yaml as the sensor configuration yaml file
+Using /home/bsb/vrx_comp/vrx-docker/team_config/example_team/component_config.yaml as the component configuration yaml file
 
 
 WAM-V urdf file sucessfully generated. File location: /home/bsb/vrx_comp/vrx-docker/generated/team_generated/example_team/example_team.urdf
@@ -152,7 +152,7 @@ OK
 ```
 Note that the `REQUIRED process [wamv_config/wamv_generator-2] has died!` message is expected.
 
-This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. By compliant, we are refering to the limitations for sensor and propulsion configuration described in the [VRX competition documentation](https://github.com/osrf/vrx/wiki/documentation) .You can view this result by:
+This will also create a file `generated/team_generated/example_team/compliant.txt` that says `true` is the configuration was compliant or `false` otherwise. By compliant, we are refering to the limitations for component and propulsion configuration described in the [VRX competition documentation](https://github.com/osrf/vrx/wiki/documentation) .You can view this result by:
 
 ```
 cat generated/team_generated/example_team/compliant.txt
@@ -215,7 +215,7 @@ generated/team_generated
 ├── example_team
 │   ├── compliant.txt
 │   ├── example_team.urdf
-│   ├── sensor_config.xacro
+│   ├── component_config.xacro
 │   └── thruster_config.xacro
 ```
 
@@ -706,7 +706,7 @@ From here, you can investigate what is happening inside of your container.
 
 All VRX teams must submit one folder containing three files for automated evaluation. The name of the folder should be the name of the team. Please note that the filenames must be identical with how they are listed below.
 
-1. `sensor_config.yaml`: The team's sensor configuration yaml file. One sensor configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
+1. `component_config.yaml`: The team's component configuration yaml file. One component configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 
 2. `thruster_config.yaml`: The team's thruster configuration yaml file. One thruster configuration is used for all trials. For more information about this file, please refer to the [Creating a Custom WAM-V](https://github.com/osrf/vrx/wiki/tutorials-Creating%20a%20custom%20WAM-V%20Thruster%20and%20Sensor%20Configuration%20For%20Competition) tutorial.
 

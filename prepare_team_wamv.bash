@@ -61,16 +61,16 @@ log_dir=$HOME/.ros/log/latest
 # Add trailing slash so that we remove the contents of the linked directory
 rm -fR $log_dir/
 
-# Find sensor and thruster yaml files
+# Find component and thruster yaml files
 echo "Looking for config files"
 TEAM_CONFIG_DIR=${DIR}/team_config/${TEAM_NAME}
-SENSOR_CONFIG=${TEAM_CONFIG_DIR}/sensor_config.yaml
+COMPONENT_CONFIG=${TEAM_CONFIG_DIR}/component_config.yaml
 THRUSTER_CONFIG=${TEAM_CONFIG_DIR}/thruster_config.yaml
 
-if [ -f "${SENSOR_CONFIG}" ]; then
-  echo -e "Successfully found: ${SENSOR_CONFIG}"
+if [ -f "${COMPONENT_CONFIG}" ]; then
+  echo -e "Successfully found: ${COMPONENT_CONFIG}"
 else
-  echo -e "${RED}Err: ${SENSOR_CONFIG}"; exit 1;
+  echo -e "${RED}Err: ${COMPONENT_CONFIG}"; exit 1;
 fi
 if [ -f "${THRUSTER_CONFIG}" ]; then
   echo -e "Successfully found: ${THRUSTER_CONFIG}\n"
@@ -85,7 +85,7 @@ mkdir -p ${wamv_target_dir}
 
 # Generate WAM-V
 echo "Generating WAM-V..."
-roslaunch vrx_gazebo generate_wamv.launch sensor_yaml:=$SENSOR_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target
+roslaunch vrx_gazebo generate_wamv.launch component_yaml:=$COMPONENT_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Write to text file about compliance
@@ -100,5 +100,5 @@ echo $is_compliant > ${wamv_target_dir}/compliant.txt
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Move generated files to correct location
-mv ${TEAM_CONFIG_DIR}/sensor_config.xacro ${wamv_target_dir}
+mv ${TEAM_CONFIG_DIR}/component_config.xacro ${wamv_target_dir}
 mv ${TEAM_CONFIG_DIR}/thruster_config.xacro ${wamv_target_dir}

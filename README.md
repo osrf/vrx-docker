@@ -68,8 +68,6 @@ Make sure it is sourced so that you can run launch files from `vrx_gazebo`. Make
 
 ### Installing dependencies
 
-* `pip install oyaml` - for generating wam-v and worlds
-
 * `sudo apt-get install recordmydesktop wmctrl psmisc vlc` - for generating and viewing videos
 
 ### Setting up vrx-docker

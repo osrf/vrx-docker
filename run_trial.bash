@@ -152,7 +152,7 @@ ${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVE
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
   -e ROS_MASTER_URI=${ROS_MASTER_URI} \
   -e ROS_IP=${SERVER_ROS_IP} \
-  -e VRX_EXIT_ON_COMPLETION=true \
+  -e VRX_EXIT_ON_COMPLETION=false \
   -e VRX_DEBUG=false" \
   "${SERVER_CMD}" &
 SERVER_PID=$!

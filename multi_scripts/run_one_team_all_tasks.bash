@@ -72,7 +72,7 @@ done
 # Record team score if all tasks successful
 if [ "$successful_team" = true ]; then
   echo "${TEAM_NAME} has completed all tasks. Creating text file for team score"
-  python ${DIR}/../utils/get_team_score.py $TEAM_NAME
+  python3 ${DIR}/../utils/get_team_score.py $TEAM_NAME
   exit_status=$?
   
   # Print OK or FAIL message

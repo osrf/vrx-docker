@@ -95,7 +95,7 @@ done
 # Record task score if all trials successful
 if [ "$successful_task" = true ]; then
   echo "All $TASK_NAME trials completed. Creating text file for task score"
-  python ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
+  python3 ${DIR}/../utils/get_task_score.py $TEAM_NAME $TASK_NAME
   exit_status=$?
   
   # Print OK or FAIL message

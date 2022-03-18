@@ -27,7 +27,7 @@ environment:
             usv_wind_gazebo:
                 - mean_vel: 0.0
                   var_gain: 0
-                  var_time: 1
+                  var_time: 2
                   seed: 10
                   direction: 240
                   /**wind_objs: "
@@ -76,7 +76,7 @@ environment:
             usv_wind_gazebo:
                 - mean_vel: 3.0
                   var_gain: 2.0
-                  var_time: 1
+                  var_time: 2
                   seed: 11
                   direction: 96
                   /**wind_objs: "
@@ -125,7 +125,7 @@ environment:
             usv_wind_gazebo:
                 - mean_vel: 8.0
                   var_gain: 4.0
-                  var_time: 1
+                  var_time: 2
                   seed: 19
                   direction: 17
                   /**wind_objs: "

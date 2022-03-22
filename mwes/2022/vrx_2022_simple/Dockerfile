@@ -54,5 +54,4 @@ RUN . /opt/ros/noetic/setup.sh \
  && cd /vrx_ws \
  && catkin_make
 
-CMD ["/bin/bash"]
 ENTRYPOINT ["/ros_entrypoint.sh"]

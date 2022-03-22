@@ -23,11 +23,6 @@ RUN apt update \
         python-vcstools \
  && rm -rf /var/lib/apt/lists/*
 
-COPY ros_entrypoint.sh run_my_system.bash /
-
-CMD ["/bin/bash"]
-ENTRYPOINT ["/ros_entrypoint.sh"]
-
 RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" > /etc/apt/sources.list.d/ros1-latest.list' \
  && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654 \
  && apt update \
@@ -52,3 +47,9 @@ RUN set -xe \
  && /bin/sh -c 'echo "Acquire::Languages \"none\";" > /etc/apt/apt.conf.d/docker-no-languages' \
  && /bin/sh -c 'echo "Acquire::GzipIndexes \"true\"; Acquire::CompressionTypes::Order:: \"gz\";" > /etc/apt/apt.conf.d/docker-gzip-indexes' \
  && /bin/sh -c 'echo "Apt::AutoRemove::SuggestsImportant \"false\";" > /etc/apt/apt.conf.d/docker-autoremove-suggests'
+
+COPY ros_entrypoint.sh run_my_system.bash /
+
+ENTRYPOINT ["/ros_entrypoint.sh"]
+
+

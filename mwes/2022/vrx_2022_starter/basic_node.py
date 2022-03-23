@@ -64,12 +64,13 @@ class SimpleNode:
         self.loopCount += 1
 
     def sendCmds(self):
+        tasklist = ("station_keeping", "wayfinding", "gymkhana",
+                                       "wildlife","scan_dock_deliver")
         while not rospy.is_shutdown():
             try:
                 if isinstance(self.taskInfo, type(self.taskType)):
                     # print(self.taskInfo.name, self.taskInfo.state)
-                    if self.taskInfo.name == "station_keeping" or self.taskInfo.name == "wayfinding" or \
-                            self.taskInfo.name == "gymkhana" or self.taskInfo.name == "navigation_course":
+                    if self.taskInfo.name in tasklist:
                         if self.taskInfo.state == "initial":
                             print("Waiting for task to start...")
                         elif self.taskInfo.state == "running":

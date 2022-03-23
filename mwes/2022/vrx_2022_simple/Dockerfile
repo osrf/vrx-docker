@@ -40,8 +40,6 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu ${RELEASE} main" > 
         ros-noetic-geographic-msgs \
  && rm -rf /var/lib/apt/lists/*
 
-COPY ros_entrypoint.sh run_my_system.bash basic_node.py /
-
 # For simplicity, we are cloning the repository directly into the image.
 # This is OK because we always want v1.5.0. It is probably not a good
 # idea to do this with code that is still being updated, because Docker
@@ -53,5 +51,7 @@ RUN mkdir -p /vrx_ws/src \
 RUN . /opt/ros/noetic/setup.sh \
  && cd /vrx_ws \
  && catkin_make
+
+COPY ros_entrypoint.sh run_my_system.bash basic_node.py /
 
 ENTRYPOINT ["/ros_entrypoint.sh"]

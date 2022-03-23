@@ -97,7 +97,7 @@ RUN mkdir -p /vrx_ws/src
 # necessarily need to build vrx. Modify the line below to indicate
 # the source repository you want to copy into the workspace inside your
 # image.
-COPY my_vrx /vrx_ws/src/vrx
+COPY my_source /vrx_ws/src/vrx
 
 # By default, environment variables do not persist from one Docker
 # command to the next, so it is necessary to source setup.sh and build

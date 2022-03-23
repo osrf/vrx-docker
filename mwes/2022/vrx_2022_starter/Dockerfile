@@ -2,10 +2,11 @@ FROM ros:noetic-ros-base
 
 # Set Ubuntu release
 ARG RELEASE=focal
+ARG DIST=noetic
 
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-ENV ROS_DISTRO=noetic
+ENV ROS_DISTRO=${DIST}
 ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_DRIVER_CAPABILITIES=graphics
 ENV NVIDIA_VISIBLE_DEVICES=all
@@ -88,18 +89,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy startup scripts from host filesystem
-COPY ros_entrypoint.sh run_my_system.bash basic_node.py /
-
 # Set up a catkin workspace
 RUN mkdir -p /vrx_ws/src
 
-# Here we use vrx as an example of a source code repository stored 
+# Here we use my_vrx as an example of a source code repository stored 
 # locally on the host. Depending on your solution, you may not 
 # necessarily need to build vrx. Modify the line below to indicate
 # the source repository you want to copy into the workspace inside your
 # image.
-COPY vrx /vrx_ws/src/vrx
+COPY my_vrx /vrx_ws/src/vrx
 
 # By default, environment variables do not persist from one Docker
 # command to the next, so it is necessary to source setup.sh and build
@@ -107,6 +105,9 @@ COPY vrx /vrx_ws/src/vrx
 RUN . /opt/ros/noetic/setup.sh \
  && cd /vrx_ws \
  && catkin_make
+
+# Copy startup scripts from host filesystem
+COPY ros_entrypoint.sh run_my_system.bash basic_node.py /
 
 ## Customize your image here.
 #

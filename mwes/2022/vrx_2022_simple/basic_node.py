@@ -68,7 +68,7 @@ class SimpleNode:
             try:
                 if isinstance(self.taskInfo, type(self.taskType)):
                     # print(self.taskInfo.name, self.taskInfo.state)
-                    if self.taskInfo.name == "stationkeeping" or self.taskInfo.name == "wayfinding" or \
+                    if self.taskInfo.name == "station_keeping" or self.taskInfo.name == "wayfinding" or \
                             self.taskInfo.name == "gymkhana" or self.taskInfo.name == "navigation_course":
                         if self.taskInfo.state == "initial":
                             print("Waiting for task to start...")

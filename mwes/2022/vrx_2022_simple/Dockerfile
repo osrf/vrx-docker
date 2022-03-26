@@ -33,10 +33,6 @@ RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu ${RELEASE} main" > 
  && apt update \
  && apt install -q -y \
         ros-noetic-desktop-full=1.5.0-1* \
-        ros-noetic-desktop=1.5.0-1* \
-        ros-noetic-robot=1.5.0-1* \
-        ros-noetic-ros-base=1.5.0-1* \
-        ros-noetic-ros-core=1.5.0-1* \
         ros-noetic-geographic-msgs \
  && rm -rf /var/lib/apt/lists/*
 

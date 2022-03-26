@@ -13,15 +13,17 @@ code that you may want to build.
   do want to use, and update the `Dockerfile` to use the correct name.
    
 ## Build
-* Clone the source repository into the directory that contains this `Dockerfile` and the startup scripts:
+* Clone the source repository into the directory that contains this 
+  `Dockerfile` and the startup scripts:
   ```
   cd vrx-docker/mwes/2022/vrx_2022_starter
   git clone https://github.com/osrf/vrx my_source
   ```
-  **Note**: We are using the `my_source` directory to represent a temporary copy of some code you want to develop.
-  However, if you already have a copy of the `vrx` repository in the same workspace, you will need to
-  move or delete the new copy you just created after building your Docker image to avoid creating naming
-  conflicts. 
+  **Note**: We are using the `my_source` directory to represent a temporary 
+  copy of some code you want to develop.  However, if you already have a copy
+  of the `vrx` repository in the same workspace, you will need to move or 
+  delete the new copy you just created after building your Docker image in 
+  the next step to avoid creating naming conflicts. 
 * Make sure there is a `COPY` command in your `Dockerfile` that will put this
   directory where it needs to go inside your image. For example:
   ```

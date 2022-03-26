@@ -4,6 +4,9 @@ FROM ros:noetic-ros-base
 ARG RELEASE=focal
 ARG DIST=noetic
 
+# Setting environment variables. These persist across all commands in the
+# build process and will also be set in the container produced from the
+# resulting image.
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV ROS_DISTRO=${DIST}
@@ -11,7 +14,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 ENV NVIDIA_DRIVER_CAPABILITIES=graphics
 ENV NVIDIA_VISIBLE_DEVICES=all
 
-# Setting the TimeZone
+# Setting the TimeZone. This is necessary to prevent any interactive 
+# requests for locale information while installing packages.
 RUN echo 'Etc/UTC' > /etc/timezone \
  && ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime \
  && apt update \

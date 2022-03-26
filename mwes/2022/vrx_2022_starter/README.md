@@ -16,12 +16,12 @@ code that you may want to build.
 * Clone the source repository into the directory that contains this `Dockerfile` and the startup scripts:
   ```
   cd vrx-docker/mwes/2022/vrx_2022_starter
-  git clone https://github.com/osrf/vrx
+  git clone https://github.com/osrf/vrx my_source
   ```
 * Make sure there is a `COPY` command in your `Dockerfile` that will put this
   directory where it needs to go inside your image. For example:
   ```
-  COPY vrx /vrx_ws/src/vrx   
+  COPY my_source /vrx_ws/src/vrx
   ```
 * Build the docker image:
   ```

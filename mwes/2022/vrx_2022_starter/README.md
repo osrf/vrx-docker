@@ -19,11 +19,6 @@ code that you may want to build.
   cd vrx-docker/mwes/2022/vrx_2022_starter
   git clone https://github.com/osrf/vrx my_source
   ```
-  **Note**: We are using the `my_source` directory to represent a temporary 
-  copy of some code you want to develop.  However, if you already have a copy
-  of the `vrx` repository in the same workspace, you will need to move or 
-  delete the new copy you just created after building your Docker image in 
-  the next step to avoid creating naming conflicts. 
 * Make sure there is a `COPY` command in your `Dockerfile` that will put this
   directory where it needs to go inside your image. For example:
   ```
@@ -35,6 +30,12 @@ code that you may want to build.
   ``` 
   where `<image_name>` is a name of your choosing.
 
+#### Note: 
+  We are using the `my_source` directory to represent a temporary 
+  copy of some code you want to develop.  However, if you already have a copy
+  of the `vrx` repository in the same workspace, you will need to move or 
+  delete the new copy you just created after building your Docker image to 
+  avoid creating naming conflicts. 
 
 ### Rebuilding your image
 * If you change your source code and want the changes to be reflected in your

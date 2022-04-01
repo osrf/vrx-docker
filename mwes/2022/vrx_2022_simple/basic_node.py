@@ -65,7 +65,7 @@ class SimpleNode:
 
     def sendCmds(self):
         tasklist = ("station_keeping", "wayfinding", "gymkhana",
-                                       "wildlife","scan_dock_deliver")
+                    "perception", "wildlife","scan_dock_deliver")
         while not rospy.is_shutdown():
             try:
                 if isinstance(self.taskInfo, type(self.taskType)):

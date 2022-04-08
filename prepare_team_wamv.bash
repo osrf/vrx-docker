@@ -85,7 +85,7 @@ mkdir -p ${wamv_target_dir}
 
 # Generate WAM-V
 echo "Generating WAM-V..."
-roslaunch vrx_gazebo generate_wamv.launch component_yaml:=$COMPONENT_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target
+roslaunch vrx_gazebo generate_wamv.launch component_yaml:=$COMPONENT_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target wamv_locked:=true
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Write to text file about compliance

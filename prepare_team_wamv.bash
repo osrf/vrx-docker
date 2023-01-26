@@ -17,7 +17,7 @@ NOCOLOR='\033[0m'
 is_wamv_compliant()
 {
   # Get logs
-  log_dir=$HOME/.ros/log
+  log_dir=$ROS_HOME/log
   logs=$(ls -t $log_dir)
 
   # Find latest wamv_generator log

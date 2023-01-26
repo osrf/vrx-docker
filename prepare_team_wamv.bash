@@ -50,6 +50,11 @@ usage()
 
 TEAM_NAME=$1
 
+if [[ -z "${ROS_HOME}" ]]; then
+  echo "Environment variable ROS_HOME not set."
+  exit 1
+fi
+
 echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
 
 # Get directory of this file

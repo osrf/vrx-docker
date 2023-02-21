@@ -17,7 +17,7 @@ NOCOLOR='\033[0m'
 is_wamv_compliant()
 {
   # Get logs
-  log_dir=$HOME/.ros/log/latest
+  log_dir=$ROS_HOME/log
   logs=$(ls -t $log_dir)
 
   # Find latest wamv_generator log
@@ -49,6 +49,11 @@ usage()
 [[ $# -ne 1 ]] && usage
 
 TEAM_NAME=$1
+
+if [[ -z "${ROS_HOME}" ]]; then
+  echo "Environment variable ROS_HOME not set."
+  exit 1
+fi
 
 echo -e "${GREEN}Preparing WAM-V URDF for team: ${TEAM_NAME}${NOCOLOR}"
 
@@ -85,7 +90,7 @@ mkdir -p ${wamv_target_dir}
 
 # Generate WAM-V
 echo "Generating WAM-V..."
-roslaunch vrx_gazebo generate_wamv.launch component_yaml:=$COMPONENT_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target wamv_locked:=true
+ros2 launch vrx_gazebo generate_wamv.launch.py component_yaml:=$COMPONENT_CONFIG thruster_yaml:=$THRUSTER_CONFIG wamv_target:=$wamv_target wamv_locked:=true
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Write to text file about compliance

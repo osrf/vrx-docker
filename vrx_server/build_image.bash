@@ -30,7 +30,7 @@ fi
 
 # Parse arguments
 BUILD_BASE=""
-image_name="vrx-server-noetic"
+image_name="vrx-server-jammy"
 
 # Parse args related to NVIDIA
 POSITIONAL=()
@@ -40,7 +40,7 @@ do
 
     case $key in
         -n|--nvidia)
-        BUILD_BASE="--build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu20.04"
+        BUILD_BASE="--build-arg BASEIMG=nvidia/cuda:11.8.0-devel-ubuntu22.04"
         image_name="$image_name-nvidia"
         shift
         ;;

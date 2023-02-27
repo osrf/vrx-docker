@@ -1,11 +1,13 @@
-ARG BASEIMG=ubuntu:focal
+ARG BASEIMG=ubuntu:jammy
 FROM $BASEIMG
 
 # Set ROS distribution
-ARG DIST=noetic
+ARG ROSDIST=humble
 
 # Set Gazebo verison
-ARG GAZ=gazebo11
+ARG GZDIST=garden
+
+ENV GZ_VERSION garden
 
 RUN export DEBIAN_FRONTEND=noninteractive \
  && apt update \
@@ -40,34 +42,38 @@ RUN export DEBIAN_FRONTEND=noninteractive \
          sudo \
          vim \
          wget \
+         libgflags-dev \
   && apt clean
 
+
+
 # Get ROS and Gazebo
-RUN wget -P /tmp/ http://packages.osrfoundation.org/gazebo.key
-RUN wget -P /tmp/ http://packages.ros.org/ros.key
-RUN /bin/sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list' \
- && apt-key add /tmp/ros.key \
- && /bin/sh -c 'echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" > /etc/apt/sources.list.d/gazebo-stable.list' \
- && apt-key add /tmp/gazebo.key \
- && apt update \
- && apt install -y \
-    ${GAZ} \
-    lib${GAZ}-dev \
-    ros-${DIST}-compressed-image-transport \
-    ros-${DIST}-ros-base \
-    ros-${DIST}-gazebo-plugins \
-    ros-${DIST}-gazebo-ros \
-    ros-${DIST}-hector-gazebo-plugins \
-    ros-${DIST}-joy \
-    ros-${DIST}-joy-teleop \
-    ros-${DIST}-key-teleop \
-    ros-${DIST}-robot-localization \
-    ros-${DIST}-robot-state-publisher \
-    ros-${DIST}-rviz \
-    ros-${DIST}-teleop-tools \
-    ros-${DIST}-teleop-twist-keyboard \
-    ros-${DIST}-velodyne-simulator \
-    ros-${DIST}-xacro \
+# Install ignition fortress and ROS2 Desktop
+RUN wget https://packages.osrfoundation.org/gazebo.gpg -O /usr/share/keyrings/pkgs-osrf-archive-keyring.gpg \
+  && /bin/sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/pkgs-osrf-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/gazebo-stable.list > /dev/null' \
+  && /bin/sh -c 'curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg' \
+  && /bin/sh -c 'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null' \
+  && apt update \
+  && apt install -y --no-install-recommends \
+     gz-${GZDIST} \
+     ros-${ROSDIST}-desktop \
+  && rm -rf /var/lib/apt/lists/* \
+  && apt-get clean -qq
+
+RUN apt update \
+ && apt install -y --no-install-recommends \
+    python3-colcon-common-extensions \
+    python3-sdformat13 \
+    ros-${ROSDIST}-compressed-image-transport \
+    ros-${ROSDIST}-joy \
+    ros-${ROSDIST}-joy-teleop \
+    ros-${ROSDIST}-key-teleop \
+    ros-${ROSDIST}-robot-localization \
+    ros-${ROSDIST}-robot-state-publisher \
+    ros-${ROSDIST}-rviz2 \
+    ros-${ROSDIST}-teleop-tools \
+    ros-${ROSDIST}-teleop-twist-keyboard \
+    ros-${ROSDIST}-xacro \
  && apt clean
 
 # Removed
@@ -108,11 +114,13 @@ RUN mkdir -p vrx_ws/src
 # Copy the VRX repository from the local file system
 # We can't use the USER:GROUP variables until Docker adds support to --chown
 # COPY --chown=developer:developer . vrx_ws/src/vrx/
-RUN git clone -b 1.6.2 https://github.com/osrf/vrx.git 
-RUN mv ./vrx ./vrx_ws/src
+RUN git clone -b 2.0.0 https://github.com/osrf/vrx.git \
+&& git clone https://github.com/gazebosim/ros_gz.git -b humble \
+&& mv ./vrx ./vrx_ws/src \
+&& mv ./ros_gz ./vrx_ws/src
 
 # Compile the VRX project.
-RUN /bin/bash -c ". /opt/ros/${DIST}/setup.bash && cd vrx_ws && catkin_make"
+RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd vrx_ws && GZ_VERSION=garden colcon build --merge-install"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${DIST}/setup.bash" >> ~/.bashrc' \
@@ -131,13 +139,6 @@ ENV LD_LIBRARY_PATH /usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_P
 # Set encoding to use unicode characters
 # RUN sudo locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
-
-# Takes too long to do, probably not needed
-# Get gazebo models early since it is big
-# RUN wget -P /tmp/ https://bitbucket.org/osrf/gazebo_models/get/default.tar.gz \
-#  && mkdir -p $HOME/.gazebo/models \
-#  && tar -xvf /tmp/default.tar.gz -C $HOME/.gazebo/models --strip 1 \
-#  && rm /tmp/default.tar.gz
 
 # setup entrypoint
 COPY ./vrx_entrypoint.sh /

@@ -79,10 +79,10 @@ docker run --name ${CONTAINER} \
   -v "$XAUTH:$XAUTH" \
   -v "/tmp/.X11-unix:/tmp/.X11-unix" \
   -v "/etc/localtime:/etc/localtime:ro" \
-  -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
+  -v "/tmp/.dockerifvefjga.xauth:/tmp/.dockerifvefjga.xauth" \
   -v /dev/log:/dev/log \
   -v "/dev/input:/dev/input" \
-  --runtime=$RUNTIME \
+  --gpus all \
   --privileged \
   --security-opt seccomp=unconfined \
   -u $USERID:$GROUPID \

@@ -2,13 +2,13 @@
 set -e
 
 # first, execute overriden entrypoint from gazebo
-source "/usr/share/gazebo/setup.sh"
+# source "/usr/share/gazebo/setup.sh"
 
 # setup ros environment.
-source "/opt/ros/noetic/setup.bash" > /dev/null
+source "/opt/ros/humble/setup.bash" > /dev/null
 
 # setup vrx environment
-source ~/vrx_ws/devel/setup.sh
+source /home/developer/vrx_ws/devel/setup.sh
 echo "vrx entrypoint executed"
 
 # TODO: optionally disable this so a gzclient can be run on the host for development.

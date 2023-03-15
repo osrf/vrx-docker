@@ -18,7 +18,7 @@ RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd vrx_ws && GZ_VERSION=ga
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${ROSDIST}/setup.bash" >> ~/.bashrc' \
- && /bin/sh -c 'echo ". ~/vrx_ws/install/setup.sh" >> ~/.bashrc'
+ && /bin/sh -c 'echo ". /home/developer/vrx_ws/install/setup.sh" >> ~/.bashrc'
 ## END OF SECTION BASED ON vrx/docker/Dockerfile
 
 # Expose port used to communiate with gzserver

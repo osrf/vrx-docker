@@ -5,7 +5,7 @@ FROM $BASEIMG
 ARG ROSDIST=humble
 
 # Create workspace
-RUN mkdir -p vrx_ws/src
+RUN mkdir -p ~/vrx_ws/src
 
 # TODO: restore version tag
 RUN git clone https://github.com/osrf/vrx.git \

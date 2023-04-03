@@ -85,7 +85,6 @@ docker run --name ${CONTAINER} \
   --gpus all \
   --privileged \
   --security-opt seccomp=unconfined \
-  -u $USERID:$GROUPID \
   ${DOCKER_EXTRA_ARGS} \
   ${IMAGE_NAME} \
 ${COMMAND}

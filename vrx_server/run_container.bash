@@ -71,10 +71,10 @@ fi
 chmod a+r $XAUTH
 
 docker run --name ${CONTAINER} \
-  -e XAUTHORITY=$XAUTH \
   -e DISPLAY \
   -e TERM \
   -e QT_X11_NO_MITSHM=1 \
+  -e XAUTHORITY=$XAUTH \
   -v "$XAUTH:$XAUTH" \
   -v "/tmp/.X11-unix:/tmp/.X11-unix" \
   -v "/etc/localtime:/etc/localtime:ro" \

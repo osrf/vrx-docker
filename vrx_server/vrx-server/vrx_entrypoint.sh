@@ -5,7 +5,7 @@ set -e
 source "/opt/ros/humble/setup.bash" > /dev/null
 
 # setup vrx environment
-source ~/vrx_ws/devel/setup.sh
+source ~/vrx_ws/install/setup.sh
 echo "vrx entrypoint executed"
 
 # TODO: optionally disable this so a gzclient can be run on the host for development.

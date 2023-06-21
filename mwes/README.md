@@ -19,9 +19,3 @@ This directory contains Dockerfiles for building example competitor Docker image
 * Provides a starting point for competitors who expect to build a workspace using custom source code. 
 * Because the Dockerfile expects to copy source code from the local file system, it is not self-contained.
 * Please see the `2022/vrx_2022_starter/README.md` for build instructions. 
-
-## 2023
-
-### `vrx_2023_simple` (in work)
-* Dockerfile pending
-* The python script corresponds to the behavior in `jessicaherman/vrx-competitor-example`

@@ -1,1 +1,1 @@
-crvogt/vrx_2022_simple
+jessicaherman/vrx-competitor-example:2023.v2

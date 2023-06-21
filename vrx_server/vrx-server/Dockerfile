@@ -1,4 +1,4 @@
-ARG BASEIMG=npslearninglab/watery_robots:vrx_current
+ARG BASEIMG=npslearninglab/watery_robots:vrx_base
 FROM $BASEIMG
 
 # Set ROS distribution

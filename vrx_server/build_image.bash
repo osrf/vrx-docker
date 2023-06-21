@@ -19,11 +19,14 @@ NOCOLOR='\033[0m'
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+# Parse arguments
+local_base_name="vrx-local-base"
+image_name="vrx-server-jammy"
+
+DOCKER_ARGS="--build-arg BASEIMG=$local_base_name"
 # DOCKER_ARGS="$DOCKER_ARGS --no-cache"
 JOY=/dev/input/js0
 
-# Parse arguments
-image_name="vrx-server-jammy"
 
 set -- "${POSITIONAL[@]}"
 
@@ -34,19 +37,21 @@ then
     exit 1
 fi
 
-# Build image
-echo "Build image: $image_name"
-set -x
-image_plus_tag=${image_name}_base:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
-docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag $DIR/vrx-server && \
-docker tag $image_plus_tag ${image_name}_base:latest && \
-echo "Built $image_plus_tag and tagged as ${image_name}_base:latest"
+ROCKER_ARGS="--dev-helpers --devices $JOY --nvidia --x11 --user --user-override-name=developer  --image-name $local_base_name"
+rocker ${ROCKER_ARGS} npslearninglab/watery_robots:vrx_base "echo -e '${GREEN}Created $local_base_name.${NOCOLOR}\n'"
 
 CONTAINER_NAME="vrx-server-system"
-ROCKER_ARGS="--dev-helpers --devices $JOY --nvidia --x11 --user --user-override-name=developer --name $CONTAINER_NAME"
-#echo "Using image <$IMG_NAME> to start container <$CONTAINER_NAME>"
 
-rocker ${ROCKER_ARGS} ${image_name}_base
+# Build image
+echo "Building image: <${image_name}> from <$local_base_name>"
+set -x
+image_plus_tag=${image_name}:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
+docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag $DIR/vrx-server && \
+docker tag $image_plus_tag ${image_name}:latest && \
+echo "Built $image_plus_tag and tagged as ${image_name}:latest"
+
+#echo "Using image <$IMG_NAME> to start container <$CONTAINER_NAME>"
+# --name $CONTAINER_NAME
+
 
 set +x
-echo -e "${GREEN}Done.${NOCOLOR}\n"

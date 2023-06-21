@@ -19,7 +19,7 @@ NOCOLOR='\033[0m'
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# DOCKER_ARGS="$DOCKER_ARGS --no-cache"
+DOCKER_ARGS="$DOCKER_ARGS --no-cache"
 
 # Parse arguments
 BUILD_BASE=""

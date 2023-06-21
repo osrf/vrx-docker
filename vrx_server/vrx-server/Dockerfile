@@ -9,12 +9,10 @@ RUN mkdir -p ~/vrx_ws/src
 
 # TODO: restore version tag
 RUN git clone https://github.com/osrf/vrx.git \
-&& git clone https://github.com/gazebosim/ros_gz.git -b humble \
-&& mv ./vrx ./vrx_ws/src \
-&& mv ./ros_gz ./vrx_ws/src
+&& mv ./vrx ./vrx_ws/src
 
 # Compile the VRX project.
-RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd vrx_ws && GZ_VERSION=garden colcon build --merge-install"
+RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd vrx_ws && colcon build --merge-install"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${ROSDIST}/setup.bash" >> ~/.bashrc' \

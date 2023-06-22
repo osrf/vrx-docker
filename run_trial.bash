@@ -19,36 +19,9 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 [-n --nvidia] <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 <team_name> <task_name> <trial_num>"
   exit 1
 }
-
-# Parse arguments
-# TODO: nvidia runtime by default; runtime may be obsolete
-RUNTIME="nvidia"
-nvidia_arg=""
-image_nvidia=""
-
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-  key="$1"
-
-  case $key in
-      -n|--nvidia)
-      RUNTIME="nvidia"
-      nvidia_arg="-n"
-      image_nvidia="-nvidia"
-      shift
-      ;;
-      *)    # unknown option
-      POSITIONAL+=("$1")
-      shift
-      ;;
-  esac
-done
-
-set -- "${POSITIONAL[@]}"
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
@@ -68,7 +41,7 @@ fi
 SERVER_CONTAINER_NAME=vrx-server-system
 SERVER_USER=developer
 ROS_DISTRO=humble
-SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
+SERVER_IMG="vrx-server-${ROS_DISTRO}:latest"
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
@@ -148,7 +121,7 @@ echo "---------------------------------"
 # container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
 SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM} ${LOG_DIR}"
-${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
+${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
   --gpus all \
@@ -179,7 +152,6 @@ docker run \
     --ip ${COMPETITOR_ROS_IP} \
     --gpus all \
     --privileged \
-    --runtime=$RUNTIME \
     ${DOCKERHUB_IMAGE} &
 
 # Run competition until server is ended

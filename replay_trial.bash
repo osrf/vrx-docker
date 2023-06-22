@@ -20,7 +20,7 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 [-n --nvidia] [--keep-docker] [--manual-play] [--keep-gz] <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 [--keep-docker] [--manual-play] [--keep-gz] <team_name> <task_name> <trial_num>"
   echo "--keep-docker: Keep Gazebo window open and Docker container running after playback ends."
   echo "  By default, everything is terminated automatically."
   echo "--manual-play: Do not automatically start playback. Wait for user to click in GUI."
@@ -31,8 +31,6 @@ usage()
 }
 
 # Parse arguments
-nvidia_arg=""
-image_nvidia=""
 keep_docker=1
 
 # Args to pass to script internal to Docker container
@@ -45,12 +43,6 @@ do
   key="$1"
 
   case $key in
-    -n|--nvidia)
-      nvidia_arg="-n"
-      image_nvidia="-nvidia"
-      shift
-      ;;
-
     --keep-docker)
       keep_docker=1
       shift
@@ -166,8 +158,8 @@ y=$y" > ${HOST_GZ_GUI_CONFIG_DIR}/gui.ini
 
 # Run Gazebo simulation server container
 SERVER_CMD="/play_vrx_log.sh ${LOG_FILE} ${OUTPUT} ${manual_play} ${keep_gz}"
-SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
-${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
+SERVER_IMG="vrx-server-${ROS_DISTRO}:latest"
+${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \

@@ -24,7 +24,8 @@ usage()
 }
 
 # Parse arguments
-RUNTIME="runc"
+# TODO: nvidia runtime by default; runtime may be obsolete
+RUNTIME="nvidia"
 nvidia_arg=""
 image_nvidia=""
 
@@ -65,7 +66,8 @@ fi
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
-ROS_DISTRO=noetic
+ROS_DISTRO=humble
+SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
@@ -97,7 +99,7 @@ chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Find wamv urdf and task world files
-echo "Looking for generated files"
+echo "Looking for WAM-V urdf file (generated)"
 TEAM_GENERATED_DIR=${DIR}/generated/team_generated/${TEAM_NAME}
 if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
   echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
@@ -106,9 +108,11 @@ else
   echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
 
+echo "Looking for task sdf file (generated/copied)"
 COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
 if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf"
+  echo -e "${GREEN}Done.${NOCOLOR}\n"
 else
   echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf not found."; exit 1;
 fi
@@ -142,11 +146,11 @@ echo "---------------------------------"
 # simulation doesn't start too early, but may have issues if competitior
 # container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
-SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
-SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
+SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM} ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
+  --gpus all \
   -v ${TEAM_GENERATED_DIR}:/team_generated \
   -v ${COMP_GENERATED_DIR}:/task_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \
@@ -172,6 +176,7 @@ docker run \
     --env ROS_MASTER_URI=${ROS_MASTER_URI} \
     --env ROS_IP=${COMPETITOR_ROS_IP} \
     --ip ${COMPETITOR_ROS_IP} \
+    --gpus all \
     --privileged \
     --runtime=$RUNTIME \
     ${DOCKERHUB_IMAGE} &

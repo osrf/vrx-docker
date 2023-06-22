@@ -66,6 +66,7 @@ fi
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
+SERVER_USER=developer
 ROS_DISTRO=humble
 SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
 LOG_DIR=/vrx/logs
@@ -188,10 +189,10 @@ echo "---------------------------------"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt $HOST_LOG_DIR/
+#docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.gz/ $HOST_LOG_DIR/gz-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/vrx_rostopics.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/verbose_output.txt $HOST_LOG_DIR/
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
 

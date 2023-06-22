@@ -19,54 +19,39 @@ NOCOLOR='\033[0m'
 # Get directory of this file
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Setup docker args
-USERID=`id -u`
-GROUPID=`id -g`
-if [[ ${USERID} != 0 ]]; then
-  DOCKER_ARGS="--build-arg USERID=${USERID} --build-arg GROUPID=${GROUPID}"
-fi
-
-# DOCKER_ARGS="$DOCKER_ARGS --no-cache"
-
 # Parse arguments
-BUILD_BASE=""
-image_name="vrx-server-noetic"
+local_base_name="vrx-local-base"
+image_name="vrx-server-jammy"
 
-# Parse args related to NVIDIA
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-    key="$1"
+DOCKER_ARGS="--build-arg BASEIMG=$local_base_name"
+# DOCKER_ARGS="$DOCKER_ARGS --no-cache"
+JOY=/dev/input/js0
 
-    case $key in
-        -n|--nvidia)
-        BUILD_BASE="--build-arg BASEIMG=nvidia/opengl:1.0-glvnd-devel-ubuntu20.04"
-        image_name="$image_name-nvidia"
-        shift
-        ;;
-        *)    # unknown option
-        POSITIONAL+=("$1")
-        shift
-        ;;
-    esac
-done
 
 set -- "${POSITIONAL[@]}"
 
 # Usage
 if [ $# -gt 0 ]
 then
-    echo "Usage: $0 [-n --nvidia]"
+    echo "Usage: $0 "
     exit 1
 fi
 
+ROCKER_ARGS="--dev-helpers --devices $JOY --nvidia --x11 --user --user-override-name=developer  --image-name $local_base_name"
+rocker ${ROCKER_ARGS} npslearninglab/watery_robots:vrx_base "echo -e '${GREEN}Created $local_base_name.${NOCOLOR}\n'"
+
+CONTAINER_NAME="vrx-server-system"
+
 # Build image
-echo "Build image: $image_name"
+echo "Building image: <${image_name}> from <$local_base_name>"
 set -x
-image_plus_tag=$image_name:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
-docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag --build-arg USER=$USER --build-arg GROUP=$USER $BUILD_BASE $DIR/vrx-server && \
-docker tag $image_plus_tag $image_name:latest && \
-echo "Built $image_plus_tag and tagged as $image_name:latest"
+image_plus_tag=${image_name}:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)
+docker build --force-rm ${DOCKER_ARGS} --tag $image_plus_tag $DIR/vrx-server && \
+docker tag $image_plus_tag ${image_name}:latest && \
+echo "Built $image_plus_tag and tagged as ${image_name}:latest"
+
+#echo "Using image <$IMG_NAME> to start container <$CONTAINER_NAME>"
+# --name $CONTAINER_NAME
+
 
 set +x
-echo -e "${GREEN}Done.${NOCOLOR}\n"

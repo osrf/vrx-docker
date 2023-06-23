@@ -124,7 +124,6 @@ SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
-  --gpus all \
   -v ${TEAM_GENERATED_DIR}:/team_generated \
   -v ${COMP_GENERATED_DIR}:/task_generated \
   -v ${HOST_LOG_DIR}:${LOG_DIR} \

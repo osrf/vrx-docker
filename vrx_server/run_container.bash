@@ -36,6 +36,7 @@ do
       ;;
       *)    # unknown option
       POSITIONAL+=("$1")
+[ruby $(which gz) sim-1] qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
       shift
       ;;
   esac
@@ -45,6 +46,7 @@ set -- "${POSITIONAL[@]}"
 
 if [[ $# -lt 2 ]] 
 then
+[ruby $(which gz) sim-1] qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
     echo "Usage: $0 [-n --nvidia] <container_name> <image_name> [<docker_extra_args> <command>]"
     exit 1
 fi
@@ -56,36 +58,31 @@ COMMAND=$4
 
 # Make sure processes in the container can connect to the x server
 # Necessary so gazebo can create a context for OpenGL rendering (even headless)
-XAUTH=/tmp/.docker.xauth
+XAUTH=/tmp/.dockervrx.xauth
 if [ ! -f $XAUTH ]
 then
-    xauth_list=$(xauth nlist :0 | sed -e 's/^..../ffff/')
-    if [ ! -z "$xauth_list" ]
-    then
-        echo $xauth_list | xauth -f $XAUTH nmerge -
-    else
-        touch $XAUTH
-    fi
-    chmod a+r $XAUTH
+    touch $XAUTH
 fi
-
-USERID=$(id -u)
-GROUPID=$(id -g)
+xauth_list=$(xauth nlist $DISPLAY | sed -e 's/^..../ffff/')
+if [ ! -z "$xauth_list" ]
+then
+    echo $xauth_list | xauth -f $XAUTH nmerge -
+fi
+chmod a+r $XAUTH
 
 docker run --name ${CONTAINER} \
+  -e DISPLAY \
+  -e TERM \
+  -e QT_X11_NO_MITSHM=1 \
   -e XAUTHORITY=$XAUTH \
-  --env="DISPLAY" \
-  --env="QT_X11_NO_MITSHM=1" \
   -v "$XAUTH:$XAUTH" \
   -v "/tmp/.X11-unix:/tmp/.X11-unix" \
   -v "/etc/localtime:/etc/localtime:ro" \
-  -v "/tmp/.docker.xauth:/tmp/.docker.xauth" \
   -v /dev/log:/dev/log \
   -v "/dev/input:/dev/input" \
-  --runtime=$RUNTIME \
+  --gpus all \
   --privileged \
   --security-opt seccomp=unconfined \
-  -u $USERID:$GROUPID \
   ${DOCKER_EXTRA_ARGS} \
   ${IMAGE_NAME} \
 ${COMMAND}

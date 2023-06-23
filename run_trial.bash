@@ -120,7 +120,7 @@ echo "---------------------------------"
 # simulation doesn't start too early, but may have issues if competitior
 # container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
-SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM} ${LOG_DIR}"
+SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf practice_2023_${TASK_NAME}${TRIAL_NUM}_task ${LOG_DIR}"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \

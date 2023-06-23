@@ -1,4 +1,4 @@
-ARG BASEIMG=npslearninglab/watery_robots:vrx_current
+ARG BASEIMG=npslearninglab/watery_robots:vrx_base
 FROM $BASEIMG
 
 # Set ROS distribution
@@ -9,10 +9,10 @@ RUN mkdir -p ~/vrx_ws/src
 
 # TODO: restore version tag
 RUN git clone https://github.com/osrf/vrx.git \
-&& mv ./vrx ./vrx_ws/src
+&& mv ./vrx ~/vrx_ws/src
 
 # Compile the VRX project.
-RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd vrx_ws && colcon build --merge-install"
+RUN /bin/bash -c ". /opt/ros/${ROSDIST}/setup.bash && cd ~/vrx_ws && colcon build --merge-install"
 
 # Source all the needed environment files.
 RUN /bin/sh -c 'echo ". /opt/ros/${ROSDIST}/setup.bash" >> ~/.bashrc' \

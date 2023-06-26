@@ -22,32 +22,10 @@
 set -x
 
 # Parse arguments
-RUNTIME="runc"
-
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-  key="$1"
-  
-  case $key in
-      -n|--nvidia)
-      RUNTIME="nvidia"
-      shift
-      ;;
-      *)    # unknown option
-      POSITIONAL+=("$1")
-[ruby $(which gz) sim-1] qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
-      shift
-      ;;
-  esac
-done
-
-set -- "${POSITIONAL[@]}"
-
 if [[ $# -lt 2 ]] 
 then
 [ruby $(which gz) sim-1] qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
-    echo "Usage: $0 [-n --nvidia] <container_name> <image_name> [<docker_extra_args> <command>]"
+    echo "Usage: $0 <container_name> <image_name> [<docker_extra_args> <command>]"
     exit 1
 fi
 

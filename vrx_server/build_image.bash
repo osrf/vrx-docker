@@ -21,7 +21,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Parse arguments
 local_base_name="vrx-local-base"
-image_name="vrx-server-jammy"
+image_name="vrx-server-humble"
 
 DOCKER_ARGS="--build-arg BASEIMG=$local_base_name"
 # DOCKER_ARGS="$DOCKER_ARGS --no-cache"

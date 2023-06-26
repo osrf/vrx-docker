@@ -4,7 +4,7 @@
 
 function is_gzserver_running()
 {
-  if pgrep gzserver > /dev/null; then
+  if pgrep -f "gz sim server" > /dev/null; then
     true
   else
     false
@@ -14,7 +14,7 @@ function is_gzserver_running()
 # Check if gzclient is running
 function is_gzclient_running()
 {
-  if pgrep gzclient > /dev/null; then
+  if pgrep "gz sim client" > /dev/null; then
     true
   else
     false

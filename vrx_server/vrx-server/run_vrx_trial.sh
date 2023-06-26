@@ -40,7 +40,7 @@ echo "Starting vrx trial..."
 # Run the trial.
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
-roslaunch vrx_gazebo vrx.launch gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
+ros2 launch vrx_gz competition.launch.py gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
@@ -48,21 +48,21 @@ echo -e "${GREEN}OK${NOCOLOR}\n"
 # Store topics in rosbag 
 # July 24, 2019 only record task info to save space
 echo "Starting rosbag recording..." 
-rosbag record -O ~/vrx_rostopics.bag /vrx/task/info &
+ros2 bag record -o ~/vrx_rostopics.bag /vrx/task/info &
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Run simulation until shutdown
 echo "Run simulation until gzserver is shutdown by scoring plugin"
 wait_until_gzserver_is_down
-echo "gzserver shut down"
+echo "gz sim server shut down"
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill rosnodes
-echo "Killing rosnodes"
-rosnode kill --all
-sleep 1s
+#echo "Killing rosnodes"
+#rosnode kill --all
+#sleep 1s
 
 # Kill roslaunch
-echo "Killing roslaunch pid: ${roslaunch_pid}"
+echo "Killing ros2 launch pid: ${roslaunch_pid}"
 kill -INT ${roslaunch_pid}
 echo -e "${GREEN}OK${NOCOLOR}\n"

@@ -78,8 +78,10 @@ TRIAL_NUM=$3
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
-ROS_DISTRO=noetic
-LOG_DIR=/vrx/logs
+ROS_DISTRO=humble
+LOG_BASE=/vrx/logs
+GZ_LOG_DIR=gz-server
+GZ_LOG_PATH=${LOG_BASE}/${GZ_LOG_DIR}
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
 SERVER_ROS_IP="172.16.0.22"
@@ -99,10 +101,8 @@ echo "Setting up"
 echo "---------------------------------"
 
 # Input file
-HOST_LOG_DIR=${DIR}/generated/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
-LOG_SUFFIX=/gazebo-server/state.log
-LOG_FILE=${LOG_DIR}${LOG_SUFFIX}
-HOST_LOG_FILE=${HOST_LOG_DIR}${LOG_SUFFIX}
+HOST_LOG_BASE=${DIR}/generated/logs/${TEAM_NAME}/${TASK_NAME}/${TRIAL_NUM}
+HOST_LOG_FILE=${HOST_LOG_BASE}/${GZ_LOG_DIR}/state.tlog
 # Sanity check: Make sure that the log file exists.
 if [ ! -f $HOST_LOG_FILE ]; then
   echo "Gazebo log file [$HOST_LOG_FILE] not found!"
@@ -112,8 +112,8 @@ else
 fi
 
 # Output directory
-HOST_OUTPUT_DIR=${HOST_LOG_DIR}/video
-OUTPUT_DIR=${LOG_DIR}/video
+HOST_OUTPUT_DIR=${HOST_LOG_BASE}/video
+OUTPUT_DIR=${LOG_BASE}/video
 if [ -d "$HOST_OUTPUT_DIR" ]; then
   echo "Overwriting directory: ${HOST_OUTPUT_DIR}"
   rm -R $HOST_OUTPUT_DIR
@@ -122,9 +122,7 @@ else
 fi
 
 mkdir -p $HOST_OUTPUT_DIR
-OUTPUT_SUFFIX=/playback_video.ogv
-HOST_OUTPUT=$HOST_OUTPUT_DIR$OUTPUT_SUFFIX
-OUTPUT=$OUTPUT_DIR$OUTPUT_SUFFIX
+OUTPUT_FILE=$OUTPUT_DIR/playback_video.ogv
 
 # Ensure any previous containers are killed and removed.
 ${DIR}/utils/kill_vrx_containers.bash
@@ -157,12 +155,12 @@ x=$x
 y=$y" > ${HOST_GZ_GUI_CONFIG_DIR}/gui.ini
 
 # Run Gazebo simulation server container
-SERVER_CMD="/play_vrx_log.sh ${LOG_FILE} ${OUTPUT} ${manual_play} ${keep_gz}"
+SERVER_CMD="/play_vrx_log.sh ${GZ_LOG_PATH} ${OUTPUT_FILE} ${manual_play} ${keep_gz}"
 SERVER_IMG="vrx-server-${ROS_DISTRO}:latest"
 ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
-  -v ${HOST_LOG_DIR}:${LOG_DIR} \
+  -v ${HOST_LOG_BASE}:${LOG_BASE} \
   -v ${HOST_OUTPUT_DIR}:${OUTPUT_DIR} \
   -v ${HOST_GZ_GUI_CONFIG_DIR}:${GZ_GUI_CONFIG_DIR} \
   -e ROS_MASTER_URI=${ROS_MASTER_URI} \

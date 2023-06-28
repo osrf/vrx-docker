@@ -19,35 +19,9 @@ NOCOLOR='\033[0m'
 # Define usage function.
 usage()
 {
-  echo "Usage: $0 [-n --nvidia] <team_name> <task_name> <trial_num>"
+  echo "Usage: $0 <team_name> <task_name> <trial_num>"
   exit 1
 }
-
-# Parse arguments
-RUNTIME="runc"
-nvidia_arg=""
-image_nvidia=""
-
-POSITIONAL=()
-while [[ $# -gt 0 ]]
-do
-  key="$1"
-
-  case $key in
-      -n|--nvidia)
-      RUNTIME="nvidia"
-      nvidia_arg="-n"
-      image_nvidia="-nvidia"
-      shift
-      ;;
-      *)    # unknown option
-      POSITIONAL+=("$1")
-      shift
-      ;;
-  esac
-done
-
-set -- "${POSITIONAL[@]}"
 
 # Call usage() function if arguments not supplied.
 [[ $# -ne 3 ]] && usage
@@ -65,7 +39,9 @@ fi
 
 # Constants for containers
 SERVER_CONTAINER_NAME=vrx-server-system
-ROS_DISTRO=noetic
+SERVER_USER=developer
+ROS_DISTRO=humble
+SERVER_IMG="vrx-server-${ROS_DISTRO}:latest"
 LOG_DIR=/vrx/logs
 NETWORK=vrx-network
 NETWORK_SUBNET="172.16.0.10/16" # subnet mask allows communication between IP addresses with 172.16.xx.xx (xx = any)
@@ -97,7 +73,7 @@ chmod 777 ${HOST_LOG_DIR}
 echo -e "${GREEN}Done.${NOCOLOR}\n"
 
 # Find wamv urdf and task world files
-echo "Looking for generated files"
+echo "Looking for WAM-V urdf file (generated)"
 TEAM_GENERATED_DIR=${DIR}/generated/team_generated/${TEAM_NAME}
 if [ -f "${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf" ]; then
   echo "Successfully found: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf"
@@ -106,9 +82,11 @@ else
   echo -e "${RED}Err: ${TEAM_GENERATED_DIR}/${TEAM_NAME}.urdf not found."; exit 1;
 fi
 
+echo "Looking for task sdf file (generated/copied)"
 COMP_GENERATED_DIR=${DIR}/generated/task_generated/${TASK_NAME}
 if [ -f "${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf" ]; then
   echo "Successfully found: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf"
+  echo -e "${GREEN}Done.${NOCOLOR}\n"
 else
   echo -e "${RED}Err: ${COMP_GENERATED_DIR}/worlds/${TASK_NAME}${TRIAL_NUM}.sdf not found."; exit 1;
 fi
@@ -142,9 +120,8 @@ echo "---------------------------------"
 # simulation doesn't start too early, but may have issues if competitior
 # container waiting for ROS master and has error before server is created.
 # Run Gazebo simulation server container
-SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM}.world ${LOG_DIR}"
-SERVER_IMG="vrx-server-${ROS_DISTRO}${image_nvidia}:latest"
-${DIR}/vrx_server/run_container.bash $nvidia_arg ${SERVER_CONTAINER_NAME} $SERVER_IMG \
+SERVER_CMD="/run_vrx_trial.sh /team_generated/${TEAM_NAME}.urdf /task_generated/worlds/${TASK_NAME}${TRIAL_NUM} ${LOG_DIR}"
+${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   "--net ${NETWORK} \
   --ip ${SERVER_ROS_IP} \
   -v ${TEAM_GENERATED_DIR}:/team_generated \
@@ -172,8 +149,8 @@ docker run \
     --env ROS_MASTER_URI=${ROS_MASTER_URI} \
     --env ROS_IP=${COMPETITOR_ROS_IP} \
     --ip ${COMPETITOR_ROS_IP} \
+    --gpus all \
     --privileged \
-    --runtime=$RUNTIME \
     ${DOCKERHUB_IMAGE} &
 
 # Run competition until server is ended
@@ -183,10 +160,10 @@ echo "---------------------------------"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/.gazebo/ $HOST_LOG_DIR/gazebo-server
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/vrx_rostopics.bag $HOST_LOG_DIR/
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$USER/verbose_output.txt $HOST_LOG_DIR/
+#docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.gz/ $HOST_LOG_DIR/gz-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/vrx_rostopics.bag $HOST_LOG_DIR/
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/verbose_output.txt $HOST_LOG_DIR/
 
 echo -e "${GREEN}OK${NOCOLOR}\n"
 

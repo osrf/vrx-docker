@@ -72,9 +72,8 @@ echo "Starting Gazebo..."
 echo "Check any possible errors after the run in $OUTPUT.playback_output.txt..."
 
 # Start Gazebo in playback mode
-roslaunch vrx_gazebo playback.launch gui:=true log_file:=$LOG_FILE paused:=true verbose:=true \
-  > $OUTPUT.playback_output.txt 2>&1 &
-roslaunch_pid=$!
+gz sim -v 4 --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
+gz_playback_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
 
@@ -91,14 +90,14 @@ fi
 wait_for_unpause_signal()
 {
   echo "Waiting for unpause signal or manual unpause..."
-  gz_world_stats_topic=$(gz topic -l | grep "world_stats")
+  gz_world_stats_topic=$(gz topic -l | grep "world" | grep "stats")
 
   # Wait for Docker injection to unpause
-  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: false" --quiet
+  while gz topic -e -t "$gz_world_stats_topic" -d 1 | grep "paused: true" --quiet
   do
     # If user manually closed Gazebo, no need to wait for host signal
     if ! is_gzclient_running || ! is_gzserver_running ; then
-      echo "Detected gzserver or gzclient no longer running"
+      echo "Detected gz sim server or gz sim gui no longer running"
       break
     fi
 
@@ -108,13 +107,16 @@ wait_for_unpause_signal()
   echo -e "${GREEN}OK${NOCOLOR}"
 }
 
-if [ $autoplay -eq 1 ]; then
-  echo "Unpausing to start playback..."
-  gz world -p 0
-  echo -e "${GREEN}OK${NOCOLOR}"
-else
-  wait_for_unpause_signal
-fi
+wait_for_unpause_signal
+
+#TODO: replacement for gz world -p 0?
+#if [ $autoplay -eq 1 ]; then
+#  echo "Unpausing to start playback..."
+#  gz world -p 0
+#  echo -e "${GREEN}OK${NOCOLOR}"
+#else
+#  wait_for_unpause_signal
+#fi
 
 echo "Playing back log file..."
 
@@ -124,35 +126,37 @@ echo "Playing back log file..."
 wait_until_playback_ends()
 {
   echo "Waiting for playback to end..."
-  gz_world_stats_topic=$(gz topic -l | grep "world_stats")
+  gz_world_stats_topic=$(gz topic -l | grep "world" | grep "stats")
 
   # Sleep until Gazebo is paused
-  until gz topic -e "$gz_world_stats_topic" -d 1 -u | grep "paused: true" --quiet
+  until gz topic -e -t "$gz_world_stats_topic" -d 1 | grep "paused: true" --quiet
   do
     sleep 1
     if ! is_gzclient_running ; then
-      echo 1>&2 "Detected gzclient no longer running"
+      echo 1>&2 "Detected gz sim gui no longer running"
       return 0
     fi
   done
   echo -e "${GREEN}OK${NOCOLOR}"
 }
 
+#wait_until_gzserver_is_down
+
 if [ $kill_gz -eq 1 ]; then
   wait_until_playback_ends
-  killall -w gzserver gzclient
+  kill $(pgrep -f "gz sim server")
 else
   echo "Waiting for Docker injection to terminate Gazebo..."
   wait_until_gzserver_is_down
 fi
 
 # Kill rosnodes
-echo "Killing rosnodes"
-rosnode kill --all
-sleep 1s
-echo -e "${GREEN}OK${NOCOLOR}\n"
+#echo "Killing rosnodes"
+#rosnode kill --all
+#sleep 1s
+#echo -e "${GREEN}OK${NOCOLOR}\n"
 
 # Kill roslaunch
-echo "Killing roslaunch pid: ${roslaunch_pid}"
-kill -INT ${roslaunch_pid}
+echo "Killing gz playback process: ${gz_playback_pid}"
+kill -INT ${gz_playback_pid}
 echo -e "${GREEN}OK${NOCOLOR}\n"

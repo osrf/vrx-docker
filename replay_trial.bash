@@ -112,6 +112,7 @@ else
 fi
 
 # Output directory
+# TODO: We don't seem to be doing anything with this.
 HOST_OUTPUT_DIR=${HOST_LOG_BASE}/video
 OUTPUT_DIR=${LOG_BASE}/video
 if [ -d "$HOST_OUTPUT_DIR" ]; then
@@ -137,23 +138,6 @@ width=1000
 height=750
 BLACK_WINDOW_TIME=2
 
-HOST_GZ_GUI_CONFIG_DIR=${DIR}/generated/logs/playback_gazebo
-GZ_GUI_CONFIG_DIR=/home/$USER/.gazebo
-if [ -d "$HOST_GZ_GUI_CONFIG_DIR" ]; then
-  echo "Overwriting directory: ${HOST_GZ_GUI_CONFIG_DIR}"
-  rm -R $HOST_GZ_GUI_CONFIG_DIR
-else
-  echo "Creating directory: ${HOST_GZ_GUI_CONFIG_DIR}"
-fi
-mkdir -p $HOST_GZ_GUI_CONFIG_DIR
-
-# Tell gazebo client what size and place it should be
-echo "[geometry]
-width=$width
-height=$height
-x=$x
-y=$y" > ${HOST_GZ_GUI_CONFIG_DIR}/gui.ini
-
 # Run Gazebo simulation server container
 SERVER_CMD="/play_vrx_log.sh ${GZ_LOG_PATH} ${OUTPUT_FILE} ${manual_play} ${keep_gz}"
 SERVER_IMG="vrx-server-${ROS_DISTRO}:latest"
@@ -162,7 +146,6 @@ ${DIR}/vrx_server/run_container.bash ${SERVER_CONTAINER_NAME} $SERVER_IMG \
   --ip ${SERVER_ROS_IP} \
   -v ${HOST_LOG_BASE}:${LOG_BASE} \
   -v ${HOST_OUTPUT_DIR}:${OUTPUT_DIR} \
-  -v ${HOST_GZ_GUI_CONFIG_DIR}:${GZ_GUI_CONFIG_DIR} \
   -e ROS_MASTER_URI=${ROS_MASTER_URI} \
   -e ROS_IP=${SERVER_ROS_IP} \
   -e VRX_DEBUG=false" \

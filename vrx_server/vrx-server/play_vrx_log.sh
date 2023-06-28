@@ -72,7 +72,7 @@ echo "Starting Gazebo..."
 echo "Check any possible errors after the run in $OUTPUT.playback_output.txt..."
 
 # Start Gazebo in playback mode
-gz sim -v 4 --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
+gz sim -v 4 --gui-config /gui.config --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
 gz_playback_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"

@@ -71,9 +71,16 @@ mkdir -p $DESTINATION_FOLDER
 echo "Starting Gazebo..."
 echo "Check any possible errors after the run in $OUTPUT.playback_output.txt..."
 
-# Start Gazebo in playback mode
-gz sim -v 4 --gui-config /gui.config --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
-gz_playback_pid=$!
+if [ $autoplay -eq 0 ]; then
+  # Start Gazebo paused in playback mode
+  gz sim -v 4 --gui-config /gui.config --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
+  gz_playback_pid=$!
+else
+  # Start Gazebo running in playback
+  gz sim -v 4 -r --gui-config /gui.config --playback $LOG_FILE > $OUTPUT.playback_output.txt 2>&1 &
+  gz_playback_pid=$!
+fi
+
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"
 

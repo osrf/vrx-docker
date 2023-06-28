@@ -160,8 +160,8 @@ echo "---------------------------------"
 
 # Copy the ROS log files from the server's container.
 echo "Copying ROS log files from server container..."
-#docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.ros/log/latest $HOST_LOG_DIR/ros-server-latest
-docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.gz/ $HOST_LOG_DIR/gz-server
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.ros/log/ $HOST_LOG_DIR/ros-server-latest
+docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/.gazebo/ $HOST_LOG_DIR/gz-server
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/vrx_rostopics.bag $HOST_LOG_DIR/
 docker cp --follow-link ${SERVER_CONTAINER_NAME}:/home/$SERVER_USER/verbose_output.txt $HOST_LOG_DIR/
 

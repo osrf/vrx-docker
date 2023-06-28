@@ -40,7 +40,7 @@ echo "Starting vrx trial..."
 # Run the trial.
 # Note: Increase record period to have faster playback. Decrease record period for slower playback
 RECORD_PERIOD="0.01"
-ros2 launch vrx_gz competition.launch.py gui:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gazebo_args:="-r --record_period ${RECORD_PERIOD} --record_path $HOME/.gazebo" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
+ros2 launch vrx_gz competition.launch.py headless:=false urdf:=$WAMV_URDF world:=$TRIAL_WORLD extra_gz_args:="--record_period ${RECORD_PERIOD} --record_path /home/developer/.gazebo --log_overwrite" verbose:=true non_competition_mode:=false > ~/verbose_output.txt 2>&1 &
 roslaunch_pid=$!
 wait_until_gzserver_is_up
 echo -e "${GREEN}OK${NOCOLOR}\n"

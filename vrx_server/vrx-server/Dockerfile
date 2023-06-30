@@ -8,7 +8,7 @@ ARG ROSDIST=humble
 RUN mkdir -p ~/vrx_ws/src
 
 # TODO: restore version tag
-RUN git clone -b M1chaelM/gz_recording_args https://github.com/osrf/vrx.git \
+RUN git clone https://github.com/osrf/vrx.git \
 && mv ./vrx ~/vrx_ws/src
 
 # Compile the VRX project.

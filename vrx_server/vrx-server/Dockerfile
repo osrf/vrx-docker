@@ -43,5 +43,6 @@ COPY ./vrx_entrypoint.sh /
 COPY ./run_vrx_trial.sh /
 COPY ./play_vrx_log.sh /
 COPY ./gz_utils.sh /
+COPY ./gui.config /
 
 ENTRYPOINT ["/vrx_entrypoint.sh"]

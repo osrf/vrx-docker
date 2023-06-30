@@ -69,7 +69,6 @@ fi
 mkdir -p $DESTINATION_FOLDER
 
 echo "Starting Gazebo..."
-echo "Check any possible errors after the run in $OUTPUT.playback_output.txt..."
 
 if [ $autoplay -eq 0 ]; then
   # Start Gazebo paused in playback mode

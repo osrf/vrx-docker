@@ -130,6 +130,7 @@ ${DIR}/utils/kill_vrx_containers.bash
 
 echo "Starting simulation server container for playback"
 echo "-------------------------------------------------"
+echo "Check any possible errors after the run in ${HOST_OUTPUT_DIR}.playback_output.txt..."
 
 # Define constants for recording
 x=100

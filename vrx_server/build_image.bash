@@ -37,12 +37,13 @@ then
     exit 1
 fi
 
+# Use rocker to build a localized base image
 ROCKER_ARGS="--dev-helpers --devices $JOY --nvidia --x11 --user --user-override-name=developer  --image-name $local_base_name"
 rocker ${ROCKER_ARGS} npslearninglab/watery_robots:vrx_base "echo -e '${GREEN}Created $local_base_name.${NOCOLOR}\n'"
 
 CONTAINER_NAME="vrx-server-system"
 
-# Build image
+# Use Docker / Dockerfile to build server from localized base image
 echo "Building image: <${image_name}> from <$local_base_name>"
 set -x
 image_plus_tag=${image_name}:$(export LC_ALL=C; date +%Y_%m_%d_%H%M)

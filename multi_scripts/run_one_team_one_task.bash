@@ -2,7 +2,7 @@
 
 # run_one_team_one_task.bash: A bash script that calls run_trial.bash on all trials in task_generated
 #
-# eg. ./run_one_team_one_task.bash example_team station_keeping
+# eg. ./run_one_team_one_task.bash example_team stationkeeping
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -52,12 +52,12 @@ trial_DIR=${DIR}/../generated/task_generated/${TASK_NAME}/worlds/
 # Get the available trial numbers from the trial directory
 get_list_of_trial_nums()
 {
-  world_files=$(ls ${trial_DIR}/*.world)
+  world_files=$(ls ${trial_DIR}/*.sdf)
 
-  for f in $(ls ${trial_DIR}/*.world); do
+  for f in $(ls ${trial_DIR}/*.sdf); do
     f=${f##*/}
-    f=${f//.world}
-    f=${f//world}
+    f=${f//.sdf}
+    f=${f//sdf}
     all_trial_nums="${all_trial_nums} ${f}"
   done
 

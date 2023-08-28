@@ -22,6 +22,6 @@ This directory contains Dockerfiles for building example competitor Docker image
 
 ## 2023
 
-### `vrx_2023_simple` (in work)
-* Dockerfile pending
+### `vrx_2023_mwes`
+* The minimal competitor image used to test scoring infrastructure in 2023. 
 * The python script corresponds to the behavior in `jessicaherman/vrx-competitor-example`

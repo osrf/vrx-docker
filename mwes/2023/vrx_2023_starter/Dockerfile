@@ -22,7 +22,7 @@ ARG GZDIST=garden
 #    vim \
 #    && rm -rf /var/lib/apt/lists/*
 
-# Set up a catkin workspace
+# Set up a colcon workspace
 RUN mkdir -p /vrx_ws/src
 
 # Here we use my_vrx as an example of a source code repository stored 

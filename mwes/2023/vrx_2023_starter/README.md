@@ -1,4 +1,4 @@
-# VRX 2022 Starter Image
+# VRX 2023 Starter Image
 
 ## Summary
 The intent of this image is to give an example of a Dockerfile that could be

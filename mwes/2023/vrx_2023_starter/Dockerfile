@@ -25,7 +25,7 @@ ARG GZDIST=garden
 # Set up a colcon workspace
 RUN mkdir -p /vrx_ws/src
 
-# Here we use my_vrx as an example of a source code repository stored 
+# Here we use my_source as an example of a source code repository stored 
 # locally on the host. Depending on your solution, you may not 
 # necessarily need to build vrx. Modify the line below to indicate
 # the source repository you want to copy into the workspace inside your

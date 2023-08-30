@@ -3,7 +3,7 @@
 ARG BASEIMG=dockwater:humble
 FROM $BASEIMG 
 
-# Set Ubuntu release
+# Set ROS/Gazebo distributions
 ARG ROSDIST=humble
 ARG GZDIST=garden
 
